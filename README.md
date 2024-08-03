@@ -1,6 +1,6 @@
 # HoneyDo
 
-Motivation for ypur life!
+Motivation for your life!
 
 ## What's New?
 
