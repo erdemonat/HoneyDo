@@ -9,7 +9,6 @@ class MotivationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
     String formattedTimeWithoutYear = DateFormat('d MMMM', 'tr_TR').format(now);
-    String formattedTimeOnlyYear = DateFormat('yyyy', 'tr_TR').format(now);
     return Container(
       margin: const EdgeInsets.all(5),
       padding: const EdgeInsets.all(10),
