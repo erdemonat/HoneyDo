@@ -1,9 +1,9 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-import 'package:honeydo/components/calender_card.dart';
-import 'package:honeydo/components/motivation_card.dart';
-import 'package:honeydo/components/pomodoro_card.dart';
-import 'package:honeydo/components/task_field_card.dart';
+import 'package:honeydo/screen_parts/calender_card.dart';
+import 'package:honeydo/screen_parts/motivation_card.dart';
+import 'package:honeydo/screen_parts/pomodoro_card.dart';
+import 'package:honeydo/screen_parts/tasks_card.dart';
 import 'package:honeydo/components/window_buttons.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -91,7 +91,7 @@ class HomeScreen extends StatelessWidget {
                                   child: Container(
                                     //margin: const EdgeInsets.all(5),
 
-                                    child: const TaskFieldCard(),
+                                    child: const TasksCard(),
                                   ),
                                 ),
                               ],
