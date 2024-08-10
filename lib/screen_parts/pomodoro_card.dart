@@ -91,6 +91,7 @@ class _PomodoroCardState extends State<PomodoroCard>
   void skipPhase() {
     setState(() {
       onTimerComplete();
+      _isPlay = true;
     });
   }
 

@@ -4,7 +4,7 @@ import 'package:honeydo/screens/homescreen.dart';
 import 'package:honeydo/theme.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   appWindow.size = const Size(1200, 675);
   initializeDateFormatting('tr_TR', null).then((_) => runApp(const MyApp()));

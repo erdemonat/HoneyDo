@@ -8,13 +8,13 @@ class TasksCard extends StatefulWidget {
   State<TasksCard> createState() => _TasksCardState();
 }
 
+TextEditingController taskTextController = TextEditingController();
+String taskName = "";
+int taskDate = 08092024;
+
 class _TasksCardState extends State<TasksCard> {
   @override
   Widget build(BuildContext context) {
-    TextEditingController taskTextController = TextEditingController();
-    String taskName = "ses";
-    int taskListId = 08092024;
-    List<String> taskList = [];
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.all(5),
@@ -30,11 +30,7 @@ class _TasksCardState extends State<TasksCard> {
           TaskTextField(
             textcontroller: taskTextController,
             onPressed: () {
-              setState(() {
-                taskName = taskTextController.text;
-                taskList.add(taskName);
-                print(taskList);
-              });
+              print(taskName);
             },
           ),
         ],
