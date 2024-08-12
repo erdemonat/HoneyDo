@@ -2,20 +2,29 @@ import 'package:isar/isar.dart';
 
 part 'task_model.g.dart';
 
-@collection
-class TaskItem {
+@Collection()
+class TaskData {
   Id id = Isar.autoIncrement;
-  String taskName;
 
-  TaskItem(this.taskName);
+  late String name;
+
+  final taskDates = IsarLinks<TaskDate>();
 }
 
-@collection
-class TaskItems {
+@Collection()
+class TaskDate {
   Id id = Isar.autoIncrement;
-  int taskDate;
 
-  final taskItems = IsarLink<TaskItem>();
+  late String date;
 
-  TaskItems(this.taskDate);
+  final tasks = IsarLinks<Task>();
+}
+
+@Collection()
+class Task {
+  Id id = Isar.autoIncrement;
+
+  late String name;
+
+  late int order;
 }
