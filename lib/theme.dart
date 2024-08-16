@@ -4,7 +4,7 @@ ThemeData darkTheme = ThemeData(
   brightness: Brightness.dark,
   scaffoldBackgroundColor: const Color.fromARGB(255, 28, 31, 38),
   colorScheme: const ColorScheme.dark(
-    primary: Color.fromARGB(255, 53, 55, 60),
+    primary: Color.fromARGB(255, 40, 45, 60),
     onPrimary: Colors.black12,
     inversePrimary: Color.fromARGB(255, 159, 172, 198),
     secondary: Colors.red,

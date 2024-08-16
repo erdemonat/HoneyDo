@@ -1,126 +1,127 @@
 import 'package:flutter/material.dart';
-import 'package:honeydo/components/build_step.dart';
-import 'package:syncfusion_flutter_gauges/gauges.dart';
+import 'package:honeydo/components/constants.dart';
 
-class TaskCard extends StatefulWidget {
-  TaskCard({
+class MyTaskCard extends StatefulWidget {
+  const MyTaskCard({
     super.key,
+    required this.tasks,
   });
 
+  final String tasks;
+
   @override
-  State<TaskCard> createState() => _TaskCardState();
+  MyTaskCardState createState() => MyTaskCardState();
 }
 
-class _TaskCardState extends State<TaskCard> {
-  bool isExpanded = false;
-  bool isComplete = false;
+class MyTaskCardState extends State<MyTaskCard> {
+  double _cardHeight = 100.0;
+  final List<SubtitleItem> _subtitles = [];
+  final TextEditingController _subtitleController = TextEditingController();
+
+  void _handleDoubleTap() {
+    setState(() {
+      _cardHeight = _cardHeight == 100.0 ? 200.0 : 100.0;
+    });
+  }
+
+  void _addSubtitle(String subtitleText) {
+    setState(() {
+      _subtitles.add(SubtitleItem(text: subtitleText));
+      _subtitleController.clear();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: isExpanded ? 120 : 60,
-      child: GestureDetector(
-        onDoubleTap: () {
-          setState(() {
-            isExpanded = !isExpanded;
-          });
-        },
+    return GestureDetector(
+      onDoubleTap: _handleDoubleTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        height:
+            _cardHeight + (_cardHeight == 200.0 ? (_subtitles.length * 30) : 0),
         child: Card(
-          color: Color(0xff1c1f26),
+          color: Theme.of(context).colorScheme.primary,
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(20.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Checkbox(
-                      value: true,
-                      onChanged: (value) {},
+                    Text('%100'),
+                    SizedBox(
+                      width: 30,
                     ),
                     Text(
-                      'Evi temizle',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    SingleChildScrollView(
-                      child: SizedBox(
-                        width: 300,
-                        height: 400,
-                        child: Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: SfLinearGauge(
-                            showTicks: false,
-                            showLabels: false,
-                            markerPointers: <LinearMarkerPointer>[
-                              LinearWidgetPointer(
-                                value: 0,
-                                position: LinearElementPosition.outside,
-                                child: buildStep(1, 'Ordered', isActive: true),
-                              ),
-                              LinearWidgetPointer(
-                                value: 33.3,
-                                position: LinearElementPosition.outside,
-                                child: buildStep(2, 'Packed', isActive: true),
-                              ),
-                              LinearWidgetPointer(
-                                value: 66.6,
-                                position: LinearElementPosition.outside,
-                                child: buildStep(3, 'Shipped', isActive: true),
-                              ),
-                              LinearWidgetPointer(
-                                value: 100,
-                                position: LinearElementPosition.outside,
-                                child:
-                                    buildStep(4, 'Delivered', isActive: false),
-                              ),
-                            ],
-                            ranges: [
-                              LinearGaugeRange(
-                                edgeStyle: LinearEdgeStyle.bothCurve,
-                                rangeShapeType: LinearRangeShapeType.curve,
-                                startValue: 0,
-                                endValue: 50,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      widget.tasks,
+                      style: cardTitleTextstyle,
                     ),
                   ],
                 ),
-                if (isExpanded)
-                  Column(
-                    children: [
-                      Row(
-                        children: [
-                          Text("• ", style: TextStyle(fontSize: 24)),
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isComplete = !isComplete;
-                              });
-                              (print("object"));
-                            },
-                            child: Text(
-                              "Odayı Temizle",
-                              style: TextStyle(
-                                decoration: isComplete
-                                    ? TextDecoration.none
-                                    : TextDecoration.lineThrough,
-                                decorationThickness: 14,
-                                decorationColor:
-                                    Color.fromARGB(62, 255, 79, 79),
-                              ),
-                            ),
-                          ),
-                        ],
+                const SizedBox(height: 10),
+                if (_cardHeight == 200.0) ...[
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: _subtitles.length,
+                      itemBuilder: (context, index) {
+                        return CheckboxListTile(
+                          controlAffinity: ListTileControlAffinity.leading,
+                          value: _subtitles[index].isChecked,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              _subtitles[index].isChecked = value ?? false;
+                            });
+                          },
+                          title: Text(_subtitles[index].text),
+                        );
+                      },
+                    ),
+                  ),
+                  CheckboxListTile(
+                    controlAffinity: ListTileControlAffinity.leading,
+                    value: false,
+                    onChanged: (value) {},
+                    title: TextField(
+                      onSubmitted: (value) {
+                        if (value.isNotEmpty) {
+                          _addSubtitle(value);
+                        }
+                      },
+                      decoration: InputDecoration(
+                        border: UnderlineInputBorder(),
                       ),
-                    ],
+                    ),
                   )
+                  // Align(
+                  //   alignment: Alignment.centerLeft,
+                  //   child: SizedBox(
+                  //     width: MediaQuery.of(context).size.width * 1 / 6,
+                  //     child: TextField(
+                  //       controller: _subtitleController,
+                  //       decoration: InputDecoration(
+                  //         border: InputBorder.none,
+                  //         enabledBorder: InputBorder.none,
+                  //         disabledBorder: InputBorder.none,
+                  //         focusedBorder: InputBorder.none,
+                  //         suffixIcon: IconButton(
+                  //             onPressed: () {
+                  //               final value = _subtitleController.text;
+                  //               if (value.isNotEmpty) {
+                  //                 _addSubtitle(value);
+                  //               }
+                  //             },
+                  //             icon: const Icon(Icons.add)),
+                  //         hintText: 'Ek görev ekle',
+                  //       ),
+                  //       onSubmitted: (value) {
+                  //         if (value.isNotEmpty) {
+                  //           _addSubtitle(value);
+                  //         }
+                  //       },
+                  //     ),
+                  //   ),
+                  // ),
+                ],
               ],
             ),
           ),
@@ -128,4 +129,11 @@ class _TaskCardState extends State<TaskCard> {
       ),
     );
   }
+}
+
+class SubtitleItem {
+  SubtitleItem({required this.text, this.isChecked = false});
+
+  String text;
+  bool isChecked;
 }

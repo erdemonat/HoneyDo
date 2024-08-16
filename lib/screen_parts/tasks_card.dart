@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:honeydo/components/task_card.dart';
 import 'package:honeydo/components/task_text_field.dart';
 import 'package:honeydo/main.dart';
-import 'package:honeydo/model/task_model.dart';
 import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
+import 'package:honeydo/model/task_model.dart';
 
 class TasksCard extends StatefulWidget {
   const TasksCard({super.key});
@@ -52,6 +53,7 @@ Future<void> createOrUpdateTaskData(
 
 class _TasksCardState extends State<TasksCard> {
   List<Task> tasks = [];
+  bool isDragging = false;
 
   @override
   void initState() {
@@ -71,6 +73,16 @@ class _TasksCardState extends State<TasksCard> {
         setState(() {});
       }
     }
+  }
+
+  Future<void> _deleteTask(int index) async {
+    final task = tasks[index];
+    await isar.writeTxn(() async {
+      await isar.tasks.delete(task.id);
+    });
+    setState(() {
+      tasks.removeAt(index);
+    });
   }
 
   Future<void> _onReorder(int oldIndex, int newIndex) async {
@@ -109,32 +121,80 @@ class _TasksCardState extends State<TasksCard> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
             child: tasks.isEmpty
                 ? const Text('Yapılacaklar Listesi Boş ....')
-                : ReorderableListView.builder(
-                    buildDefaultDragHandles: false,
+                : ListView.builder(
                     itemCount: tasks.length,
                     itemBuilder: (context, index) {
-                      return ListTile(
-                        key: ValueKey(tasks[index].id),
-                        title: Text(tasks[index].name),
-                        trailing: ReorderableDragStartListener(
-                          index: index,
-                          child: const Icon(
-                            Icons.drag_indicator_outlined,
-                          ),
+                      return DragTarget<int>(
+                        onAcceptWithDetails: (details) {
+                          int oldIndex = details.data;
+                          _onReorder(oldIndex, index);
+                        },
+                        builder: (context, candidateData, rejectedData) {
+                          return Draggable<int>(
+                            data: index,
+                            feedback: Material(
+                              color: Colors.transparent,
+                              child: MyTaskCard(tasks: tasks[index].name),
+                            ),
+                            childWhenDragging: Container(),
+                            onDragStarted: () {
+                              setState(() {
+                                isDragging = true;
+                              });
+                            },
+                            onDragCompleted: () {
+                              setState(() {
+                                isDragging = false;
+                              });
+                            },
+                            onDraggableCanceled: (_, __) {
+                              setState(() {
+                                isDragging = false;
+                              });
+                            },
+                            child: MyTaskCard(tasks: tasks[index].name),
+                          );
+                        },
+                      );
+                    },
+                  ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: TaskTextField(
+                  textcontroller: taskTextController,
+                  onPressed: onPressed,
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Visibility(
+                  visible: isDragging,
+                  child: DragTarget<int>(
+                    onAcceptWithDetails: (details) {
+                      _deleteTask(details.data);
+                    },
+                    builder: (context, candidateData, rejectedData) {
+                      return const Padding(
+                        padding: EdgeInsets.only(left: 10.0),
+                        child: Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                          size: 36.0,
                         ),
                       );
                     },
-                    onReorder: _onReorder,
                   ),
-          ),
-          TaskTextField(
-            textcontroller: taskTextController,
-            onPressed: onPressed,
+                ),
+              ),
+            ],
           ),
         ],
       ),
