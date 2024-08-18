@@ -138,7 +138,10 @@ class _TasksCardState extends State<TasksCard> {
                             data: index,
                             feedback: Material(
                               color: Colors.transparent,
-                              child: MyTaskCard(tasks: tasks[index].name),
+                              child: SizedBox(
+                                  height: 90,
+                                  width: double.maxFinite,
+                                  child: MyTaskCard(tasks: tasks[index].name)),
                             ),
                             childWhenDragging: Container(),
                             onDragStarted: () {
@@ -182,11 +185,11 @@ class _TasksCardState extends State<TasksCard> {
                       _deleteTask(details.data);
                     },
                     builder: (context, candidateData, rejectedData) {
-                      return const Padding(
-                        padding: EdgeInsets.only(left: 10.0),
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
                         child: Icon(
                           Icons.delete,
-                          color: Colors.red,
+                          color: Theme.of(context).colorScheme.tertiary,
                           size: 36.0,
                         ),
                       );

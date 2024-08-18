@@ -12,7 +12,7 @@ late Isar isar;
 void main() async {
   final dir = await getApplicationDocumentsDirectory();
   isar = await Isar.open(
-    [TaskDataSchema, TaskDateSchema, TaskSchema],
+    [TaskDataSchema, TaskDateSchema, TaskSchema, SubTaskSchema],
     directory: dir.path,
   );
   WidgetsFlutterBinding.ensureInitialized();

@@ -27,4 +27,15 @@ class Task {
   late String name;
 
   late int order;
+
+  final subtasks = IsarLink<SubTask>();
+}
+
+@Collection()
+class SubTask {
+  Id id = Isar.autoIncrement;
+
+  late String name;
+
+  late bool isChecked;
 }

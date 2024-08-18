@@ -616,6 +616,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  syncfusion_flutter_core:
+    dependency: transitive
+    description:
+      name: syncfusion_flutter_core
+      sha256: "24d7f43ff33bd6248c95d8b3312f6b9fe89637727ca778d60490b81ebd5bd8e7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "26.2.9"
+  syncfusion_flutter_gauges:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_gauges
+      sha256: defdbf39023d2e0c3abfe6ec19f16dad94722e4d6f5336b9eb756ed843f3d4be
+      url: "https://pub.dev"
+    source: hosted
+    version: "26.2.9"
   term_glyph:
     dependency: transitive
     description:
