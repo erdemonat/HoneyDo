@@ -25,28 +25,30 @@ class ProgressBar extends StatelessWidget {
 
     double stepValue = subTaskLength > 0 ? 100 / subTaskLength : 100.0;
 
-    markerPointers.add(
-      LinearWidgetPointer(
-        value: 0,
-        enableAnimation: false,
-        child: Container(
-          width: 24,
-          height: 24,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            border: Border.all(
-                width: 4,
-                color: completedTasks > 0 ? activeColor : inactiveColor),
-            borderRadius: const BorderRadius.all(Radius.circular(12)),
-          ),
-          child: Center(
-            child: completedTasks > 0
-                ? const Icon(Icons.check_rounded, size: 14, color: activeColor)
-                : const SizedBox(),
+    if (subTaskLength > 0)
+      markerPointers.add(
+        LinearWidgetPointer(
+          value: 0,
+          enableAnimation: false,
+          child: Container(
+            width: 24,
+            height: 24,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              border: Border.all(
+                  width: 4,
+                  color: completedTasks > 0 ? activeColor : inactiveColor),
+              borderRadius: const BorderRadius.all(Radius.circular(12)),
+            ),
+            child: Center(
+              child: completedTasks > 0
+                  ? const Icon(Icons.check_rounded,
+                      size: 14, color: activeColor)
+                  : const SizedBox(),
+            ),
           ),
         ),
-      ),
-    );
+      );
 
     for (int i = 1; i < subTaskLength; i++) {
       double pointerValue = i * stepValue;
@@ -78,7 +80,7 @@ class ProgressBar extends StatelessWidget {
 
     markerPointers.add(
       LinearWidgetPointer(
-        value: 100,
+        value: (subTaskLength != 0) ? 100 : 50,
         enableAnimation: false,
         child: Container(
           width: 24,
@@ -107,7 +109,7 @@ class ProgressBar extends StatelessWidget {
         showLabels: false,
         showTicks: false,
         axisTrackStyle: LinearAxisTrackStyle(
-          color: inactiveColor,
+          color: (subTaskLength != 0) ? inactiveColor : Colors.transparent,
         ),
         barPointers: <LinearBarPointer>[
           LinearBarPointer(
