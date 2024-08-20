@@ -106,7 +106,9 @@ class _TasksCardState extends State<TasksCard> {
   void onPressed() async {
     String taskName = taskTextController.text;
     String taskDate = DateFormat('ddMMyyyy').format(DateTime.now());
-    await createOrUpdateTaskData('Tasks Data', taskDate, taskName);
+    if (taskName.isNotEmpty) {
+      await createOrUpdateTaskData('Tasks Data', taskDate, taskName);
+    }
     taskTextController.clear();
     _loadTasks();
   }

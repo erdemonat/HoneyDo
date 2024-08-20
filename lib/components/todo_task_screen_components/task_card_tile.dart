@@ -70,11 +70,8 @@ class TaskCardTileState extends State<TaskCardTile> {
         }
       }
 
-      final totalItems = _subtitles.length + 1;
-      completionPercentage =
-          (completedSubtasks + (widget.tasks.isChecked ? 1 : 0)) /
-              totalItems *
-              100;
+      final totalItems = _subtitles.length;
+      completionPercentage = (completedSubtasks / totalItems) * 100;
 
       _currentExpandedHeight =
           _expandedBaseHeight + _subtitles.length * _subtitleHeightIncrement;
@@ -176,7 +173,7 @@ class TaskCardTileState extends State<TaskCardTile> {
 
       completionPercentage = (_subtitles.isNotEmpty
               ? (completedSubtasks + (widget.tasks.isChecked ? 1 : 0)) /
-                  (_subtitles.length + 1)
+                  (_subtitles.length)
               : 0.0) *
           100;
     });
