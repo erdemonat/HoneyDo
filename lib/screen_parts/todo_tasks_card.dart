@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:honeydo/components/task_card.dart';
-import 'package:honeydo/components/task_text_field.dart';
+import 'package:honeydo/components/todo_task_screen_components/task_card_tile.dart';
+import 'package:honeydo/components/todo_task_screen_components/task_text_field.dart';
 import 'package:honeydo/main.dart';
 import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
@@ -44,7 +44,8 @@ Future<void> createOrUpdateTaskData(
 
     final task = Task()
       ..name = taskName
-      ..order = nextOrder;
+      ..order = nextOrder
+      ..isChecked = false;
     await isar.tasks.put(task);
     taskDate.tasks.add(task);
     await taskDate.tasks.save();
@@ -141,7 +142,7 @@ class _TasksCardState extends State<TasksCard> {
                               child: SizedBox(
                                   height: 90,
                                   width: double.maxFinite,
-                                  child: MyTaskCard(tasks: tasks[index].name)),
+                                  child: TaskCardTile(tasks: tasks[index])),
                             ),
                             childWhenDragging: Container(),
                             onDragStarted: () {
@@ -159,7 +160,7 @@ class _TasksCardState extends State<TasksCard> {
                                 isDragging = false;
                               });
                             },
-                            child: MyTaskCard(tasks: tasks[index].name),
+                            child: TaskCardTile(tasks: tasks[index]),
                           );
                         },
                       );

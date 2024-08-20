@@ -991,13 +991,18 @@ const TaskSchema = CollectionSchema(
   name: r'Task',
   id: 2998003626758701373,
   properties: {
-    r'name': PropertySchema(
+    r'isChecked': PropertySchema(
       id: 0,
+      name: r'isChecked',
+      type: IsarType.bool,
+    ),
+    r'name': PropertySchema(
+      id: 1,
       name: r'name',
       type: IsarType.string,
     ),
     r'order': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'order',
       type: IsarType.long,
     )
@@ -1013,7 +1018,7 @@ const TaskSchema = CollectionSchema(
       id: -6792615499052850209,
       name: r'subtasks',
       target: r'SubTask',
-      single: true,
+      single: false,
     )
   },
   embeddedSchemas: {},
@@ -1039,8 +1044,9 @@ void _taskSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.name);
-  writer.writeLong(offsets[1], object.order);
+  writer.writeBool(offsets[0], object.isChecked);
+  writer.writeString(offsets[1], object.name);
+  writer.writeLong(offsets[2], object.order);
 }
 
 Task _taskDeserialize(
@@ -1051,8 +1057,9 @@ Task _taskDeserialize(
 ) {
   final object = Task();
   object.id = id;
-  object.name = reader.readString(offsets[0]);
-  object.order = reader.readLong(offsets[1]);
+  object.isChecked = reader.readBool(offsets[0]);
+  object.name = reader.readString(offsets[1]);
+  object.order = reader.readLong(offsets[2]);
   return object;
 }
 
@@ -1064,8 +1071,10 @@ P _taskDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readString(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 1:
+      return (reader.readString(offset)) as P;
+    case 2:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1209,6 +1218,15 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> isCheckedEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isChecked',
+        value: value,
       ));
     });
   }
@@ -1404,14 +1422,69 @@ extension TaskQueryLinks on QueryBuilder<Task, Task, QFilterCondition> {
     });
   }
 
-  QueryBuilder<Task, Task, QAfterFilterCondition> subtasksIsNull() {
+  QueryBuilder<Task, Task, QAfterFilterCondition> subtasksLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'subtasks', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> subtasksIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'subtasks', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> subtasksIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'subtasks', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> subtasksLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'subtasks', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> subtasksLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'subtasks', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> subtasksLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'subtasks', lower, includeLower, upper, includeUpper);
     });
   }
 }
 
 extension TaskQuerySortBy on QueryBuilder<Task, Task, QSortBy> {
+  QueryBuilder<Task, Task, QAfterSortBy> sortByIsChecked() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isChecked', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterSortBy> sortByIsCheckedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isChecked', Sort.desc);
+    });
+  }
+
   QueryBuilder<Task, Task, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -1450,6 +1523,18 @@ extension TaskQuerySortThenBy on QueryBuilder<Task, Task, QSortThenBy> {
     });
   }
 
+  QueryBuilder<Task, Task, QAfterSortBy> thenByIsChecked() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isChecked', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterSortBy> thenByIsCheckedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isChecked', Sort.desc);
+    });
+  }
+
   QueryBuilder<Task, Task, QAfterSortBy> thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -1476,6 +1561,12 @@ extension TaskQuerySortThenBy on QueryBuilder<Task, Task, QSortThenBy> {
 }
 
 extension TaskQueryWhereDistinct on QueryBuilder<Task, Task, QDistinct> {
+  QueryBuilder<Task, Task, QDistinct> distinctByIsChecked() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isChecked');
+    });
+  }
+
   QueryBuilder<Task, Task, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1494,6 +1585,12 @@ extension TaskQueryProperty on QueryBuilder<Task, Task, QQueryProperty> {
   QueryBuilder<Task, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<Task, bool, QQueryOperations> isCheckedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isChecked');
     });
   }
 
@@ -1538,7 +1635,14 @@ const SubTaskSchema = CollectionSchema(
   deserializeProp: _subTaskDeserializeProp,
   idName: r'id',
   indexes: {},
-  links: {},
+  links: {
+    r'task': LinkSchema(
+      id: 135278000390379861,
+      name: r'task',
+      target: r'Task',
+      single: true,
+    )
+  },
   embeddedSchemas: {},
   getId: _subTaskGetId,
   getLinks: _subTaskGetLinks,
@@ -1600,11 +1704,12 @@ Id _subTaskGetId(SubTask object) {
 }
 
 List<IsarLinkBase<dynamic>> _subTaskGetLinks(SubTask object) {
-  return [];
+  return [object.task];
 }
 
 void _subTaskAttach(IsarCollection<dynamic> col, Id id, SubTask object) {
   object.id = id;
+  object.task.attach(col, col.isar.collection<Task>(), r'task', id);
 }
 
 extension SubTaskQueryWhereSort on QueryBuilder<SubTask, SubTask, QWhere> {
@@ -1881,7 +1986,20 @@ extension SubTaskQueryObject
     on QueryBuilder<SubTask, SubTask, QFilterCondition> {}
 
 extension SubTaskQueryLinks
-    on QueryBuilder<SubTask, SubTask, QFilterCondition> {}
+    on QueryBuilder<SubTask, SubTask, QFilterCondition> {
+  QueryBuilder<SubTask, SubTask, QAfterFilterCondition> task(
+      FilterQuery<Task> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'task');
+    });
+  }
+
+  QueryBuilder<SubTask, SubTask, QAfterFilterCondition> taskIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'task', 0, true, 0, true);
+    });
+  }
+}
 
 extension SubTaskQuerySortBy on QueryBuilder<SubTask, SubTask, QSortBy> {
   QueryBuilder<SubTask, SubTask, QAfterSortBy> sortByIsChecked() {

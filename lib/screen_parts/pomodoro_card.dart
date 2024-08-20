@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:honeydo/components/settings_sheet.dart';
+import 'package:honeydo/components/pomodoro_components/settings_sheet.dart';
 
 class PomodoroCard extends StatefulWidget {
   const PomodoroCard({super.key});

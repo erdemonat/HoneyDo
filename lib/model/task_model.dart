@@ -28,7 +28,9 @@ class Task {
 
   late int order;
 
-  final subtasks = IsarLink<SubTask>();
+  late bool isChecked;
+
+  final subtasks = IsarLinks<SubTask>();
 }
 
 @Collection()
@@ -38,4 +40,6 @@ class SubTask {
   late String name;
 
   late bool isChecked;
+
+  final task = IsarLink<Task>();
 }

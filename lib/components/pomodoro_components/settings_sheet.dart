@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:honeydo/components/digit_text_field.dart';
+import 'package:honeydo/components/pomodoro_components/digit_text_field.dart';
 
 class SettingsSheet extends StatefulWidget {
   final int userPomodoroDuration;

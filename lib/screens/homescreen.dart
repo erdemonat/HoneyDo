@@ -4,7 +4,7 @@ import 'package:honeydo/screen_parts/calender_card.dart';
 import 'package:honeydo/screen_parts/motivation_card.dart';
 import 'package:honeydo/screen_parts/pomodoro_card.dart';
 import 'package:honeydo/components/window_buttons.dart';
-import 'package:honeydo/screen_parts/tasks_card.dart';
+import 'package:honeydo/screen_parts/todo_tasks_card.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
