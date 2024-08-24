@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:honeydo/components/constants.dart';
 import 'package:honeydo/components/todo_task_screen_components/subtitleitem_model.dart';
 
 class SubtitleListTile extends StatelessWidget {
@@ -34,7 +35,10 @@ class SubtitleListTile extends StatelessWidget {
             controlAffinity: ListTileControlAffinity.leading,
             value: subtitles[index].isChecked,
             onChanged: (value) => onUpdateCheckStatus(index, value),
-            title: Text(subtitles[index].text),
+            title: Text(
+              subtitles[index].text,
+              style: cardSubTitleTextStyle(context),
+            ),
           ),
         );
       },

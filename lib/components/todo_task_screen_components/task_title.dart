@@ -62,7 +62,7 @@ class TaskTitleState extends State<TaskTitle> {
           onPressed: widget.onPressed,
           child: Text(
             widget.task.name,
-            style: cardTitleTextstyle,
+            style: cardTitleTextStyle(context),
           ),
         ),
       ),
