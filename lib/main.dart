@@ -1,13 +1,14 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:honeydo/model/task_model.dart';
 import 'package:honeydo/screens/homescreen.dart';
 import 'package:honeydo/theme.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
 late Isar isar;
+final FlutterLocalization localization = FlutterLocalization.instance;
 
 void main() async {
   final dir = await getApplicationDocumentsDirectory();
@@ -17,7 +18,7 @@ void main() async {
   );
   WidgetsFlutterBinding.ensureInitialized();
   appWindow.size = const Size(1200, 675);
-  initializeDateFormatting('tr_TR', null).then((_) => runApp(const MyApp()));
+  runApp(const MyApp());
   appWindow.show();
   doWhenWindowReady(() {
     final win = appWindow;
@@ -36,6 +37,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      localizationsDelegates: localization.localizationsDelegates,
+      locale: const Locale('tr', 'TR'),
+      supportedLocales: const [Locale('tr')],
       theme: darkTheme,
       debugShowCheckedModeBanner: false,
       home: const HomeScreen(),

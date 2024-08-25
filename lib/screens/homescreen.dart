@@ -1,14 +1,22 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:honeydo/screen_parts/calender_card.dart';
+import 'package:honeydo/screen_parts/large_calendart_card.dart';
 import 'package:honeydo/screen_parts/motivation_card.dart';
 import 'package:honeydo/screen_parts/pomodoro_card.dart';
 import 'package:honeydo/components/window_buttons.dart';
 import 'package:honeydo/screen_parts/todo_tasks_card.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+bool isCalendarToggle = false;
+
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +64,9 @@ class HomeScreen extends StatelessWidget {
                                   flex: 10,
                                   child: Container(
                                     //margin: const EdgeInsets.all(5),
-                                    child: const PomodoroCard(),
+                                    child: isCalendarToggle
+                                        ? LargeCalendartCard()
+                                        : const PomodoroCard(),
                                   ),
                                 ),
                               ],
@@ -83,7 +93,14 @@ class HomeScreen extends StatelessWidget {
                                     //color: Colors.blue,
                                     height: 200,
                                     width: double.infinity,
-                                    child: const CalenderCard(),
+                                    child: CalenderCard(
+                                      onCalendarIconPress: () {
+                                        setState(() {
+                                          isCalendarToggle = !isCalendarToggle;
+                                          print(isCalendarToggle);
+                                        });
+                                      },
+                                    ),
                                   ),
                                 ),
                                 Expanded(
@@ -91,7 +108,7 @@ class HomeScreen extends StatelessWidget {
                                   child: Container(
                                     //margin: const EdgeInsets.all(5),
 
-                                    child: TasksCard(),
+                                    child: const TasksCard(),
                                   ),
                                 ),
                               ],

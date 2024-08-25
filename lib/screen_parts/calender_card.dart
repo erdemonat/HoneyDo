@@ -4,7 +4,8 @@ import 'package:honeydo/components/constants.dart';
 import 'package:intl/intl.dart';
 
 class CalenderCard extends StatefulWidget {
-  const CalenderCard({super.key});
+  final void Function() onCalendarIconPress;
+  const CalenderCard({super.key, required this.onCalendarIconPress});
 
   @override
   State<CalenderCard> createState() => _CalenderCardState();
@@ -59,7 +60,7 @@ class _CalenderCardState extends State<CalenderCard> {
                   width: 50,
                   height: 50,
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: widget.onCalendarIconPress,
                     icon: const Icon(Icons.date_range_rounded),
                   ),
                 ),
@@ -72,7 +73,7 @@ class _CalenderCardState extends State<CalenderCard> {
                   EasyInfiniteDateTimeLine(
                     dayProps: const EasyDayProps(width: 125),
                     itemBuilder: (context, date, isSelected, onTap) {
-                      final dayName = DateFormat('EEEE', 'tr_TR').format(date);
+                      final dayName = DateFormat('EE', 'tr_TR').format(date);
                       return InkWell(
                         borderRadius: BorderRadius.circular(16),
                         onTap: onTap,
