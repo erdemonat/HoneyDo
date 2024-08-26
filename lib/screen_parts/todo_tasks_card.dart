@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:honeydo/components/todo_task_screen_components/task_card_tile.dart';
 import 'package:honeydo/components/todo_task_screen_components/task_text_field.dart';
 import 'package:honeydo/main.dart';
+import 'package:honeydo/model/focus_date_model.dart';
 import 'package:intl/intl.dart';
 import 'package:isar/isar.dart';
 import 'package:honeydo/model/task_model.dart';
+import 'package:provider/provider.dart';
 
 class TasksCard extends StatefulWidget {
   const TasksCard({super.key});
@@ -59,11 +61,24 @@ class _TasksCardState extends State<TasksCard> {
   @override
   void initState() {
     super.initState();
-    _loadTasks();
+    loadTasks();
+
+    final focusDateModel = Provider.of<FocusDateModel>(context, listen: false);
+    focusDateModel.addListener(() {
+      loadTasks();
+    });
   }
 
-  Future<void> _loadTasks() async {
-    String taskDate = DateFormat('ddMMyyyy').format(DateTime.now());
+  @override
+  void dispose() {
+    final focusDateModel = Provider.of<FocusDateModel>(context, listen: false);
+    focusDateModel.removeListener(loadTasks);
+    super.dispose();
+  }
+
+  Future<void> loadTasks() async {
+    final focusDateModel = Provider.of<FocusDateModel>(context, listen: false);
+    String taskDate = DateFormat('ddMMyyyy').format(focusDateModel.focusDate);
     TaskData? taskData = await getTaskDataByName('Tasks Data');
     if (taskData != null) {
       TaskDate? taskDateObj = await getTaskDateByDate(taskData, taskDate);
@@ -104,13 +119,14 @@ class _TasksCardState extends State<TasksCard> {
   }
 
   void onPressed() async {
+    final focusDateModel = Provider.of<FocusDateModel>(context, listen: false);
     String taskName = taskTextController.text;
-    String taskDate = DateFormat('ddMMyyyy').format(DateTime.now());
+    String taskDate = DateFormat('ddMMyyyy').format(focusDateModel.focusDate);
     if (taskName.isNotEmpty) {
       await createOrUpdateTaskData('Tasks Data', taskDate, taskName);
     }
     taskTextController.clear();
-    _loadTasks();
+    loadTasks();
   }
 
   @override

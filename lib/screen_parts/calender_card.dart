@@ -1,11 +1,16 @@
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:honeydo/components/constants.dart';
+import 'package:honeydo/main.dart';
+import 'package:honeydo/model/focus_date_model.dart';
+import 'package:honeydo/model/task_model.dart';
+import 'package:honeydo/screen_parts/large_calendart_card.dart';
+import 'package:honeydo/screen_parts/todo_tasks_card.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class CalenderCard extends StatefulWidget {
-  final void Function() onCalendarIconPress;
-  const CalenderCard({super.key, required this.onCalendarIconPress});
+  const CalenderCard({super.key});
 
   @override
   State<CalenderCard> createState() => _CalenderCardState();
@@ -14,13 +19,31 @@ class CalenderCard extends StatefulWidget {
 final EasyInfiniteDateTimelineController _controller =
     EasyInfiniteDateTimelineController();
 DateTime now = DateTime.now();
-DateTime _focusDate = DateTime.now();
-DateTime firstDate = now.subtract(const Duration(days: 15));
-DateTime lastDate = now.add(const Duration(days: 15));
+DateTime firstDate = DateTime(1900);
+DateTime lastDate = DateTime(2100);
+
+Future<void> _createEmptyTaskDate(String taskDataName, String date) async {
+  await isar.writeTxn(() async {
+    TaskData? taskData = await getTaskDataByName(taskDataName);
+    if (taskData == null) {
+      taskData = TaskData()..name = taskDataName;
+      await isar.taskDatas.put(taskData);
+    }
+    TaskDate? taskDate = await getTaskDateByDate(taskData, date);
+    if (taskDate == null) {
+      taskDate = TaskDate()..date = date;
+      await isar.taskDates.put(taskDate);
+      taskData.taskDates.add(taskDate);
+      await taskData.taskDates.save();
+    }
+    await taskDate.tasks.load();
+  });
+}
 
 class _CalenderCardState extends State<CalenderCard> {
   @override
   Widget build(BuildContext context) {
+    final focusDateModel = Provider.of<FocusDateModel>(context);
     return Padding(
         padding: const EdgeInsets.all(5),
         child: Row(
@@ -40,9 +63,9 @@ class _CalenderCardState extends State<CalenderCard> {
                     onPressed: () {
                       VoidCallback;
                       setState(() {
-                        _focusDate = now;
+                        focusDateModel.updateFocusDate(now);
                         _controller.animateToDate(
-                          _focusDate,
+                          focusDateModel.focusDate,
                           duration: const Duration(milliseconds: 500),
                           curve: Curves.easeInOut,
                         );
@@ -60,7 +83,31 @@ class _CalenderCardState extends State<CalenderCard> {
                   width: 50,
                   height: 50,
                   child: IconButton(
-                    onPressed: widget.onCalendarIconPress,
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          content: SizedBox(
+                            height: 250,
+                            width: 400,
+                            child: LargeCalendartCard(
+                              onSelectionChanged: (args) {
+                                setState(() {
+                                  focusDateModel
+                                      .updateFocusDate(args.value as DateTime);
+                                  _controller.animateToDate(
+                                    focusDateModel.focusDate,
+                                    duration: const Duration(milliseconds: 500),
+                                    curve: Curves.easeInOut,
+                                  );
+                                });
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                     icon: const Icon(Icons.date_range_rounded),
                   ),
                 ),
@@ -69,7 +116,10 @@ class _CalenderCardState extends State<CalenderCard> {
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text(DateFormat('MMMM yyyy', 'tr_TR')
+                      .format(focusDateModel.focusDate)),
                   EasyInfiniteDateTimeLine(
                     dayProps: const EasyDayProps(width: 125),
                     itemBuilder: (context, date, isSelected, onTap) {
@@ -107,12 +157,17 @@ class _CalenderCardState extends State<CalenderCard> {
                     locale: "tr_TR",
                     controller: _controller,
                     firstDate: firstDate,
-                    focusDate: _focusDate,
+                    focusDate: focusDateModel.focusDate,
                     lastDate: lastDate,
                     onDateChange: (selectedDate) {
                       setState(
                         () {
-                          _focusDate = selectedDate;
+                          focusDateModel.updateFocusDate(selectedDate);
+                          _createEmptyTaskDate(
+                            'Tasks Data',
+                            DateFormat('ddMMyyyy')
+                                .format(focusDateModel.focusDate),
+                          );
                         },
                       );
                     },

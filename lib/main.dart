@@ -1,11 +1,13 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:honeydo/model/focus_date_model.dart';
 import 'package:honeydo/model/task_model.dart';
 import 'package:honeydo/screens/homescreen.dart';
 import 'package:honeydo/theme.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 
 late Isar isar;
 final FlutterLocalization localization = FlutterLocalization.instance;
@@ -18,7 +20,10 @@ void main() async {
   );
   WidgetsFlutterBinding.ensureInitialized();
   appWindow.size = const Size(1200, 675);
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (BuildContext context) => FocusDateModel(),
+    child: const MyApp(),
+  ));
   appWindow.show();
   doWhenWindowReady(() {
     final win = appWindow;

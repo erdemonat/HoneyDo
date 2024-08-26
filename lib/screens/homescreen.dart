@@ -1,7 +1,6 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:honeydo/screen_parts/calender_card.dart';
-import 'package:honeydo/screen_parts/large_calendart_card.dart';
 import 'package:honeydo/screen_parts/motivation_card.dart';
 import 'package:honeydo/screen_parts/pomodoro_card.dart';
 import 'package:honeydo/components/window_buttons.dart';
@@ -13,8 +12,6 @@ class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
-
-bool isCalendarToggle = false;
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
@@ -64,9 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   flex: 10,
                                   child: Container(
                                     //margin: const EdgeInsets.all(5),
-                                    child: isCalendarToggle
-                                        ? LargeCalendartCard()
-                                        : const PomodoroCard(),
+                                    child: const PomodoroCard(),
                                   ),
                                 ),
                               ],
@@ -93,14 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     //color: Colors.blue,
                                     height: 200,
                                     width: double.infinity,
-                                    child: CalenderCard(
-                                      onCalendarIconPress: () {
-                                        setState(() {
-                                          isCalendarToggle = !isCalendarToggle;
-                                          print(isCalendarToggle);
-                                        });
-                                      },
-                                    ),
+                                    child: CalenderCard(),
                                   ),
                                 ),
                                 Expanded(
