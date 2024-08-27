@@ -71,7 +71,17 @@ class TaskCardTileState extends State<TaskCardTile> {
       }
 
       final totalItems = _subtitles.length;
-      completionPercentage = (completedSubtasks / totalItems) * 100;
+      if (totalItems > 0) {
+        completionPercentage = (completedSubtasks / totalItems) * 100;
+      } else {
+        // Reflect task completion status when no subtasks are present
+        completionPercentage = widget.tasks.isChecked ? 100.0 : 0.0;
+      }
+
+      // Ensure the percentage doesn't exceed 100%
+      if (completionPercentage > 100) {
+        completionPercentage = 100.0;
+      }
 
       _currentExpandedHeight =
           _expandedBaseHeight + _subtitles.length * _subtitleHeightIncrement;
@@ -94,6 +104,18 @@ class TaskCardTileState extends State<TaskCardTile> {
         for (var subtitle in _subtitles) {
           subtitle.isChecked = false;
         }
+      }
+
+      // Update completion percentage when there are no subtasks
+      if (_subtitles.isEmpty) {
+        completionPercentage = isChecked ? 100.0 : 0.0;
+      } else {
+        completionPercentage = (completedSubtasks / _subtitles.length) * 100;
+      }
+
+      // Ensure the percentage doesn't exceed 100%
+      if (completionPercentage > 100) {
+        completionPercentage = 100.0;
       }
     });
 
@@ -176,6 +198,11 @@ class TaskCardTileState extends State<TaskCardTile> {
                   (_subtitles.length)
               : 0.0) *
           100;
+
+      // Ensure the percentage doesn't exceed 100%
+      if (completionPercentage > 100) {
+        completionPercentage = 100.0;
+      }
     });
   }
 
