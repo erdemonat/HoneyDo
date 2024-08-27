@@ -9,13 +9,13 @@ part of 'task_model.dart';
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-extension GetTaskDataCollection on Isar {
-  IsarCollection<TaskData> get taskDatas => this.collection();
+extension GetHoneyDoDataCollection on Isar {
+  IsarCollection<HoneyDoData> get honeyDoDatas => this.collection();
 }
 
-const TaskDataSchema = CollectionSchema(
-  name: r'TaskData',
-  id: 6386124436821998370,
+const HoneyDoDataSchema = CollectionSchema(
+  name: r'HoneyDoData',
+  id: -8525945276220776969,
   properties: {
     r'name': PropertySchema(
       id: 0,
@@ -23,29 +23,29 @@ const TaskDataSchema = CollectionSchema(
       type: IsarType.string,
     )
   },
-  estimateSize: _taskDataEstimateSize,
-  serialize: _taskDataSerialize,
-  deserialize: _taskDataDeserialize,
-  deserializeProp: _taskDataDeserializeProp,
+  estimateSize: _honeyDoDataEstimateSize,
+  serialize: _honeyDoDataSerialize,
+  deserialize: _honeyDoDataDeserialize,
+  deserializeProp: _honeyDoDataDeserializeProp,
   idName: r'id',
   indexes: {},
   links: {
-    r'taskDates': LinkSchema(
-      id: -3447548421858882862,
-      name: r'taskDates',
-      target: r'TaskDate',
+    r'dateLinks': LinkSchema(
+      id: -4306945774667993528,
+      name: r'dateLinks',
+      target: r'DateLinks',
       single: false,
     )
   },
   embeddedSchemas: {},
-  getId: _taskDataGetId,
-  getLinks: _taskDataGetLinks,
-  attach: _taskDataAttach,
+  getId: _honeyDoDataGetId,
+  getLinks: _honeyDoDataGetLinks,
+  attach: _honeyDoDataAttach,
   version: '3.1.0+1',
 );
 
-int _taskDataEstimateSize(
-  TaskData object,
+int _honeyDoDataEstimateSize(
+  HoneyDoData object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
@@ -54,8 +54,8 @@ int _taskDataEstimateSize(
   return bytesCount;
 }
 
-void _taskDataSerialize(
-  TaskData object,
+void _honeyDoDataSerialize(
+  HoneyDoData object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
@@ -63,19 +63,19 @@ void _taskDataSerialize(
   writer.writeString(offsets[0], object.name);
 }
 
-TaskData _taskDataDeserialize(
+HoneyDoData _honeyDoDataDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = TaskData();
+  final object = HoneyDoData();
   object.id = id;
   object.name = reader.readString(offsets[0]);
   return object;
 }
 
-P _taskDataDeserializeProp<P>(
+P _honeyDoDataDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -89,30 +89,33 @@ P _taskDataDeserializeProp<P>(
   }
 }
 
-Id _taskDataGetId(TaskData object) {
+Id _honeyDoDataGetId(HoneyDoData object) {
   return object.id;
 }
 
-List<IsarLinkBase<dynamic>> _taskDataGetLinks(TaskData object) {
-  return [object.taskDates];
+List<IsarLinkBase<dynamic>> _honeyDoDataGetLinks(HoneyDoData object) {
+  return [object.dateLinks];
 }
 
-void _taskDataAttach(IsarCollection<dynamic> col, Id id, TaskData object) {
+void _honeyDoDataAttach(
+    IsarCollection<dynamic> col, Id id, HoneyDoData object) {
   object.id = id;
-  object.taskDates
-      .attach(col, col.isar.collection<TaskDate>(), r'taskDates', id);
+  object.dateLinks
+      .attach(col, col.isar.collection<DateLinks>(), r'dateLinks', id);
 }
 
-extension TaskDataQueryWhereSort on QueryBuilder<TaskData, TaskData, QWhere> {
-  QueryBuilder<TaskData, TaskData, QAfterWhere> anyId() {
+extension HoneyDoDataQueryWhereSort
+    on QueryBuilder<HoneyDoData, HoneyDoData, QWhere> {
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 }
 
-extension TaskDataQueryWhere on QueryBuilder<TaskData, TaskData, QWhereClause> {
-  QueryBuilder<TaskData, TaskData, QAfterWhereClause> idEqualTo(Id id) {
+extension HoneyDoDataQueryWhere
+    on QueryBuilder<HoneyDoData, HoneyDoData, QWhereClause> {
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterWhereClause> idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
         lower: id,
@@ -121,7 +124,8 @@ extension TaskDataQueryWhere on QueryBuilder<TaskData, TaskData, QWhereClause> {
     });
   }
 
-  QueryBuilder<TaskData, TaskData, QAfterWhereClause> idNotEqualTo(Id id) {
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterWhereClause> idNotEqualTo(
+      Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -143,7 +147,7 @@ extension TaskDataQueryWhere on QueryBuilder<TaskData, TaskData, QWhereClause> {
     });
   }
 
-  QueryBuilder<TaskData, TaskData, QAfterWhereClause> idGreaterThan(Id id,
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterWhereClause> idGreaterThan(Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -152,7 +156,7 @@ extension TaskDataQueryWhere on QueryBuilder<TaskData, TaskData, QWhereClause> {
     });
   }
 
-  QueryBuilder<TaskData, TaskData, QAfterWhereClause> idLessThan(Id id,
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterWhereClause> idLessThan(Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -161,7 +165,7 @@ extension TaskDataQueryWhere on QueryBuilder<TaskData, TaskData, QWhereClause> {
     });
   }
 
-  QueryBuilder<TaskData, TaskData, QAfterWhereClause> idBetween(
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterWhereClause> idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
@@ -178,9 +182,10 @@ extension TaskDataQueryWhere on QueryBuilder<TaskData, TaskData, QWhereClause> {
   }
 }
 
-extension TaskDataQueryFilter
-    on QueryBuilder<TaskData, TaskData, QFilterCondition> {
-  QueryBuilder<TaskData, TaskData, QAfterFilterCondition> idEqualTo(Id value) {
+extension HoneyDoDataQueryFilter
+    on QueryBuilder<HoneyDoData, HoneyDoData, QFilterCondition> {
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterFilterCondition> idEqualTo(
+      Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -189,7 +194,7 @@ extension TaskDataQueryFilter
     });
   }
 
-  QueryBuilder<TaskData, TaskData, QAfterFilterCondition> idGreaterThan(
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterFilterCondition> idGreaterThan(
     Id value, {
     bool include = false,
   }) {
@@ -202,7 +207,7 @@ extension TaskDataQueryFilter
     });
   }
 
-  QueryBuilder<TaskData, TaskData, QAfterFilterCondition> idLessThan(
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterFilterCondition> idLessThan(
     Id value, {
     bool include = false,
   }) {
@@ -215,7 +220,7 @@ extension TaskDataQueryFilter
     });
   }
 
-  QueryBuilder<TaskData, TaskData, QAfterFilterCondition> idBetween(
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterFilterCondition> idBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -232,7 +237,7 @@ extension TaskDataQueryFilter
     });
   }
 
-  QueryBuilder<TaskData, TaskData, QAfterFilterCondition> nameEqualTo(
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterFilterCondition> nameEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -245,7 +250,7 @@ extension TaskDataQueryFilter
     });
   }
 
-  QueryBuilder<TaskData, TaskData, QAfterFilterCondition> nameGreaterThan(
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterFilterCondition> nameGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -260,7 +265,7 @@ extension TaskDataQueryFilter
     });
   }
 
-  QueryBuilder<TaskData, TaskData, QAfterFilterCondition> nameLessThan(
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterFilterCondition> nameLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -275,7 +280,7 @@ extension TaskDataQueryFilter
     });
   }
 
-  QueryBuilder<TaskData, TaskData, QAfterFilterCondition> nameBetween(
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterFilterCondition> nameBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -294,7 +299,7 @@ extension TaskDataQueryFilter
     });
   }
 
-  QueryBuilder<TaskData, TaskData, QAfterFilterCondition> nameStartsWith(
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterFilterCondition> nameStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -307,7 +312,7 @@ extension TaskDataQueryFilter
     });
   }
 
-  QueryBuilder<TaskData, TaskData, QAfterFilterCondition> nameEndsWith(
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterFilterCondition> nameEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -320,7 +325,7 @@ extension TaskDataQueryFilter
     });
   }
 
-  QueryBuilder<TaskData, TaskData, QAfterFilterCondition> nameContains(
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterFilterCondition> nameContains(
       String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -332,7 +337,7 @@ extension TaskDataQueryFilter
     });
   }
 
-  QueryBuilder<TaskData, TaskData, QAfterFilterCondition> nameMatches(
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterFilterCondition> nameMatches(
       String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -344,7 +349,7 @@ extension TaskDataQueryFilter
     });
   }
 
-  QueryBuilder<TaskData, TaskData, QAfterFilterCondition> nameIsEmpty() {
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterFilterCondition> nameIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'name',
@@ -353,7 +358,8 @@ extension TaskDataQueryFilter
     });
   }
 
-  QueryBuilder<TaskData, TaskData, QAfterFilterCondition> nameIsNotEmpty() {
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterFilterCondition>
+      nameIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'name',
@@ -363,60 +369,61 @@ extension TaskDataQueryFilter
   }
 }
 
-extension TaskDataQueryObject
-    on QueryBuilder<TaskData, TaskData, QFilterCondition> {}
+extension HoneyDoDataQueryObject
+    on QueryBuilder<HoneyDoData, HoneyDoData, QFilterCondition> {}
 
-extension TaskDataQueryLinks
-    on QueryBuilder<TaskData, TaskData, QFilterCondition> {
-  QueryBuilder<TaskData, TaskData, QAfterFilterCondition> taskDates(
-      FilterQuery<TaskDate> q) {
+extension HoneyDoDataQueryLinks
+    on QueryBuilder<HoneyDoData, HoneyDoData, QFilterCondition> {
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterFilterCondition> dateLinks(
+      FilterQuery<DateLinks> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'taskDates');
+      return query.link(q, r'dateLinks');
     });
   }
 
-  QueryBuilder<TaskData, TaskData, QAfterFilterCondition>
-      taskDatesLengthEqualTo(int length) {
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterFilterCondition>
+      dateLinksLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'taskDates', length, true, length, true);
+      return query.linkLength(r'dateLinks', length, true, length, true);
     });
   }
 
-  QueryBuilder<TaskData, TaskData, QAfterFilterCondition> taskDatesIsEmpty() {
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterFilterCondition>
+      dateLinksIsEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'taskDates', 0, true, 0, true);
+      return query.linkLength(r'dateLinks', 0, true, 0, true);
     });
   }
 
-  QueryBuilder<TaskData, TaskData, QAfterFilterCondition>
-      taskDatesIsNotEmpty() {
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterFilterCondition>
+      dateLinksIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'taskDates', 0, false, 999999, true);
+      return query.linkLength(r'dateLinks', 0, false, 999999, true);
     });
   }
 
-  QueryBuilder<TaskData, TaskData, QAfterFilterCondition>
-      taskDatesLengthLessThan(
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterFilterCondition>
+      dateLinksLengthLessThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'taskDates', 0, true, length, include);
+      return query.linkLength(r'dateLinks', 0, true, length, include);
     });
   }
 
-  QueryBuilder<TaskData, TaskData, QAfterFilterCondition>
-      taskDatesLengthGreaterThan(
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterFilterCondition>
+      dateLinksLengthGreaterThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'taskDates', length, include, 999999, true);
+      return query.linkLength(r'dateLinks', length, include, 999999, true);
     });
   }
 
-  QueryBuilder<TaskData, TaskData, QAfterFilterCondition>
-      taskDatesLengthBetween(
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterFilterCondition>
+      dateLinksLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -424,55 +431,56 @@ extension TaskDataQueryLinks
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(
-          r'taskDates', lower, includeLower, upper, includeUpper);
+          r'dateLinks', lower, includeLower, upper, includeUpper);
     });
   }
 }
 
-extension TaskDataQuerySortBy on QueryBuilder<TaskData, TaskData, QSortBy> {
-  QueryBuilder<TaskData, TaskData, QAfterSortBy> sortByName() {
+extension HoneyDoDataQuerySortBy
+    on QueryBuilder<HoneyDoData, HoneyDoData, QSortBy> {
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
     });
   }
 
-  QueryBuilder<TaskData, TaskData, QAfterSortBy> sortByNameDesc() {
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterSortBy> sortByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
 }
 
-extension TaskDataQuerySortThenBy
-    on QueryBuilder<TaskData, TaskData, QSortThenBy> {
-  QueryBuilder<TaskData, TaskData, QAfterSortBy> thenById() {
+extension HoneyDoDataQuerySortThenBy
+    on QueryBuilder<HoneyDoData, HoneyDoData, QSortThenBy> {
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<TaskData, TaskData, QAfterSortBy> thenByIdDesc() {
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 
-  QueryBuilder<TaskData, TaskData, QAfterSortBy> thenByName() {
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterSortBy> thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
     });
   }
 
-  QueryBuilder<TaskData, TaskData, QAfterSortBy> thenByNameDesc() {
+  QueryBuilder<HoneyDoData, HoneyDoData, QAfterSortBy> thenByNameDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.desc);
     });
   }
 }
 
-extension TaskDataQueryWhereDistinct
-    on QueryBuilder<TaskData, TaskData, QDistinct> {
-  QueryBuilder<TaskData, TaskData, QDistinct> distinctByName(
+extension HoneyDoDataQueryWhereDistinct
+    on QueryBuilder<HoneyDoData, HoneyDoData, QDistinct> {
+  QueryBuilder<HoneyDoData, HoneyDoData, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
@@ -480,15 +488,15 @@ extension TaskDataQueryWhereDistinct
   }
 }
 
-extension TaskDataQueryProperty
-    on QueryBuilder<TaskData, TaskData, QQueryProperty> {
-  QueryBuilder<TaskData, int, QQueryOperations> idProperty() {
+extension HoneyDoDataQueryProperty
+    on QueryBuilder<HoneyDoData, HoneyDoData, QQueryProperty> {
+  QueryBuilder<HoneyDoData, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
     });
   }
 
-  QueryBuilder<TaskData, String, QQueryOperations> nameProperty() {
+  QueryBuilder<HoneyDoData, String, QQueryOperations> nameProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'name');
     });
@@ -498,13 +506,13 @@ extension TaskDataQueryProperty
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-extension GetTaskDateCollection on Isar {
-  IsarCollection<TaskDate> get taskDates => this.collection();
+extension GetDateLinksCollection on Isar {
+  IsarCollection<DateLinks> get dateLinks => this.collection();
 }
 
-const TaskDateSchema = CollectionSchema(
-  name: r'TaskDate',
-  id: 698810487906281258,
+const DateLinksSchema = CollectionSchema(
+  name: r'DateLinks',
+  id: 8586730241737920456,
   properties: {
     r'date': PropertySchema(
       id: 0,
@@ -512,29 +520,35 @@ const TaskDateSchema = CollectionSchema(
       type: IsarType.string,
     )
   },
-  estimateSize: _taskDateEstimateSize,
-  serialize: _taskDateSerialize,
-  deserialize: _taskDateDeserialize,
-  deserializeProp: _taskDateDeserializeProp,
+  estimateSize: _dateLinksEstimateSize,
+  serialize: _dateLinksSerialize,
+  deserialize: _dateLinksDeserialize,
+  deserializeProp: _dateLinksDeserializeProp,
   idName: r'id',
   indexes: {},
   links: {
     r'tasks': LinkSchema(
-      id: -6983227563795075869,
+      id: 322019366809658800,
       name: r'tasks',
       target: r'Task',
+      single: false,
+    ),
+    r'meals': LinkSchema(
+      id: -3745014711289797703,
+      name: r'meals',
+      target: r'Meal',
       single: false,
     )
   },
   embeddedSchemas: {},
-  getId: _taskDateGetId,
-  getLinks: _taskDateGetLinks,
-  attach: _taskDateAttach,
+  getId: _dateLinksGetId,
+  getLinks: _dateLinksGetLinks,
+  attach: _dateLinksAttach,
   version: '3.1.0+1',
 );
 
-int _taskDateEstimateSize(
-  TaskDate object,
+int _dateLinksEstimateSize(
+  DateLinks object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
@@ -543,8 +557,8 @@ int _taskDateEstimateSize(
   return bytesCount;
 }
 
-void _taskDateSerialize(
-  TaskDate object,
+void _dateLinksSerialize(
+  DateLinks object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
@@ -552,19 +566,19 @@ void _taskDateSerialize(
   writer.writeString(offsets[0], object.date);
 }
 
-TaskDate _taskDateDeserialize(
+DateLinks _dateLinksDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = TaskDate();
+  final object = DateLinks();
   object.date = reader.readString(offsets[0]);
   object.id = id;
   return object;
 }
 
-P _taskDateDeserializeProp<P>(
+P _dateLinksDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -578,29 +592,32 @@ P _taskDateDeserializeProp<P>(
   }
 }
 
-Id _taskDateGetId(TaskDate object) {
+Id _dateLinksGetId(DateLinks object) {
   return object.id;
 }
 
-List<IsarLinkBase<dynamic>> _taskDateGetLinks(TaskDate object) {
-  return [object.tasks];
+List<IsarLinkBase<dynamic>> _dateLinksGetLinks(DateLinks object) {
+  return [object.tasks, object.meals];
 }
 
-void _taskDateAttach(IsarCollection<dynamic> col, Id id, TaskDate object) {
+void _dateLinksAttach(IsarCollection<dynamic> col, Id id, DateLinks object) {
   object.id = id;
   object.tasks.attach(col, col.isar.collection<Task>(), r'tasks', id);
+  object.meals.attach(col, col.isar.collection<Meal>(), r'meals', id);
 }
 
-extension TaskDateQueryWhereSort on QueryBuilder<TaskDate, TaskDate, QWhere> {
-  QueryBuilder<TaskDate, TaskDate, QAfterWhere> anyId() {
+extension DateLinksQueryWhereSort
+    on QueryBuilder<DateLinks, DateLinks, QWhere> {
+  QueryBuilder<DateLinks, DateLinks, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
     });
   }
 }
 
-extension TaskDateQueryWhere on QueryBuilder<TaskDate, TaskDate, QWhereClause> {
-  QueryBuilder<TaskDate, TaskDate, QAfterWhereClause> idEqualTo(Id id) {
+extension DateLinksQueryWhere
+    on QueryBuilder<DateLinks, DateLinks, QWhereClause> {
+  QueryBuilder<DateLinks, DateLinks, QAfterWhereClause> idEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(IdWhereClause.between(
         lower: id,
@@ -609,7 +626,7 @@ extension TaskDateQueryWhere on QueryBuilder<TaskDate, TaskDate, QWhereClause> {
     });
   }
 
-  QueryBuilder<TaskDate, TaskDate, QAfterWhereClause> idNotEqualTo(Id id) {
+  QueryBuilder<DateLinks, DateLinks, QAfterWhereClause> idNotEqualTo(Id id) {
     return QueryBuilder.apply(this, (query) {
       if (query.whereSort == Sort.asc) {
         return query
@@ -631,7 +648,7 @@ extension TaskDateQueryWhere on QueryBuilder<TaskDate, TaskDate, QWhereClause> {
     });
   }
 
-  QueryBuilder<TaskDate, TaskDate, QAfterWhereClause> idGreaterThan(Id id,
+  QueryBuilder<DateLinks, DateLinks, QAfterWhereClause> idGreaterThan(Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -640,7 +657,7 @@ extension TaskDateQueryWhere on QueryBuilder<TaskDate, TaskDate, QWhereClause> {
     });
   }
 
-  QueryBuilder<TaskDate, TaskDate, QAfterWhereClause> idLessThan(Id id,
+  QueryBuilder<DateLinks, DateLinks, QAfterWhereClause> idLessThan(Id id,
       {bool include = false}) {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(
@@ -649,7 +666,7 @@ extension TaskDateQueryWhere on QueryBuilder<TaskDate, TaskDate, QWhereClause> {
     });
   }
 
-  QueryBuilder<TaskDate, TaskDate, QAfterWhereClause> idBetween(
+  QueryBuilder<DateLinks, DateLinks, QAfterWhereClause> idBetween(
     Id lowerId,
     Id upperId, {
     bool includeLower = true,
@@ -666,9 +683,9 @@ extension TaskDateQueryWhere on QueryBuilder<TaskDate, TaskDate, QWhereClause> {
   }
 }
 
-extension TaskDateQueryFilter
-    on QueryBuilder<TaskDate, TaskDate, QFilterCondition> {
-  QueryBuilder<TaskDate, TaskDate, QAfterFilterCondition> dateEqualTo(
+extension DateLinksQueryFilter
+    on QueryBuilder<DateLinks, DateLinks, QFilterCondition> {
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition> dateEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -681,7 +698,7 @@ extension TaskDateQueryFilter
     });
   }
 
-  QueryBuilder<TaskDate, TaskDate, QAfterFilterCondition> dateGreaterThan(
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition> dateGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -696,7 +713,7 @@ extension TaskDateQueryFilter
     });
   }
 
-  QueryBuilder<TaskDate, TaskDate, QAfterFilterCondition> dateLessThan(
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition> dateLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -711,7 +728,7 @@ extension TaskDateQueryFilter
     });
   }
 
-  QueryBuilder<TaskDate, TaskDate, QAfterFilterCondition> dateBetween(
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition> dateBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -730,7 +747,7 @@ extension TaskDateQueryFilter
     });
   }
 
-  QueryBuilder<TaskDate, TaskDate, QAfterFilterCondition> dateStartsWith(
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition> dateStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -743,7 +760,7 @@ extension TaskDateQueryFilter
     });
   }
 
-  QueryBuilder<TaskDate, TaskDate, QAfterFilterCondition> dateEndsWith(
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition> dateEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -756,7 +773,7 @@ extension TaskDateQueryFilter
     });
   }
 
-  QueryBuilder<TaskDate, TaskDate, QAfterFilterCondition> dateContains(
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition> dateContains(
       String value,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -768,7 +785,7 @@ extension TaskDateQueryFilter
     });
   }
 
-  QueryBuilder<TaskDate, TaskDate, QAfterFilterCondition> dateMatches(
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition> dateMatches(
       String pattern,
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -780,7 +797,7 @@ extension TaskDateQueryFilter
     });
   }
 
-  QueryBuilder<TaskDate, TaskDate, QAfterFilterCondition> dateIsEmpty() {
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition> dateIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'date',
@@ -789,7 +806,7 @@ extension TaskDateQueryFilter
     });
   }
 
-  QueryBuilder<TaskDate, TaskDate, QAfterFilterCondition> dateIsNotEmpty() {
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition> dateIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'date',
@@ -798,7 +815,8 @@ extension TaskDateQueryFilter
     });
   }
 
-  QueryBuilder<TaskDate, TaskDate, QAfterFilterCondition> idEqualTo(Id value) {
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition> idEqualTo(
+      Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'id',
@@ -807,7 +825,7 @@ extension TaskDateQueryFilter
     });
   }
 
-  QueryBuilder<TaskDate, TaskDate, QAfterFilterCondition> idGreaterThan(
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition> idGreaterThan(
     Id value, {
     bool include = false,
   }) {
@@ -820,7 +838,7 @@ extension TaskDateQueryFilter
     });
   }
 
-  QueryBuilder<TaskDate, TaskDate, QAfterFilterCondition> idLessThan(
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition> idLessThan(
     Id value, {
     bool include = false,
   }) {
@@ -833,7 +851,7 @@ extension TaskDateQueryFilter
     });
   }
 
-  QueryBuilder<TaskDate, TaskDate, QAfterFilterCondition> idBetween(
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition> idBetween(
     Id lower,
     Id upper, {
     bool includeLower = true,
@@ -851,38 +869,38 @@ extension TaskDateQueryFilter
   }
 }
 
-extension TaskDateQueryObject
-    on QueryBuilder<TaskDate, TaskDate, QFilterCondition> {}
+extension DateLinksQueryObject
+    on QueryBuilder<DateLinks, DateLinks, QFilterCondition> {}
 
-extension TaskDateQueryLinks
-    on QueryBuilder<TaskDate, TaskDate, QFilterCondition> {
-  QueryBuilder<TaskDate, TaskDate, QAfterFilterCondition> tasks(
+extension DateLinksQueryLinks
+    on QueryBuilder<DateLinks, DateLinks, QFilterCondition> {
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition> tasks(
       FilterQuery<Task> q) {
     return QueryBuilder.apply(this, (query) {
       return query.link(q, r'tasks');
     });
   }
 
-  QueryBuilder<TaskDate, TaskDate, QAfterFilterCondition> tasksLengthEqualTo(
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition> tasksLengthEqualTo(
       int length) {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'tasks', length, true, length, true);
     });
   }
 
-  QueryBuilder<TaskDate, TaskDate, QAfterFilterCondition> tasksIsEmpty() {
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition> tasksIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'tasks', 0, true, 0, true);
     });
   }
 
-  QueryBuilder<TaskDate, TaskDate, QAfterFilterCondition> tasksIsNotEmpty() {
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition> tasksIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(r'tasks', 0, false, 999999, true);
     });
   }
 
-  QueryBuilder<TaskDate, TaskDate, QAfterFilterCondition> tasksLengthLessThan(
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition> tasksLengthLessThan(
     int length, {
     bool include = false,
   }) {
@@ -891,7 +909,7 @@ extension TaskDateQueryLinks
     });
   }
 
-  QueryBuilder<TaskDate, TaskDate, QAfterFilterCondition>
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition>
       tasksLengthGreaterThan(
     int length, {
     bool include = false,
@@ -901,7 +919,7 @@ extension TaskDateQueryLinks
     });
   }
 
-  QueryBuilder<TaskDate, TaskDate, QAfterFilterCondition> tasksLengthBetween(
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition> tasksLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -912,52 +930,109 @@ extension TaskDateQueryLinks
           r'tasks', lower, includeLower, upper, includeUpper);
     });
   }
+
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition> meals(
+      FilterQuery<Meal> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'meals');
+    });
+  }
+
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition> mealsLengthEqualTo(
+      int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'meals', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition> mealsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'meals', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition> mealsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'meals', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition> mealsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'meals', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition>
+      mealsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'meals', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<DateLinks, DateLinks, QAfterFilterCondition> mealsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'meals', lower, includeLower, upper, includeUpper);
+    });
+  }
 }
 
-extension TaskDateQuerySortBy on QueryBuilder<TaskDate, TaskDate, QSortBy> {
-  QueryBuilder<TaskDate, TaskDate, QAfterSortBy> sortByDate() {
+extension DateLinksQuerySortBy on QueryBuilder<DateLinks, DateLinks, QSortBy> {
+  QueryBuilder<DateLinks, DateLinks, QAfterSortBy> sortByDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'date', Sort.asc);
     });
   }
 
-  QueryBuilder<TaskDate, TaskDate, QAfterSortBy> sortByDateDesc() {
+  QueryBuilder<DateLinks, DateLinks, QAfterSortBy> sortByDateDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'date', Sort.desc);
     });
   }
 }
 
-extension TaskDateQuerySortThenBy
-    on QueryBuilder<TaskDate, TaskDate, QSortThenBy> {
-  QueryBuilder<TaskDate, TaskDate, QAfterSortBy> thenByDate() {
+extension DateLinksQuerySortThenBy
+    on QueryBuilder<DateLinks, DateLinks, QSortThenBy> {
+  QueryBuilder<DateLinks, DateLinks, QAfterSortBy> thenByDate() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'date', Sort.asc);
     });
   }
 
-  QueryBuilder<TaskDate, TaskDate, QAfterSortBy> thenByDateDesc() {
+  QueryBuilder<DateLinks, DateLinks, QAfterSortBy> thenByDateDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'date', Sort.desc);
     });
   }
 
-  QueryBuilder<TaskDate, TaskDate, QAfterSortBy> thenById() {
+  QueryBuilder<DateLinks, DateLinks, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
     });
   }
 
-  QueryBuilder<TaskDate, TaskDate, QAfterSortBy> thenByIdDesc() {
+  QueryBuilder<DateLinks, DateLinks, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
     });
   }
 }
 
-extension TaskDateQueryWhereDistinct
-    on QueryBuilder<TaskDate, TaskDate, QDistinct> {
-  QueryBuilder<TaskDate, TaskDate, QDistinct> distinctByDate(
+extension DateLinksQueryWhereDistinct
+    on QueryBuilder<DateLinks, DateLinks, QDistinct> {
+  QueryBuilder<DateLinks, DateLinks, QDistinct> distinctByDate(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'date', caseSensitive: caseSensitive);
@@ -965,17 +1040,757 @@ extension TaskDateQueryWhereDistinct
   }
 }
 
-extension TaskDateQueryProperty
-    on QueryBuilder<TaskDate, TaskDate, QQueryProperty> {
-  QueryBuilder<TaskDate, int, QQueryOperations> idProperty() {
+extension DateLinksQueryProperty
+    on QueryBuilder<DateLinks, DateLinks, QQueryProperty> {
+  QueryBuilder<DateLinks, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
     });
   }
 
-  QueryBuilder<TaskDate, String, QQueryOperations> dateProperty() {
+  QueryBuilder<DateLinks, String, QQueryOperations> dateProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'date');
+    });
+  }
+}
+
+// coverage:ignore-file
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+
+extension GetMealCollection on Isar {
+  IsarCollection<Meal> get meals => this.collection();
+}
+
+const MealSchema = CollectionSchema(
+  name: r'Meal',
+  id: 2462895270179255875,
+  properties: {
+    r'description': PropertySchema(
+      id: 0,
+      name: r'description',
+      type: IsarType.string,
+    ),
+    r'isChecked': PropertySchema(
+      id: 1,
+      name: r'isChecked',
+      type: IsarType.bool,
+    ),
+    r'name': PropertySchema(
+      id: 2,
+      name: r'name',
+      type: IsarType.string,
+    ),
+    r'order': PropertySchema(
+      id: 3,
+      name: r'order',
+      type: IsarType.long,
+    )
+  },
+  estimateSize: _mealEstimateSize,
+  serialize: _mealSerialize,
+  deserialize: _mealDeserialize,
+  deserializeProp: _mealDeserializeProp,
+  idName: r'id',
+  indexes: {},
+  links: {},
+  embeddedSchemas: {},
+  getId: _mealGetId,
+  getLinks: _mealGetLinks,
+  attach: _mealAttach,
+  version: '3.1.0+1',
+);
+
+int _mealEstimateSize(
+  Meal object,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  var bytesCount = offsets.last;
+  bytesCount += 3 + object.description.length * 3;
+  bytesCount += 3 + object.name.length * 3;
+  return bytesCount;
+}
+
+void _mealSerialize(
+  Meal object,
+  IsarWriter writer,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  writer.writeString(offsets[0], object.description);
+  writer.writeBool(offsets[1], object.isChecked);
+  writer.writeString(offsets[2], object.name);
+  writer.writeLong(offsets[3], object.order);
+}
+
+Meal _mealDeserialize(
+  Id id,
+  IsarReader reader,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  final object = Meal();
+  object.description = reader.readString(offsets[0]);
+  object.id = id;
+  object.isChecked = reader.readBool(offsets[1]);
+  object.name = reader.readString(offsets[2]);
+  object.order = reader.readLong(offsets[3]);
+  return object;
+}
+
+P _mealDeserializeProp<P>(
+  IsarReader reader,
+  int propertyId,
+  int offset,
+  Map<Type, List<int>> allOffsets,
+) {
+  switch (propertyId) {
+    case 0:
+      return (reader.readString(offset)) as P;
+    case 1:
+      return (reader.readBool(offset)) as P;
+    case 2:
+      return (reader.readString(offset)) as P;
+    case 3:
+      return (reader.readLong(offset)) as P;
+    default:
+      throw IsarError('Unknown property with id $propertyId');
+  }
+}
+
+Id _mealGetId(Meal object) {
+  return object.id;
+}
+
+List<IsarLinkBase<dynamic>> _mealGetLinks(Meal object) {
+  return [];
+}
+
+void _mealAttach(IsarCollection<dynamic> col, Id id, Meal object) {
+  object.id = id;
+}
+
+extension MealQueryWhereSort on QueryBuilder<Meal, Meal, QWhere> {
+  QueryBuilder<Meal, Meal, QAfterWhere> anyId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+}
+
+extension MealQueryWhere on QueryBuilder<Meal, Meal, QWhereClause> {
+  QueryBuilder<Meal, Meal, QAfterWhereClause> idEqualTo(Id id) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IdWhereClause.between(
+        lower: id,
+        upper: id,
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterWhereClause> idNotEqualTo(Id id) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(
+              IdWhereClause.lessThan(upper: id, includeUpper: false),
+            )
+            .addWhereClause(
+              IdWhereClause.greaterThan(lower: id, includeLower: false),
+            );
+      } else {
+        return query
+            .addWhereClause(
+              IdWhereClause.greaterThan(lower: id, includeLower: false),
+            )
+            .addWhereClause(
+              IdWhereClause.lessThan(upper: id, includeUpper: false),
+            );
+      }
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterWhereClause> idGreaterThan(Id id,
+      {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IdWhereClause.greaterThan(lower: id, includeLower: include),
+      );
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterWhereClause> idLessThan(Id id,
+      {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IdWhereClause.lessThan(upper: id, includeUpper: include),
+      );
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterWhereClause> idBetween(
+    Id lowerId,
+    Id upperId, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IdWhereClause.between(
+        lower: lowerId,
+        includeLower: includeLower,
+        upper: upperId,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+}
+
+extension MealQueryFilter on QueryBuilder<Meal, Meal, QFilterCondition> {
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> descriptionEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'description',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> descriptionGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'description',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> descriptionLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'description',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> descriptionBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'description',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> descriptionStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'description',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> descriptionEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'description',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> descriptionContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'description',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> descriptionMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'description',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> descriptionIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'description',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> descriptionIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'description',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> idEqualTo(Id value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> idGreaterThan(
+    Id value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> idLessThan(
+    Id value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> idBetween(
+    Id lower,
+    Id upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> isCheckedEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isChecked',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> nameEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> nameGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> nameLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> nameBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'name',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> nameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> nameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> nameContains(String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'name',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> nameMatches(String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'name',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> nameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'name',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> nameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'name',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> orderEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'order',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> orderGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'order',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> orderLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'order',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterFilterCondition> orderBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'order',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+}
+
+extension MealQueryObject on QueryBuilder<Meal, Meal, QFilterCondition> {}
+
+extension MealQueryLinks on QueryBuilder<Meal, Meal, QFilterCondition> {}
+
+extension MealQuerySortBy on QueryBuilder<Meal, Meal, QSortBy> {
+  QueryBuilder<Meal, Meal, QAfterSortBy> sortByDescription() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'description', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterSortBy> sortByDescriptionDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'description', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterSortBy> sortByIsChecked() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isChecked', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterSortBy> sortByIsCheckedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isChecked', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterSortBy> sortByName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'name', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterSortBy> sortByNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'name', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterSortBy> sortByOrder() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'order', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterSortBy> sortByOrderDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'order', Sort.desc);
+    });
+  }
+}
+
+extension MealQuerySortThenBy on QueryBuilder<Meal, Meal, QSortThenBy> {
+  QueryBuilder<Meal, Meal, QAfterSortBy> thenByDescription() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'description', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterSortBy> thenByDescriptionDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'description', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterSortBy> thenById() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterSortBy> thenByIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterSortBy> thenByIsChecked() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isChecked', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterSortBy> thenByIsCheckedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isChecked', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterSortBy> thenByName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'name', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterSortBy> thenByNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'name', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterSortBy> thenByOrder() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'order', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QAfterSortBy> thenByOrderDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'order', Sort.desc);
+    });
+  }
+}
+
+extension MealQueryWhereDistinct on QueryBuilder<Meal, Meal, QDistinct> {
+  QueryBuilder<Meal, Meal, QDistinct> distinctByDescription(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'description', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QDistinct> distinctByIsChecked() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isChecked');
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QDistinct> distinctByName(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'name', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<Meal, Meal, QDistinct> distinctByOrder() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'order');
+    });
+  }
+}
+
+extension MealQueryProperty on QueryBuilder<Meal, Meal, QQueryProperty> {
+  QueryBuilder<Meal, int, QQueryOperations> idProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<Meal, String, QQueryOperations> descriptionProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'description');
+    });
+  }
+
+  QueryBuilder<Meal, bool, QQueryOperations> isCheckedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isChecked');
+    });
+  }
+
+  QueryBuilder<Meal, String, QQueryOperations> nameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'name');
+    });
+  }
+
+  QueryBuilder<Meal, int, QQueryOperations> orderProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'order');
     });
   }
 }

@@ -24,19 +24,19 @@ DateTime lastDate = DateTime(2100);
 
 Future<void> _createEmptyTaskDate(String taskDataName, String date) async {
   await isar.writeTxn(() async {
-    TaskData? taskData = await getTaskDataByName(taskDataName);
-    if (taskData == null) {
-      taskData = TaskData()..name = taskDataName;
-      await isar.taskDatas.put(taskData);
+    HoneyDoData? honeyDoData = await getTaskDataByName(taskDataName);
+    if (honeyDoData == null) {
+      honeyDoData = HoneyDoData()..name = taskDataName;
+      await isar.honeyDoDatas.put(honeyDoData);
     }
-    TaskDate? taskDate = await getTaskDateByDate(taskData, date);
-    if (taskDate == null) {
-      taskDate = TaskDate()..date = date;
-      await isar.taskDates.put(taskDate);
-      taskData.taskDates.add(taskDate);
-      await taskData.taskDates.save();
+    DateLinks? dateLink = await getTaskDateByDate(honeyDoData, date);
+    if (dateLink == null) {
+      dateLink = DateLinks()..date = date;
+      await isar.dateLinks.put(dateLink);
+      honeyDoData.dateLinks.add(dateLink);
+      await honeyDoData.dateLinks.save();
     }
-    await taskDate.tasks.load();
+    await dateLink.tasks.load();
   });
 }
 
@@ -164,7 +164,7 @@ class _CalenderCardState extends State<CalenderCard> {
                         () {
                           focusDateModel.updateFocusDate(selectedDate);
                           _createEmptyTaskDate(
-                            'Tasks Data',
+                            'HoneyDo Data',
                             DateFormat('ddMMyyyy')
                                 .format(focusDateModel.focusDate),
                           );

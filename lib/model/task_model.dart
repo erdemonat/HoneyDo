@@ -3,21 +3,36 @@ import 'package:isar/isar.dart';
 part 'task_model.g.dart';
 
 @Collection()
-class TaskData {
+class HoneyDoData {
   Id id = Isar.autoIncrement;
 
   late String name;
 
-  final taskDates = IsarLinks<TaskDate>();
+  final dateLinks = IsarLinks<DateLinks>();
 }
 
 @Collection()
-class TaskDate {
+class DateLinks {
   Id id = Isar.autoIncrement;
 
   late String date;
 
   final tasks = IsarLinks<Task>();
+
+  final meals = IsarLinks<Meal>();
+}
+
+@Collection()
+class Meal {
+  Id id = Isar.autoIncrement;
+
+  late String name;
+
+  late String description;
+
+  late int order;
+
+  late bool isChecked;
 }
 
 @Collection()

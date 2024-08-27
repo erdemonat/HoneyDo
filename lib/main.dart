@@ -15,7 +15,7 @@ final FlutterLocalization localization = FlutterLocalization.instance;
 void main() async {
   final dir = await getApplicationDocumentsDirectory();
   isar = await Isar.open(
-    [TaskDataSchema, TaskDateSchema, TaskSchema, SubTaskSchema],
+    [HoneyDoDataSchema, DateLinksSchema, TaskSchema, SubTaskSchema, MealSchema],
     directory: dir.path,
   );
   WidgetsFlutterBinding.ensureInitialized();

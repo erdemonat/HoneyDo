@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 class TaskTextField extends StatelessWidget {
   final TextEditingController? textcontroller;
   final void Function()? onPressed;
+  final void Function()? onTaskMealToggle;
+  final IconData taskMealIcon;
 
   const TaskTextField({
     super.key,
     this.textcontroller,
     this.onPressed,
+    this.onTaskMealToggle,
+    required this.taskMealIcon,
   });
 
   @override
@@ -17,6 +21,10 @@ class TaskTextField extends StatelessWidget {
       child: TextFormField(
         controller: textcontroller,
         decoration: InputDecoration(
+          prefixIcon: IconButton(
+            onPressed: onTaskMealToggle,
+            icon: Icon(taskMealIcon),
+          ),
           suffixIcon: IconButton(
             onPressed: onPressed,
             icon: const Icon(Icons.add),

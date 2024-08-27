@@ -17,46 +17,48 @@ class TasksCard extends StatefulWidget {
 
 TextEditingController taskTextController = TextEditingController();
 
-Future<TaskData?> getTaskDataByName(String name) async {
-  return await isar.taskDatas.filter().nameEqualTo(name).findFirst();
+Future<HoneyDoData?> getTaskDataByName(String name) async {
+  return await isar.honeyDoDatas.filter().nameEqualTo(name).findFirst();
 }
 
-Future<TaskDate?> getTaskDateByDate(TaskData taskData, String date) async {
-  await taskData.taskDates.load();
-  return taskData.taskDates.filter().dateEqualTo(date).findFirst();
+Future<DateLinks?> getTaskDateByDate(
+    HoneyDoData honeyDoData, String date) async {
+  await honeyDoData.dateLinks.load();
+  return honeyDoData.dateLinks.filter().dateEqualTo(date).findFirst();
 }
 
 Future<void> createOrUpdateTaskData(
     String taskDataName, String date, String taskName) async {
   await isar.writeTxn(() async {
-    TaskData? taskData = await getTaskDataByName(taskDataName);
-    if (taskData == null) {
-      taskData = TaskData()..name = taskDataName;
-      await isar.taskDatas.put(taskData);
+    HoneyDoData? honeyDoData = await getTaskDataByName(taskDataName);
+    if (honeyDoData == null) {
+      honeyDoData = HoneyDoData()..name = taskDataName;
+      await isar.honeyDoDatas.put(honeyDoData);
     }
-    TaskDate? taskDate = await getTaskDateByDate(taskData, date);
-    if (taskDate == null) {
-      taskDate = TaskDate()..date = date;
-      await isar.taskDates.put(taskDate);
-      taskData.taskDates.add(taskDate);
-      await taskData.taskDates.save();
+    DateLinks? dateLink = await getTaskDateByDate(honeyDoData, date);
+    if (dateLink == null) {
+      dateLink = DateLinks()..date = date;
+      await isar.dateLinks.put(dateLink);
+      honeyDoData.dateLinks.add(dateLink);
+      await honeyDoData.dateLinks.save();
     }
-    await taskDate.tasks.load();
-    int nextOrder = taskDate.tasks.length;
+    await dateLink.tasks.load();
+    int nextOrder = dateLink.tasks.length;
 
     final task = Task()
       ..name = taskName
       ..order = nextOrder
       ..isChecked = false;
     await isar.tasks.put(task);
-    taskDate.tasks.add(task);
-    await taskDate.tasks.save();
+    dateLink.tasks.add(task);
+    await dateLink.tasks.save();
   });
 }
 
 class _TasksCardState extends State<TasksCard> {
   List<Task> tasks = [];
   bool isDragging = false;
+  bool taskMealToggle = false;
 
   @override
   void initState() {
@@ -79,9 +81,12 @@ class _TasksCardState extends State<TasksCard> {
   Future<void> loadTasks() async {
     final focusDateModel = Provider.of<FocusDateModel>(context, listen: false);
     String taskDate = DateFormat('ddMMyyyy').format(focusDateModel.focusDate);
-    TaskData? taskData = await getTaskDataByName('Tasks Data');
-    if (taskData != null) {
-      TaskDate? taskDateObj = await getTaskDateByDate(taskData, taskDate);
+    setState(() {
+      tasks = [];
+    });
+    HoneyDoData? honeyDoData = await getTaskDataByName('HoneyDo Data');
+    if (honeyDoData != null) {
+      DateLinks? taskDateObj = await getTaskDateByDate(honeyDoData, taskDate);
       if (taskDateObj != null) {
         await taskDateObj.tasks.load();
         tasks = taskDateObj.tasks.toList()
@@ -123,7 +128,7 @@ class _TasksCardState extends State<TasksCard> {
     String taskName = taskTextController.text;
     String taskDate = DateFormat('ddMMyyyy').format(focusDateModel.focusDate);
     if (taskName.isNotEmpty) {
-      await createOrUpdateTaskData('Tasks Data', taskDate, taskName);
+      await createOrUpdateTaskData('HoneyDo Data', taskDate, taskName);
     }
     taskTextController.clear();
     loadTasks();
@@ -141,50 +146,97 @@ class _TasksCardState extends State<TasksCard> {
       ),
       child: Column(
         children: [
-          Expanded(
-            child: tasks.isEmpty
-                ? const Text('Yapılacaklar Listesi Boş ....')
-                : ListView.builder(
-                    itemCount: tasks.length,
-                    itemBuilder: (context, index) {
-                      return DragTarget<int>(
-                        onAcceptWithDetails: (details) {
-                          int oldIndex = details.data;
-                          _onReorder(oldIndex, index);
-                        },
-                        builder: (context, candidateData, rejectedData) {
-                          return Draggable<int>(
-                            data: index,
-                            feedback: Material(
-                              color: Colors.transparent,
-                              child: SizedBox(
-                                  height: 90,
-                                  width: double.maxFinite,
-                                  child: TaskCardTile(tasks: tasks[index])),
-                            ),
-                            childWhenDragging: Container(),
-                            onDragStarted: () {
-                              setState(() {
-                                isDragging = true;
-                              });
-                            },
-                            onDragCompleted: () {
-                              setState(() {
-                                isDragging = false;
-                              });
-                            },
-                            onDraggableCanceled: (_, __) {
-                              setState(() {
-                                isDragging = false;
-                              });
-                            },
-                            child: TaskCardTile(tasks: tasks[index]),
-                          );
-                        },
-                      );
-                    },
-                  ),
-          ),
+          taskMealToggle
+              ? Expanded(
+                  child: tasks.isEmpty
+                      ? const Text('Sektir.')
+                      : ListView.builder(
+                          itemCount: tasks.length,
+                          itemBuilder: (context, index) {
+                            return DragTarget<int>(
+                              onAcceptWithDetails: (details) {
+                                int oldIndex = details.data;
+                                _onReorder(oldIndex, index);
+                              },
+                              builder: (context, candidateData, rejectedData) {
+                                return Draggable<int>(
+                                  data: index,
+                                  feedback: Material(
+                                    color: Colors.transparent,
+                                    child: SizedBox(
+                                        height: 90,
+                                        width: double.maxFinite,
+                                        child:
+                                            TaskCardTile(tasks: tasks[index])),
+                                  ),
+                                  childWhenDragging: Container(),
+                                  onDragStarted: () {
+                                    setState(() {
+                                      isDragging = true;
+                                    });
+                                  },
+                                  onDragCompleted: () {
+                                    setState(() {
+                                      isDragging = false;
+                                    });
+                                  },
+                                  onDraggableCanceled: (_, __) {
+                                    setState(() {
+                                      isDragging = false;
+                                    });
+                                  },
+                                  child: TaskCardTile(tasks: tasks[index]),
+                                );
+                              },
+                            );
+                          },
+                        ),
+                )
+              : Expanded(
+                  child: tasks.isEmpty
+                      ? const Text('Yapılacaklar Listesi Boş ....')
+                      : ListView.builder(
+                          itemCount: tasks.length,
+                          itemBuilder: (context, index) {
+                            return DragTarget<int>(
+                              onAcceptWithDetails: (details) {
+                                int oldIndex = details.data;
+                                _onReorder(oldIndex, index);
+                              },
+                              builder: (context, candidateData, rejectedData) {
+                                return Draggable<int>(
+                                  data: index,
+                                  feedback: Material(
+                                    color: Colors.transparent,
+                                    child: SizedBox(
+                                        height: 90,
+                                        width: double.maxFinite,
+                                        child:
+                                            TaskCardTile(tasks: tasks[index])),
+                                  ),
+                                  childWhenDragging: Container(),
+                                  onDragStarted: () {
+                                    setState(() {
+                                      isDragging = true;
+                                    });
+                                  },
+                                  onDragCompleted: () {
+                                    setState(() {
+                                      isDragging = false;
+                                    });
+                                  },
+                                  onDraggableCanceled: (_, __) {
+                                    setState(() {
+                                      isDragging = false;
+                                    });
+                                  },
+                                  child: TaskCardTile(tasks: tasks[index]),
+                                );
+                              },
+                            );
+                          },
+                        ),
+                ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -193,6 +245,15 @@ class _TasksCardState extends State<TasksCard> {
                 child: TaskTextField(
                   textcontroller: taskTextController,
                   onPressed: onPressed,
+                  onTaskMealToggle: () {
+                    setState(() {
+                      taskMealToggle = !taskMealToggle;
+                    });
+                    print(taskMealToggle);
+                  },
+                  taskMealIcon: taskMealToggle
+                      ? Icons.restaurant
+                      : Icons.library_add_sharp,
                 ),
               ),
               Align(
