@@ -1,6 +1,5 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localization/flutter_localization.dart';
 import 'package:honeydo/model/focus_date_model.dart';
 import 'package:honeydo/model/task_model.dart';
 import 'package:honeydo/screens/homescreen.dart';
@@ -8,17 +7,17 @@ import 'package:honeydo/theme.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 late Isar isar;
-final FlutterLocalization localization = FlutterLocalization.instance;
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   final dir = await getApplicationDocumentsDirectory();
   isar = await Isar.open(
     [HoneyDoDataSchema, DateLinksSchema, TaskSchema, SubTaskSchema, MealSchema],
     directory: dir.path,
   );
-  WidgetsFlutterBinding.ensureInitialized();
   appWindow.size = const Size(1200, 675);
   runApp(ChangeNotifierProvider(
     create: (BuildContext context) => FocusDateModel(),
@@ -42,9 +41,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      localizationsDelegates: localization.localizationsDelegates,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
       locale: const Locale('tr', 'TR'),
-      supportedLocales: const [Locale('tr')],
+      supportedLocales: const [Locale('tr', 'TR')],
       theme: darkTheme,
       debugShowCheckedModeBanner: false,
       home: const HomeScreen(),

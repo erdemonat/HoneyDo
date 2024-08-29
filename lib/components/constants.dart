@@ -25,7 +25,7 @@ TextStyle calendarDayNumberTextStyle(BuildContext context) {
 }
 
 TextStyle calendarDayTextStyle(BuildContext context) {
-  return TextStyle(
+  return const TextStyle(
     fontWeight: FontWeight.bold,
     color: Colors.white,
   );

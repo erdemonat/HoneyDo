@@ -25,7 +25,7 @@ class ProgressBar extends StatelessWidget {
 
     double stepValue = subTaskLength > 0 ? 100 / subTaskLength : 100.0;
 
-    if (subTaskLength > 0)
+    if (subTaskLength > 0) {
       markerPointers.add(
         LinearWidgetPointer(
           value: 0,
@@ -49,6 +49,7 @@ class ProgressBar extends StatelessWidget {
           ),
         ),
       );
+    }
 
     for (int i = 1; i < subTaskLength; i++) {
       double pointerValue = i * stepValue;

@@ -58,7 +58,7 @@ class _CalenderCardState extends State<CalenderCard> {
                     color: Theme.of(context).colorScheme.surface,
                   ),
                   width: 50,
-                  height: 50,
+                  height: 45,
                   child: IconButton(
                     onPressed: () {
                       VoidCallback;
@@ -81,7 +81,7 @@ class _CalenderCardState extends State<CalenderCard> {
                     color: Theme.of(context).colorScheme.surface,
                   ),
                   width: 50,
-                  height: 50,
+                  height: 45,
                   child: IconButton(
                     onPressed: () {
                       showDialog(

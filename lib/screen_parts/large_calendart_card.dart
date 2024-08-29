@@ -4,8 +4,7 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 class LargeCalendartCard extends StatelessWidget {
   final void Function(DateRangePickerSelectionChangedArgs) onSelectionChanged;
 
-  const LargeCalendartCard({Key? key, required this.onSelectionChanged})
-      : super(key: key);
+  const LargeCalendartCard({super.key, required this.onSelectionChanged});
 
   @override
   Widget build(BuildContext context) {

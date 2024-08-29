@@ -266,7 +266,7 @@ class _PomodoroCardState extends State<PomodoroCard>
                       context: context,
                       builder: (context) {
                         return Align(
-                          alignment: Alignment(-1.1, 1.5),
+                          alignment: const Alignment(-1.1, 1.5),
                           child: FractionallySizedBox(
                             heightFactor: 0.9,
                             widthFactor: 0.3,

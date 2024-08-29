@@ -21,7 +21,7 @@ class MotivationCard extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Align(
+          const Align(
             alignment: Alignment.centerLeft,
             child: Text('Bugün'),
           ),
@@ -30,7 +30,7 @@ class MotivationCard extends StatelessWidget {
             child: Text(
               formattedTimeWithoutYear,
               maxLines: 1,
-              style: TextStyle(fontSize: 25),
+              style: const TextStyle(fontSize: 25),
             ),
           ),
           Align(
