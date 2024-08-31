@@ -48,6 +48,8 @@ Future<void> createOrUpdateTaskData(
     final task = Task()
       ..name = taskName
       ..order = nextOrder
+      ..isMarked = false
+      ..markColor = "4294198070"
       ..isChecked = false;
     await isar.tasks.put(task);
     dateLink.tasks.add(task);

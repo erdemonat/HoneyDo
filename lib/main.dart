@@ -15,7 +15,14 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final dir = await getApplicationDocumentsDirectory();
   isar = await Isar.open(
-    [HoneyDoDataSchema, DateLinksSchema, TaskSchema, SubTaskSchema, MealSchema],
+    [
+      HoneyDoDataSchema,
+      DateLinksSchema,
+      TaskSchema,
+      SubTaskSchema,
+      MealSchema,
+      SubMealSchema
+    ],
     directory: dir.path,
   );
   appWindow.size = const Size(1200, 675);

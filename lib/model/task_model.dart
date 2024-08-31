@@ -48,9 +48,13 @@ class Task {
 
   late String name;
 
+  late String markColor;
+
   late int order;
 
   late bool isChecked;
+
+  late bool isMarked;
 
   final subtasks = IsarLinks<SubTask>();
 }

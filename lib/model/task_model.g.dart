@@ -2085,13 +2085,23 @@ const TaskSchema = CollectionSchema(
       name: r'isChecked',
       type: IsarType.bool,
     ),
-    r'name': PropertySchema(
+    r'isMarked': PropertySchema(
       id: 1,
+      name: r'isMarked',
+      type: IsarType.bool,
+    ),
+    r'markColor': PropertySchema(
+      id: 2,
+      name: r'markColor',
+      type: IsarType.string,
+    ),
+    r'name': PropertySchema(
+      id: 3,
       name: r'name',
       type: IsarType.string,
     ),
     r'order': PropertySchema(
-      id: 2,
+      id: 4,
       name: r'order',
       type: IsarType.long,
     )
@@ -2123,6 +2133,7 @@ int _taskEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.markColor.length * 3;
   bytesCount += 3 + object.name.length * 3;
   return bytesCount;
 }
@@ -2134,8 +2145,10 @@ void _taskSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeBool(offsets[0], object.isChecked);
-  writer.writeString(offsets[1], object.name);
-  writer.writeLong(offsets[2], object.order);
+  writer.writeBool(offsets[1], object.isMarked);
+  writer.writeString(offsets[2], object.markColor);
+  writer.writeString(offsets[3], object.name);
+  writer.writeLong(offsets[4], object.order);
 }
 
 Task _taskDeserialize(
@@ -2147,8 +2160,10 @@ Task _taskDeserialize(
   final object = Task();
   object.id = id;
   object.isChecked = reader.readBool(offsets[0]);
-  object.name = reader.readString(offsets[1]);
-  object.order = reader.readLong(offsets[2]);
+  object.isMarked = reader.readBool(offsets[1]);
+  object.markColor = reader.readString(offsets[2]);
+  object.name = reader.readString(offsets[3]);
+  object.order = reader.readLong(offsets[4]);
   return object;
 }
 
@@ -2162,8 +2177,12 @@ P _taskDeserializeProp<P>(
     case 0:
       return (reader.readBool(offset)) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 2:
+      return (reader.readString(offset)) as P;
+    case 3:
+      return (reader.readString(offset)) as P;
+    case 4:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -2316,6 +2335,145 @@ extension TaskQueryFilter on QueryBuilder<Task, Task, QFilterCondition> {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'isChecked',
         value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> isMarkedEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isMarked',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> markColorEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'markColor',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> markColorGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'markColor',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> markColorLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'markColor',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> markColorBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'markColor',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> markColorStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'markColor',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> markColorEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'markColor',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> markColorContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'markColor',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> markColorMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'markColor',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> markColorIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'markColor',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterFilterCondition> markColorIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'markColor',
+        value: '',
       ));
     });
   }
@@ -2574,6 +2732,30 @@ extension TaskQuerySortBy on QueryBuilder<Task, Task, QSortBy> {
     });
   }
 
+  QueryBuilder<Task, Task, QAfterSortBy> sortByIsMarked() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isMarked', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterSortBy> sortByIsMarkedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isMarked', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterSortBy> sortByMarkColor() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'markColor', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterSortBy> sortByMarkColorDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'markColor', Sort.desc);
+    });
+  }
+
   QueryBuilder<Task, Task, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -2624,6 +2806,30 @@ extension TaskQuerySortThenBy on QueryBuilder<Task, Task, QSortThenBy> {
     });
   }
 
+  QueryBuilder<Task, Task, QAfterSortBy> thenByIsMarked() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isMarked', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterSortBy> thenByIsMarkedDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isMarked', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterSortBy> thenByMarkColor() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'markColor', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Task, Task, QAfterSortBy> thenByMarkColorDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'markColor', Sort.desc);
+    });
+  }
+
   QueryBuilder<Task, Task, QAfterSortBy> thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -2656,6 +2862,19 @@ extension TaskQueryWhereDistinct on QueryBuilder<Task, Task, QDistinct> {
     });
   }
 
+  QueryBuilder<Task, Task, QDistinct> distinctByIsMarked() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isMarked');
+    });
+  }
+
+  QueryBuilder<Task, Task, QDistinct> distinctByMarkColor(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'markColor', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<Task, Task, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2680,6 +2899,18 @@ extension TaskQueryProperty on QueryBuilder<Task, Task, QQueryProperty> {
   QueryBuilder<Task, bool, QQueryOperations> isCheckedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isChecked');
+    });
+  }
+
+  QueryBuilder<Task, bool, QQueryOperations> isMarkedProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isMarked');
+    });
+  }
+
+  QueryBuilder<Task, String, QQueryOperations> markColorProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'markColor');
     });
   }
 
