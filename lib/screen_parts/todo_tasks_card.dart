@@ -124,12 +124,23 @@ class _TasksCardState extends State<TasksCard> {
     });
   }
 
-  void onPressed() async {
+  void onTaskPressed() async {
     final focusDateModel = Provider.of<FocusDateModel>(context, listen: false);
     String taskName = taskTextController.text;
     String taskDate = DateFormat('ddMMyyyy').format(focusDateModel.focusDate);
     if (taskName.isNotEmpty) {
       await createOrUpdateTaskData('HoneyDo Data', taskDate, taskName);
+    }
+    taskTextController.clear();
+    loadTasks();
+  }
+
+  void onMealPressed() async {
+    final focusDateModel = Provider.of<FocusDateModel>(context, listen: false);
+    String mealName = taskTextController.text;
+    String mealDate = DateFormat('ddMMyyyy').format(focusDateModel.focusDate);
+    if (mealName.isNotEmpty) {
+      await createOrUpdateTaskData('HoneyDo Data', mealDate, mealName);
     }
     taskTextController.clear();
     loadTasks();
@@ -246,7 +257,7 @@ class _TasksCardState extends State<TasksCard> {
                 alignment: Alignment.bottomCenter,
                 child: TaskTextField(
                   textcontroller: taskTextController,
-                  onPressed: onPressed,
+                  onPressed: taskMealToggle ? onMealPressed : onTaskPressed,
                   onTaskMealToggle: () {
                     setState(() {
                       taskMealToggle = !taskMealToggle;
