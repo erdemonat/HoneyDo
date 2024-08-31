@@ -28,11 +28,18 @@ class Meal {
 
   late String name;
 
-  late String description;
-
   late int order;
 
-  late bool isChecked;
+  final submeals = IsarLinks<SubMeal>();
+}
+
+@Collection()
+class SubMeal {
+  Id id = Isar.autoIncrement;
+
+  late String name;
+
+  final meal = IsarLink<Meal>();
 }
 
 @Collection()

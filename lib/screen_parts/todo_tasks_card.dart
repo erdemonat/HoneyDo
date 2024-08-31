@@ -57,6 +57,7 @@ Future<void> createOrUpdateTaskData(
 
 class _TasksCardState extends State<TasksCard> {
   List<Task> tasks = [];
+  List meals = ['asdasd'];
   bool isDragging = false;
   bool taskMealToggle = false;
 
@@ -148,10 +149,10 @@ class _TasksCardState extends State<TasksCard> {
         children: [
           taskMealToggle
               ? Expanded(
-                  child: tasks.isEmpty
+                  child: meals.isEmpty
                       ? const Text('Sektir.')
                       : ListView.builder(
-                          itemCount: tasks.length,
+                          itemCount: meals.length,
                           itemBuilder: (context, index) {
                             return DragTarget<int>(
                               onAcceptWithDetails: (details) {
@@ -166,8 +167,7 @@ class _TasksCardState extends State<TasksCard> {
                                     child: SizedBox(
                                         height: 90,
                                         width: double.maxFinite,
-                                        child:
-                                            TaskCardTile(tasks: tasks[index])),
+                                        child: Text('data2')),
                                   ),
                                   childWhenDragging: Container(),
                                   onDragStarted: () {
@@ -185,7 +185,9 @@ class _TasksCardState extends State<TasksCard> {
                                       isDragging = false;
                                     });
                                   },
-                                  child: TaskCardTile(tasks: tasks[index]),
+                                  child: Container(
+                                    child: Text('data'),
+                                  ),
                                 );
                               },
                             );
