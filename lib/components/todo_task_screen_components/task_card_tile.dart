@@ -282,6 +282,7 @@ class TaskCardTileState extends State<TaskCardTile> {
                               SubTitleAddTextField(
                                 controller: _subtitleController,
                                 onSubmitted: _addSubtitle,
+                                hintext: 'Bir görev ekle',
                               ),
                             ],
                           ),

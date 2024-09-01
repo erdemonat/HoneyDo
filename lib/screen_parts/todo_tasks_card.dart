@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:honeydo/components/todo_task_screen_components/meal_card_tile.dart';
 import 'package:honeydo/components/todo_task_screen_components/task_card_tile.dart';
 import 'package:honeydo/components/todo_task_screen_components/task_text_field.dart';
 import 'package:honeydo/main.dart';
@@ -227,7 +228,7 @@ class _TasksCardState extends State<TasksCard> {
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.all(5),
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.fromLTRB(5, 10, 5, 5),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(10),
@@ -237,7 +238,7 @@ class _TasksCardState extends State<TasksCard> {
           taskMealToggle
               ? Expanded(
                   child: meals.isEmpty
-                      ? const Text('Sektir.')
+                      ? const Text('Yediklerin yazılmamış..')
                       : ListView.builder(
                           itemCount: meals.length,
                           itemBuilder: (context, index) {
@@ -254,7 +255,14 @@ class _TasksCardState extends State<TasksCard> {
                                     child: SizedBox(
                                         height: 90,
                                         width: double.maxFinite,
-                                        child: Text(meals[index].name)),
+                                        child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .secondary,
+                                            ),
+                                            child: MealCardTile(
+                                                meals: meals[index]))),
                                   ),
                                   childWhenDragging: Container(),
                                   onDragStarted: () {
@@ -272,9 +280,7 @@ class _TasksCardState extends State<TasksCard> {
                                       isDragging = false;
                                     });
                                   },
-                                  child: Container(
-                                    child: Text(meals[index].name),
-                                  ),
+                                  child: MealCardTile(meals: meals[index]),
                                 );
                               },
                             );
@@ -283,7 +289,7 @@ class _TasksCardState extends State<TasksCard> {
                 )
               : Expanded(
                   child: tasks.isEmpty
-                      ? const Text('Yapılacaklar Listesi Boş ....')
+                      ? const Text('Yapılacaklar yazılmamış ....')
                       : ListView.builder(
                           itemCount: tasks.length,
                           itemBuilder: (context, index) {
@@ -343,6 +349,9 @@ class _TasksCardState extends State<TasksCard> {
                   taskMealIcon: taskMealToggle
                       ? Icons.restaurant
                       : Icons.library_add_sharp,
+                  hintext: taskMealToggle
+                      ? "Bugün ne yedin?"
+                      : "Her şey bir adımla başlar!",
                 ),
               ),
               Align(

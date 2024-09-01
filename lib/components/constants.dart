@@ -30,3 +30,19 @@ TextStyle calendarDayTextStyle(BuildContext context) {
     color: Colors.white,
   );
 }
+
+TextStyle calendarMonthYearTextStyle(BuildContext context) {
+  return TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+    color: Theme.of(context).colorScheme.tertiary,
+    letterSpacing: 1.2,
+    shadows: [
+      Shadow(
+        offset: const Offset(2.0, 2.0),
+        blurRadius: 1.0,
+        color: Colors.white.withOpacity(0.3),
+      ),
+    ],
+  );
+}

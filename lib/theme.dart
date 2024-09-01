@@ -29,6 +29,10 @@ ThemeData darkTheme = ThemeData(
     bodyMedium: TextStyle(color: Color.fromARGB(255, 159, 172, 198)),
     bodySmall: TextStyle(color: Color.fromARGB(255, 159, 172, 198)),
   ),
+  textSelectionTheme: const TextSelectionThemeData(
+    selectionColor: Color.fromARGB(60, 159, 172, 198),
+    cursorColor: Color.fromARGB(255, 159, 172, 198),
+  ),
 );
 
 const Color customWhite = Colors.white;

@@ -5,6 +5,7 @@ class TaskTextField extends StatelessWidget {
   final void Function()? onPressed;
   final void Function()? onTaskMealToggle;
   final IconData taskMealIcon;
+  final String hintext;
 
   const TaskTextField({
     super.key,
@@ -12,6 +13,7 @@ class TaskTextField extends StatelessWidget {
     this.onPressed,
     this.onTaskMealToggle,
     required this.taskMealIcon,
+    required this.hintext,
   });
 
   @override
@@ -38,9 +40,9 @@ class TaskTextField extends StatelessWidget {
           ),
           contentPadding:
               const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          hintText: "Yapılacak bir şey ekle",
+          hintText: hintext,
           hintStyle: TextStyle(
-              color: Theme.of(context).colorScheme.tertiary.withOpacity(0.3)),
+              color: Theme.of(context).colorScheme.tertiary.withOpacity(0.15)),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
           ),

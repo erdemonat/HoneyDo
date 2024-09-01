@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class SubTitleAddTextField extends StatelessWidget {
+class MealSubTitleAddTextField extends StatelessWidget {
   final TextEditingController controller;
   final Function(String) onSubmitted;
   final String hintext;
 
-  const SubTitleAddTextField({
+  const MealSubTitleAddTextField({
     super.key,
     required this.controller,
     required this.onSubmitted,
@@ -14,16 +14,9 @@ class SubTitleAddTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CheckboxListTile(
-      side: BorderSide(
-        color: Theme.of(context).colorScheme.tertiary.withOpacity(0.3),
-        width: 1.5,
-        strokeAlign: 1.5,
-      ),
-      controlAffinity: ListTileControlAffinity.leading,
-      value: false,
-      onChanged: (value) {},
-      title: TextField(
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: TextField(
         controller: controller,
         onSubmitted: (value) {
           if (value.isNotEmpty) {
@@ -35,7 +28,16 @@ class SubTitleAddTextField extends StatelessWidget {
           hintStyle: TextStyle(
             color: Theme.of(context).colorScheme.tertiary.withOpacity(0.3),
           ),
-          border: InputBorder.none,
+          border: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.tertiary.withOpacity(0.3),
+            ),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          contentPadding: const EdgeInsets.symmetric(
+            vertical: 10.0,
+            horizontal: 16.0,
+          ),
         ),
       ),
     );

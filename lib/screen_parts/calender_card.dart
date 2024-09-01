@@ -43,139 +43,158 @@ Future<void> _createEmptyTaskDate(String taskDataName, String date) async {
 class _CalenderCardState extends State<CalenderCard> {
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
+
+    final double widthContainerSize = screenWidth * 0.045;
+    final double heightContainerSize = screenHeight * 0.085;
+    final double paddingSize = screenWidth * 0.02;
+
     final focusDateModel = Provider.of<FocusDateModel>(context);
-    return Padding(
-        padding: const EdgeInsets.all(5),
-        child: Row(
+
+    return Row(
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Theme.of(context).colorScheme.surface,
-                  ),
-                  width: 50,
-                  height: 45,
-                  child: IconButton(
-                    onPressed: () {
-                      VoidCallback;
-                      setState(() {
-                        focusDateModel.updateFocusDate(now);
-                        _controller.animateToDate(
-                          focusDateModel.focusDate,
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.easeInOut,
-                        );
-                      });
-                    },
-                    icon: const Icon(Icons.arrow_back_ios_new_outlined),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Theme.of(context).colorScheme.surface,
-                  ),
-                  width: 50,
-                  height: 45,
-                  child: IconButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          content: SizedBox(
-                            height: 250,
-                            width: 400,
-                            child: LargeCalendartCard(
-                              onSelectionChanged: (args) {
-                                setState(() {
-                                  focusDateModel
-                                      .updateFocusDate(args.value as DateTime);
-                                  _controller.animateToDate(
-                                    focusDateModel.focusDate,
-                                    duration: const Duration(milliseconds: 500),
-                                    curve: Curves.easeInOut,
-                                  );
-                                });
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                    icon: const Icon(Icons.date_range_rounded),
-                  ),
-                ),
-              ],
+            Container(
+              width: widthContainerSize,
+              height: heightContainerSize,
+              margin: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Theme.of(context).colorScheme.surface,
+              ),
+              child: IconButton(
+                onPressed: () {
+                  VoidCallback;
+                  setState(() {
+                    focusDateModel.updateFocusDate(now);
+                    _controller.animateToDate(
+                      focusDateModel.focusDate,
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                    );
+                  });
+                },
+                icon: const Icon(Icons.arrow_back_ios_new_outlined),
+              ),
             ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(DateFormat('MMMM yyyy', 'tr_TR')
-                      .format(focusDateModel.focusDate)),
-                  EasyInfiniteDateTimeLine(
-                    dayProps: const EasyDayProps(width: 125),
-                    itemBuilder: (context, date, isSelected, onTap) {
-                      final dayName = DateFormat('EE', 'tr_TR').format(date);
-                      return InkWell(
-                        borderRadius: BorderRadius.circular(16),
-                        onTap: onTap,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? Theme.of(context).colorScheme.secondary
-                                : Theme.of(context).colorScheme.surface,
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                dayName,
-                                style: isSelected
-                                    ? calendarDayTextStyle(context)
-                                    : null,
-                              ),
-                              Text(
-                                date.day.toString(),
-                                style: calendarDayNumberTextStyle(context),
-                              ),
-                            ],
-                          ),
+            Container(
+              width: widthContainerSize,
+              height: heightContainerSize,
+              margin: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Theme.of(context).colorScheme.surface,
+              ),
+              child: IconButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      content: SizedBox(
+                        height: 250,
+                        width: 400,
+                        child: LargeCalendartCard(
+                          onSelectionChanged: (args) {
+                            setState(() {
+                              focusDateModel
+                                  .updateFocusDate(args.value as DateTime);
+                              _controller.animateToDate(
+                                focusDateModel.focusDate,
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.easeInOut,
+                              );
+                            });
+                            Navigator.of(context).pop();
+                          },
                         ),
-                      );
-                    },
-                    physics: const NeverScrollableScrollPhysics(),
-                    showTimelineHeader: false,
-                    locale: "tr_TR",
-                    controller: _controller,
-                    firstDate: firstDate,
-                    focusDate: focusDateModel.focusDate,
-                    lastDate: lastDate,
-                    onDateChange: (selectedDate) {
-                      setState(
-                        () {
-                          focusDateModel.updateFocusDate(selectedDate);
-                          _createEmptyTaskDate(
-                            'HoneyDo Data',
-                            DateFormat('ddMMyyyy')
-                                .format(focusDateModel.focusDate),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                ],
+                      ),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.date_range_rounded),
               ),
             ),
           ],
-        ));
+        ),
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              EasyInfiniteDateTimeLine(
+                dayProps: const EasyDayProps(width: 125),
+                itemBuilder: (context, date, isSelected, onTap) {
+                  final dayName = DateFormat('EE', 'tr_TR').format(date);
+                  return InkWell(
+                    borderRadius: BorderRadius.circular(16),
+                    onTap: onTap,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? Theme.of(context).colorScheme.secondary
+                            : Theme.of(context).colorScheme.surface,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            dayName,
+                            style: isSelected
+                                ? calendarDayTextStyle(context)
+                                : null,
+                          ),
+                          Text(
+                            date.day.toString(),
+                            style: calendarDayNumberTextStyle(context),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+                physics: const NeverScrollableScrollPhysics(),
+                showTimelineHeader: false,
+                locale: "tr_TR",
+                controller: _controller,
+                firstDate: firstDate,
+                focusDate: focusDateModel.focusDate,
+                lastDate: lastDate,
+                onDateChange: (selectedDate) {
+                  setState(
+                    () {
+                      focusDateModel.updateFocusDate(selectedDate);
+                      _createEmptyTaskDate(
+                        'HoneyDo Data',
+                        DateFormat('ddMMyyyy').format(focusDateModel.focusDate),
+                      );
+                    },
+                  );
+                },
+              ),
+              SizedBox(
+                height: 6,
+              ),
+              Container(
+                width: double.infinity,
+                height: screenHeight * 0.05,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: Theme.of(context).colorScheme.surface),
+                child: Center(
+                  child: Text(
+                    "${DateFormat('MMMM yyyy', 'tr_TR').format(focusDateModel.focusDate)}",
+                    style: calendarMonthYearTextStyle(context),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }
