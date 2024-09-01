@@ -57,9 +57,36 @@ Future<void> createOrUpdateTaskData(
   });
 }
 
+Future<void> createOrUpdateMealData(
+    String mealDataName, String date, String mealName) async {
+  await isar.writeTxn(() async {
+    HoneyDoData? honeyDoData = await getTaskDataByName(mealDataName);
+    if (honeyDoData == null) {
+      honeyDoData = HoneyDoData()..name = mealDataName;
+      await isar.honeyDoDatas.put(honeyDoData);
+    }
+    DateLinks? dateLink = await getTaskDateByDate(honeyDoData, date);
+    if (dateLink == null) {
+      dateLink = DateLinks()..date = date;
+      await isar.dateLinks.put(dateLink);
+      honeyDoData.dateLinks.add(dateLink);
+      await honeyDoData.dateLinks.save();
+    }
+    await dateLink.meals.load();
+    int nextOrder = dateLink.meals.length;
+
+    final meal = Meal()
+      ..name = mealName
+      ..order = nextOrder;
+    await isar.meals.put(meal);
+    dateLink.meals.add(meal);
+    await dateLink.meals.save();
+  });
+}
+
 class _TasksCardState extends State<TasksCard> {
   List<Task> tasks = [];
-  List meals = ['asdasd'];
+  List<Meal> meals = [];
   bool isDragging = false;
   bool taskMealToggle = false;
 
@@ -67,10 +94,12 @@ class _TasksCardState extends State<TasksCard> {
   void initState() {
     super.initState();
     loadTasks();
+    loadMeals();
 
     final focusDateModel = Provider.of<FocusDateModel>(context, listen: false);
     focusDateModel.addListener(() {
       loadTasks();
+      loadMeals();
     });
   }
 
@@ -99,6 +128,24 @@ class _TasksCardState extends State<TasksCard> {
     }
   }
 
+  Future<void> loadMeals() async {
+    final focusDateModel = Provider.of<FocusDateModel>(context, listen: false);
+    String mealDate = DateFormat('ddMMyyyy').format(focusDateModel.focusDate);
+    setState(() {
+      meals = [];
+    });
+    HoneyDoData? honeyDoData = await getTaskDataByName('HoneyDo Data');
+    if (honeyDoData != null) {
+      DateLinks? mealDateObj = await getTaskDateByDate(honeyDoData, mealDate);
+      if (mealDateObj != null) {
+        await mealDateObj.meals.load();
+        meals = mealDateObj.meals.toList()
+          ..sort((a, b) => a.order.compareTo(b.order));
+        setState(() {});
+      }
+    }
+  }
+
   Future<void> _deleteTask(int index) async {
     final task = tasks[index];
     await isar.writeTxn(() async {
@@ -109,7 +156,17 @@ class _TasksCardState extends State<TasksCard> {
     });
   }
 
-  Future<void> _onReorder(int oldIndex, int newIndex) async {
+  Future<void> _deleteMeal(int index) async {
+    final meal = meals[index];
+    await isar.writeTxn(() async {
+      await isar.meals.delete(meal.id);
+    });
+    setState(() {
+      meals.removeAt(index);
+    });
+  }
+
+  Future<void> _onReorderTask(int oldIndex, int newIndex) async {
     setState(() {
       if (newIndex > oldIndex) {
         newIndex -= 1;
@@ -122,6 +179,23 @@ class _TasksCardState extends State<TasksCard> {
       for (int i = 0; i < tasks.length; i++) {
         tasks[i].order = i;
         await isar.tasks.put(tasks[i]);
+      }
+    });
+  }
+
+  Future<void> _onReorderMeal(int oldIndex, int newIndex) async {
+    setState(() {
+      if (newIndex > oldIndex) {
+        newIndex -= 1;
+      }
+      final Meal item = meals.removeAt(oldIndex);
+      meals.insert(newIndex, item);
+    });
+
+    await isar.writeTxn(() async {
+      for (int i = 0; i < meals.length; i++) {
+        meals[i].order = i;
+        await isar.meals.put(meals[i]);
       }
     });
   }
@@ -142,10 +216,10 @@ class _TasksCardState extends State<TasksCard> {
     String mealName = taskTextController.text;
     String mealDate = DateFormat('ddMMyyyy').format(focusDateModel.focusDate);
     if (mealName.isNotEmpty) {
-      await createOrUpdateTaskData('HoneyDo Data', mealDate, mealName);
+      await createOrUpdateMealData('HoneyDo Data', mealDate, mealName);
     }
     taskTextController.clear();
-    loadTasks();
+    loadMeals();
   }
 
   @override
@@ -170,7 +244,7 @@ class _TasksCardState extends State<TasksCard> {
                             return DragTarget<int>(
                               onAcceptWithDetails: (details) {
                                 int oldIndex = details.data;
-                                _onReorder(oldIndex, index);
+                                _onReorderMeal(oldIndex, index);
                               },
                               builder: (context, candidateData, rejectedData) {
                                 return Draggable<int>(
@@ -180,7 +254,7 @@ class _TasksCardState extends State<TasksCard> {
                                     child: SizedBox(
                                         height: 90,
                                         width: double.maxFinite,
-                                        child: Text('data2')),
+                                        child: Text(meals[index].name)),
                                   ),
                                   childWhenDragging: Container(),
                                   onDragStarted: () {
@@ -199,7 +273,7 @@ class _TasksCardState extends State<TasksCard> {
                                     });
                                   },
                                   child: Container(
-                                    child: Text('data'),
+                                    child: Text(meals[index].name),
                                   ),
                                 );
                               },
@@ -216,7 +290,7 @@ class _TasksCardState extends State<TasksCard> {
                             return DragTarget<int>(
                               onAcceptWithDetails: (details) {
                                 int oldIndex = details.data;
-                                _onReorder(oldIndex, index);
+                                _onReorderTask(oldIndex, index);
                               },
                               builder: (context, candidateData, rejectedData) {
                                 return Draggable<int>(
@@ -277,7 +351,9 @@ class _TasksCardState extends State<TasksCard> {
                   visible: isDragging,
                   child: DragTarget<int>(
                     onAcceptWithDetails: (details) {
-                      _deleteTask(details.data);
+                      taskMealToggle
+                          ? _deleteMeal(details.data)
+                          : _deleteTask(details.data);
                     },
                     builder: (context, candidateData, rejectedData) {
                       return Padding(
