@@ -33,9 +33,16 @@ ThemeData darkTheme = ThemeData(
     selectionColor: Color.fromARGB(60, 159, 172, 198),
     cursorColor: Color.fromARGB(255, 159, 172, 198),
   ),
+  iconButtonTheme: const IconButtonThemeData(
+    style: ButtonStyle(
+      iconColor: WidgetStatePropertyAll(
+        Color.fromARGB(255, 159, 172, 198),
+      ),
+    ),
+  ),
 );
 
-const Color customWhite = Colors.white;
+const Color customWhite = Color.fromARGB(255, 225, 230, 240);
 const Color customBlack = Colors.black;
 const Color customYellow = Color.fromARGB(255, 255, 208, 0);
 const Color customRed = Color.fromARGB(255, 227, 86, 86);

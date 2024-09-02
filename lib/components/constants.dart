@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:honeydo/theme.dart';
 
 TextStyle cardTitleTextStyle(BuildContext context) {
   return TextStyle(
@@ -25,9 +26,9 @@ TextStyle calendarDayNumberTextStyle(BuildContext context) {
 }
 
 TextStyle calendarDayTextStyle(BuildContext context) {
-  return const TextStyle(
+  return TextStyle(
     fontWeight: FontWeight.bold,
-    color: Colors.white,
+    color: customWhite,
   );
 }
 
@@ -40,7 +41,7 @@ TextStyle calendarMonthYearTextStyle(BuildContext context) {
     shadows: [
       Shadow(
         offset: const Offset(2.0, 2.0),
-        blurRadius: 1.0,
+        blurRadius: 4.0,
         color: Colors.white.withOpacity(0.3),
       ),
     ],

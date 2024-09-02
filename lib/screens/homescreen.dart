@@ -84,9 +84,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 Expanded(
                                   flex: 3,
                                   child: Container(
-                                    //margin: const EdgeInsets.all(5),
+                                    margin: const EdgeInsets.all(5),
                                     //color: Colors.blue,
-                                    height: 200,
+                                    //height: 200,
                                     width: double.infinity,
                                     child: CalenderCard(),
                                   ),

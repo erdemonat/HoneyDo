@@ -6,6 +6,7 @@ import 'package:honeydo/model/focus_date_model.dart';
 import 'package:honeydo/model/task_model.dart';
 import 'package:honeydo/screen_parts/large_calendart_card.dart';
 import 'package:honeydo/screen_parts/todo_tasks_card.dart';
+import 'package:honeydo/theme.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -54,18 +55,18 @@ class _CalenderCardState extends State<CalenderCard> {
 
     return Row(
       children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: widthContainerSize,
-              height: heightContainerSize,
-              margin: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Theme.of(context).colorScheme.surface,
-              ),
-              child: IconButton(
+        Container(
+          width: widthContainerSize,
+          height: double.infinity,
+          margin: const EdgeInsets.only(right: 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Theme.of(context).colorScheme.surface,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconButton(
                 onPressed: () {
                   VoidCallback;
                   setState(() {
@@ -77,18 +78,18 @@ class _CalenderCardState extends State<CalenderCard> {
                     );
                   });
                 },
-                icon: const Icon(Icons.arrow_back_ios_new_outlined),
+                icon: Icon(
+                  Icons.arrow_back_ios_new_outlined,
+                  size: screenWidth * 0.024,
+                ),
               ),
-            ),
-            Container(
-              width: widthContainerSize,
-              height: heightContainerSize,
-              margin: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Theme.of(context).colorScheme.surface,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Divider(
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
               ),
-              child: IconButton(
+              IconButton(
                 onPressed: () {
                   showDialog(
                     context: context,
@@ -114,18 +115,21 @@ class _CalenderCardState extends State<CalenderCard> {
                     ),
                   );
                 },
-                icon: const Icon(Icons.date_range_rounded),
+                icon: Icon(
+                  Icons.date_range_rounded,
+                  size: screenWidth * 0.024,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         Expanded(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               EasyInfiniteDateTimeLine(
-                dayProps: const EasyDayProps(width: 125),
+                dayProps: EasyDayProps(width: 125, height: screenHeight * 0.14),
                 itemBuilder: (context, date, isSelected, onTap) {
                   final dayName = DateFormat('EE', 'tr_TR').format(date);
                   return InkWell(
@@ -149,8 +153,17 @@ class _CalenderCardState extends State<CalenderCard> {
                           ),
                           Text(
                             date.day.toString(),
-                            style: calendarDayNumberTextStyle(context),
+                            style: isSelected
+                                ? calendarDayNumberTextStyle(context)
+                                    .copyWith(color: customWhite)
+                                : calendarDayNumberTextStyle(context),
                           ),
+                          if (isSelected)
+                            Text(
+                              DateFormat('MMMM yyyy', 'tr_TR')
+                                  .format(focusDateModel.focusDate),
+                              style: calendarDayTextStyle(context),
+                            ),
                         ],
                       ),
                     ),
@@ -175,19 +188,19 @@ class _CalenderCardState extends State<CalenderCard> {
                   );
                 },
               ),
-              SizedBox(
-                height: 6,
-              ),
-              Container(
-                width: double.infinity,
-                height: screenHeight * 0.05,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Theme.of(context).colorScheme.surface),
-                child: Center(
-                  child: Text(
-                    "${DateFormat('MMMM yyyy', 'tr_TR').format(focusDateModel.focusDate)}",
-                    style: calendarMonthYearTextStyle(context),
+              Flexible(
+                child: Container(
+                  margin: EdgeInsets.only(top: 0.01 * screenHeight),
+                  width: double.infinity,
+                  height: double.infinity,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: Theme.of(context).colorScheme.surface),
+                  child: Center(
+                    child: Text(
+                      "Upcoming",
+                      style: calendarMonthYearTextStyle(context),
+                    ),
                   ),
                 ),
               ),
