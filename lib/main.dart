@@ -17,11 +17,12 @@ void main() async {
   isar = await Isar.open(
     [
       HoneyDoDataSchema,
+      PersonalInfoSchema,
       DateLinksSchema,
       TaskSchema,
       SubTaskSchema,
       MealSchema,
-      SubMealSchema
+      SubMealSchema,
     ],
     directory: dir.path,
   );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:honeydo/components/personal_info.dart';
 import 'package:honeydo/data/random_sentence.dart';
 import 'package:intl/intl.dart';
 
@@ -13,7 +14,6 @@ class MotivationCard extends StatelessWidget {
     String formattedTimeWithoutYear = DateFormat('d MMMM', 'tr_TR').format(now);
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Container'ın genişliğine ve yüksekliğine göre font boyutunu ayarla
         double fontSize = (constraints.maxWidth / 10).clamp(10, 35);
 
         return Container(
@@ -27,9 +27,25 @@ class MotivationCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Bugün',
-                style: TextStyle(fontSize: fontSize * 0.6),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Bugün',
+                    style: TextStyle(fontSize: fontSize * 0.6),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return PersonalInfoDialog();
+                        },
+                      );
+                    },
+                    icon: Icon(Icons.person),
+                  ),
+                ],
               ),
               Text(
                 formattedTimeWithoutYear,
