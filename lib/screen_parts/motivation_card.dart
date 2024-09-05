@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:honeydo/components/personal_info.dart';
 import 'package:honeydo/data/random_sentence.dart';
 import 'package:intl/intl.dart';
 
@@ -27,25 +26,9 @@ class MotivationCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Bugün',
-                    style: TextStyle(fontSize: fontSize * 0.6),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return PersonalInfoDialog();
-                        },
-                      );
-                    },
-                    icon: Icon(Icons.person),
-                  ),
-                ],
+              Text(
+                'Bugün',
+                style: TextStyle(fontSize: fontSize * 0.6),
               ),
               Text(
                 formattedTimeWithoutYear,

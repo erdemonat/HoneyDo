@@ -17,7 +17,6 @@ void main() async {
   isar = await Isar.open(
     [
       HoneyDoDataSchema,
-      PersonalInfoSchema,
       DateLinksSchema,
       TaskSchema,
       SubTaskSchema,

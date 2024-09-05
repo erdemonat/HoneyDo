@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:honeydo/components/colorie_info_dialog.dart';
 import 'package:honeydo/components/todo_task_screen_components/meal_card_tile.dart';
 import 'package:honeydo/components/todo_task_screen_components/task_card_tile.dart';
 import 'package:honeydo/components/todo_task_screen_components/task_text_field.dart';
@@ -255,14 +256,8 @@ class _TasksCardState extends State<TasksCard> {
                                     child: SizedBox(
                                         height: 90,
                                         width: double.maxFinite,
-                                        child: Container(
-                                            decoration: BoxDecoration(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .secondary,
-                                            ),
-                                            child: MealCardTile(
-                                                meals: meals[index]))),
+                                        child:
+                                            MealCardTile(meals: meals[index])),
                                   ),
                                   childWhenDragging: Container(),
                                   onDragStarted: () {
@@ -333,8 +328,24 @@ class _TasksCardState extends State<TasksCard> {
                         ),
                 ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              if (taskMealToggle)
+                IconButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => ColorieInfoDialog(),
+                    );
+                  },
+                  icon: Icon(Icons.help_outline),
+                  iconSize: 30,
+                ),
+              if (!taskMealToggle)
+                SizedBox(
+                  width: 46,
+                  height: 46,
+                ),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: TaskTextField(

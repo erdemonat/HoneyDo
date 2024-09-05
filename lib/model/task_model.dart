@@ -69,18 +69,3 @@ class SubTask {
 
   final task = IsarLink<Task>();
 }
-
-@Collection()
-class PersonalInfo {
-  Id id = 1;
-
-  late int age;
-
-  late double height;
-
-  late double weight;
-
-  late String gender;
-
-  late String activityLevel;
-}
