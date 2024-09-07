@@ -26,7 +26,7 @@ class SubtitleListTile extends StatelessWidget {
           },
           child: CheckboxListTile(
             activeColor: const Color(0xff0DC9AB),
-            splashRadius: 200,
+            splashRadius: 0,
             checkColor: Theme.of(context).colorScheme.surface,
             side: BorderSide(
               color: Theme.of(context).colorScheme.tertiary,

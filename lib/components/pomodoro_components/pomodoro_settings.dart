@@ -1,26 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:honeydo/components/constants.dart';
 import 'package:honeydo/components/pomodoro_components/digit_text_field.dart';
+import 'package:honeydo/providers/settings_provider.model.dart';
+import 'package:provider/provider.dart';
 
-class SettingsSheet extends StatefulWidget {
+class PomodoroSettings extends StatefulWidget {
   final int userPomodoroDuration;
   final int userShortBreakDuration;
   final int userLongBreakDuration;
   final int userSetCount;
+
   final Function(int pomodoro, int shortBreak, int longBreak, int setCount,
       bool autoShortBreak, bool autoPomodoro) onSettingsChanged;
-  const SettingsSheet(
-      {super.key,
-      required this.userPomodoroDuration,
-      required this.userShortBreakDuration,
-      required this.userLongBreakDuration,
-      required this.userSetCount,
-      required this.onSettingsChanged});
+  const PomodoroSettings({
+    super.key,
+    required this.userPomodoroDuration,
+    required this.userShortBreakDuration,
+    required this.userLongBreakDuration,
+    required this.userSetCount,
+    required this.onSettingsChanged,
+  });
 
   @override
-  State<SettingsSheet> createState() => _SettingsSheetState();
+  State<PomodoroSettings> createState() => _PomodoroSettingsState();
 }
 
-class _SettingsSheetState extends State<SettingsSheet> {
+class _PomodoroSettingsState extends State<PomodoroSettings> {
   late int pomodoroDuration;
   late int shortBreakDuration;
   late int longBreakDuration;
@@ -39,37 +44,13 @@ class _SettingsSheetState extends State<SettingsSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final settingsProvider = Provider.of<SettingsProvider>(context);
+
     return Container(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('İptal Et'),
-              ),
-              TextButton(
-                onPressed: () {
-                  widget.onSettingsChanged(
-                    pomodoroDuration,
-                    shortBreakDuration,
-                    longBreakDuration,
-                    setCount,
-                    isAutoShortBreak,
-                    isAutoPomodoro,
-                  );
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Tamamla'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
           Row(
             children: [
               DigitTextField(
@@ -109,7 +90,10 @@ class _SettingsSheetState extends State<SettingsSheet> {
           ),
           const SizedBox(height: 16),
           SwitchListTile(
-            title: const Text('Molaları doğrudan başlat'),
+            title: Text(
+              'Oto. Mola',
+              style: pomodoroSettingsTextStyle(context),
+            ),
             value: isAutoShortBreak,
             onChanged: (bool value) {
               setState(() {
@@ -118,7 +102,10 @@ class _SettingsSheetState extends State<SettingsSheet> {
             },
           ),
           SwitchListTile(
-            title: const Text('Pomodoro doğrudan başlat'),
+            title: Text(
+              'Oto. Pomodoro',
+              style: pomodoroSettingsTextStyle(context),
+            ),
             value: isAutoPomodoro,
             onChanged: (bool value) {
               setState(() {
@@ -126,6 +113,32 @@ class _SettingsSheetState extends State<SettingsSheet> {
                 print(isAutoPomodoro.toString());
               });
             },
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              IconButton(
+                onPressed: () {
+                  settingsProvider.toggleSettingsCard();
+                },
+                icon: const Icon(Icons.close),
+              ),
+              IconButton(
+                onPressed: () {
+                  widget.onSettingsChanged(
+                    pomodoroDuration,
+                    shortBreakDuration,
+                    longBreakDuration,
+                    setCount,
+                    isAutoShortBreak,
+                    isAutoPomodoro,
+                  );
+                  settingsProvider.toggleSettingsCard();
+                },
+                icon: const Icon(Icons.check),
+              ),
+            ],
           ),
         ],
       ),

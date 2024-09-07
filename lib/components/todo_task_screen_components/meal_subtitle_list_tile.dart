@@ -18,7 +18,7 @@ class MealSubtitleListTile extends StatelessWidget {
       shrinkWrap: true,
       itemCount: subtitles.length,
       itemBuilder: (context, index) {
-        return GestureDetector(
+        return InkWell(
           onLongPress: () {
             onDelete(index, subtitles[index].text);
           },

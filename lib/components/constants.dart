@@ -32,6 +32,13 @@ TextStyle calendarDayTextStyle(BuildContext context) {
   );
 }
 
+TextStyle pomodoroSettingsTextStyle(BuildContext context) {
+  return TextStyle(
+    color: Theme.of(context).colorScheme.tertiary,
+    fontSize: 14,
+  );
+}
+
 TextStyle calendarMonthYearTextStyle(BuildContext context) {
   return TextStyle(
     fontSize: 16,

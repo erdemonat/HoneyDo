@@ -1,12 +1,14 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:honeydo/components/settings_button.dart';
+import 'package:honeydo/providers/settings_provider.model.dart';
 import 'package:honeydo/screen_parts/calender_card.dart';
 import 'package:honeydo/screen_parts/motivation_card.dart';
 import 'package:honeydo/screen_parts/pomodoro_card.dart';
 import 'package:honeydo/components/window_buttons.dart';
 import 'package:honeydo/screen_parts/settings_card.dart';
 import 'package:honeydo/screen_parts/todo_tasks_card.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,15 +18,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  bool _showSettingCards = false;
-  void toggleSettingsCard() {
-    setState(() {
-      _showSettingCards = !_showSettingCards;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final settingsProvider = Provider.of<SettingsProvider>(context);
+
     return Scaffold(
       body: Column(
         mainAxisSize: MainAxisSize.min,
@@ -34,9 +31,17 @@ class HomeScreenState extends State<HomeScreen> {
             child: MoveWindow(
               child: Row(
                 children: [
-                  SettingsButton(
-                    onTap: toggleSettingsCard,
+                  const Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 15),
+                      child: Icon(
+                        Icons.donut_small_sharp,
+                        size: 18,
+                      ),
+                    ),
                   ),
+                  const SizedBox(width: 6),
+                  const Center(child: Text('HoneyDo')),
                   Expanded(
                     child: Row(
                       children: [
@@ -91,7 +96,8 @@ class HomeScreenState extends State<HomeScreen> {
                             ),
                           ],
                         ),
-                        if (_showSettingCards) const SettingsCard(),
+                        if (settingsProvider.showSettingCards)
+                          const SettingsCard(),
                       ],
                     ),
                   ),

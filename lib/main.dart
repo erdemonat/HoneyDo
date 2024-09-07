@@ -1,9 +1,10 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:honeydo/model/focus_date_model.dart';
+import 'package:honeydo/providers/settings_provider.model.dart';
 import 'package:honeydo/model/task_model.dart';
+import 'package:honeydo/providers/theme_provider.dart';
 import 'package:honeydo/screens/homescreen.dart';
-import 'package:honeydo/theme.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -26,8 +27,18 @@ void main() async {
     directory: dir.path,
   );
   appWindow.size = const Size(1200, 675);
-  runApp(ChangeNotifierProvider(
-    create: (BuildContext context) => FocusDateModel(),
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+        create: (BuildContext context) => FocusDateModel(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => SettingsProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => ThemeProvider(),
+      ),
+    ],
     child: const MyApp(),
   ));
   appWindow.show();
@@ -55,7 +66,7 @@ class MyApp extends StatelessWidget {
       ],
       locale: const Locale('tr', 'TR'),
       supportedLocales: const [Locale('tr', 'TR')],
-      theme: darkTheme,
+      theme: Provider.of<ThemeProvider>(context).getThemeData,
       debugShowCheckedModeBanner: false,
       home: const HomeScreen(),
     );

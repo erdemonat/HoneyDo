@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:honeydo/components/pomodoro_components/settings_sheet.dart';
+import 'package:honeydo/components/pomodoro_components/pomodoro_settings.dart';
+import 'package:honeydo/providers/settings_provider.model.dart';
+import 'package:provider/provider.dart';
 
 class PomodoroCard extends StatefulWidget {
   const PomodoroCard({super.key});
@@ -148,6 +150,8 @@ class _PomodoroCardState extends State<PomodoroCard>
 
   @override
   Widget build(BuildContext context) {
+    final settingsProvider = Provider.of<SettingsProvider>(context);
+
     return Container(
       margin: const EdgeInsets.all(5),
       padding: const EdgeInsets.all(10),
@@ -179,7 +183,9 @@ class _PomodoroCardState extends State<PomodoroCard>
                   Center(
                     child: Text(
                       timerText,
-                      style: const TextStyle(color: Colors.white, fontSize: 32),
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.tertiary,
+                          fontSize: 32),
                     ),
                   ),
                 ],
@@ -196,14 +202,14 @@ class _PomodoroCardState extends State<PomodoroCard>
                   child: Text(
                     setNumber.toString(),
                     style: isCurrent
-                        ? const TextStyle(
+                        ? TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white)
+                            color: Theme.of(context).colorScheme.tertiary)
                         : TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.normal,
-                            color: Colors.white.withOpacity(0.5),
+                            color: Theme.of(context).colorScheme.tertiary,
                           ),
                   ),
                 );
@@ -262,57 +268,7 @@ class _PomodoroCardState extends State<PomodoroCard>
                     icon: const Icon(Icons.refresh_rounded)),
                 IconButton(
                   onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return Align(
-                          alignment: const Alignment(-1.1, 1.5),
-                          child: FractionallySizedBox(
-                            heightFactor: 0.9,
-                            widthFactor: 0.3,
-                            child: Dialog(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: SettingsSheet(
-                                userPomodoroDuration:
-                                    pomodoroDuration.inMinutes,
-                                userShortBreakDuration:
-                                    shortBreakDuration.inMinutes,
-                                userLongBreakDuration:
-                                    longBreakDuration.inMinutes,
-                                userSetCount: selectedSet,
-                                onSettingsChanged: (int pomodoro,
-                                    int shortBreak,
-                                    int longBreak,
-                                    int setCount,
-                                    bool autoShortBreak,
-                                    bool autoPomodoro) {
-                                  setState(() {
-                                    pomodoroDuration =
-                                        Duration(minutes: pomodoro);
-                                    shortBreakDuration =
-                                        Duration(minutes: shortBreak);
-                                    longBreakDuration =
-                                        Duration(minutes: longBreak);
-                                    selectedSet = setCount;
-
-                                    if (currentSet > selectedSet) {
-                                      currentSet = 1;
-                                    }
-
-                                    remainingPomodoroDuration =
-                                        getCurrentDuration();
-                                    _controller.duration =
-                                        remainingPomodoroDuration;
-                                  });
-                                },
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    );
+                    settingsProvider.toggleSettingsCard();
                   },
                   icon: const Icon(Icons.settings),
                 ),
