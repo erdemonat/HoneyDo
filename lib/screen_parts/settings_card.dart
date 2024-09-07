@@ -15,6 +15,7 @@ class SettingsCard extends StatefulWidget {
 class SettingsCardState extends State<SettingsCard> {
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
     return Container(
@@ -79,9 +80,21 @@ class SettingsCardState extends State<SettingsCard> {
                     children: [
                       Row(
                         children: [
-                          ColorThemeBox(boxColor: Colors.red),
-                          ColorThemeBox(boxColor: Colors.purpleAccent),
-                          ColorThemeBox(boxColor: Colors.greenAccent),
+                          ColorThemeBox(
+                              boxColor: Colors.red,
+                              onTap: () {
+                                themeProvider.switchThemeIndex(0);
+                              }),
+                          ColorThemeBox(
+                              boxColor: Colors.purpleAccent,
+                              onTap: () {
+                                themeProvider.switchThemeIndex(1);
+                              }),
+                          ColorThemeBox(
+                              boxColor: Colors.greenAccent,
+                              onTap: () {
+                                themeProvider.switchThemeIndex(2);
+                              }),
                         ],
                       ),
                     ],
@@ -91,9 +104,21 @@ class SettingsCardState extends State<SettingsCard> {
                     children: [
                       Row(
                         children: [
-                          ColorThemeBox(boxColor: Colors.yellow),
-                          ColorThemeBox(boxColor: Colors.orange),
-                          ColorThemeBox(boxColor: Colors.deepPurple),
+                          ColorThemeBox(
+                              boxColor: Colors.yellow,
+                              onTap: () {
+                                themeProvider.switchThemeIndex(3);
+                              }),
+                          ColorThemeBox(
+                              boxColor: Colors.orange,
+                              onTap: () {
+                                themeProvider.switchThemeIndex(4);
+                              }),
+                          ColorThemeBox(
+                              boxColor: Colors.deepPurple,
+                              onTap: () {
+                                themeProvider.switchThemeIndex(5);
+                              }),
                         ],
                       ),
                     ],
@@ -155,9 +180,11 @@ class SettingsCardState extends State<SettingsCard> {
 
 class ColorThemeBox extends StatelessWidget {
   final Color boxColor;
+  final void Function() onTap;
   const ColorThemeBox({
     super.key,
     required this.boxColor,
+    required this.onTap,
   });
 
   @override
@@ -167,7 +194,7 @@ class ColorThemeBox extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: InkWell(
-        onTap: () {},
+        onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(6),

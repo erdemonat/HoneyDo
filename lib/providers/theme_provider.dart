@@ -4,13 +4,21 @@ import 'package:honeydo/theme.dart';
 class ThemeProvider extends ChangeNotifier {
   // Tema listeleri (6 dark, 6 light)
   final List<ThemeData> _darkThemes = [
-    darkTheme, // Varsayılan dark tema
-    // Diğer dark temalar burada olacak
+    darkTheme1,
+    darkTheme2,
+    darkTheme3,
+    darkTheme4,
+    darkTheme5,
+    darkTheme6,
   ];
 
   final List<ThemeData> _lightThemes = [
-    lightTheme, // Varsayılan light tema
-    // Diğer light temalar burada olacak
+    lightTheme1,
+    lightTheme2,
+    lightTheme3,
+    lightTheme4,
+    lightTheme5,
+    lightTheme6,
   ];
 
   bool _isDarkMode = true; // Dark mode açık mı?
