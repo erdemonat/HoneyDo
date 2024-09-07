@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:honeydo/components/constants.dart';
 import 'package:honeydo/components/todo_task_screen_components/meal_subtitle_add_textfield.dart';
 import 'package:honeydo/components/todo_task_screen_components/meal_subtitle_list_tile.dart';
-import 'package:honeydo/components/todo_task_screen_components/subtitle_add_textfield.dart';
 import 'package:honeydo/components/todo_task_screen_components/subtitleitem_model.dart';
 import 'package:honeydo/main.dart';
 import 'package:honeydo/model/task_model.dart';
