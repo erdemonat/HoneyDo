@@ -29,6 +29,24 @@ class ThemeProvider extends ChangeNotifier {
       ? _darkThemes[_currentThemeIndex]
       : _lightThemes[_currentThemeIndex];
 
+  Color getThemePrimaryColor(int index) {
+    if (index >= 0 && index < _darkThemes.length) {
+      return _isDarkMode
+          ? _darkThemes[index].colorScheme.primary
+          : _lightThemes[index].colorScheme.primary;
+    }
+    return Colors.transparent; // Geçersiz index için varsayılan değer
+  }
+
+  Color getThemeTertiaryColor(int index) {
+    if (index >= 0 && index < _darkThemes.length) {
+      return _isDarkMode
+          ? _darkThemes[index].colorScheme.tertiary
+          : _lightThemes[index].colorScheme.tertiary;
+    }
+    return Colors.transparent; // Geçersiz index için varsayılan değer
+  }
+
   // Temayı değiştirir (dark-light geçişi ve tema numarasına göre)
   void switchTheme() {
     _isDarkMode = !_isDarkMode;

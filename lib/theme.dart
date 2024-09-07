@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 const Color customWhite = Color.fromARGB(255, 225, 230, 240);
 const Color customBlack = Colors.black;
@@ -91,40 +92,135 @@ const Color customGreen = Color(0xFF0DC9AB);
 //   ),
 // );
 
-// Theme 1
+// Theme 1 Pastel Blue - Pinkimsi
 ThemeData darkTheme1 = ThemeData(
   brightness: Brightness.dark,
   scaffoldBackgroundColor: const Color(0xFF2F3C7E),
   colorScheme: const ColorScheme.dark(
-    surface: Color(0xFF202A50),
-    primary: Color(0xFF2F3C7E),
-    onPrimary: Color(0xFFFBEAEB),
-    inversePrimary: Color(0xFF4A5D9E),
-    secondary: Color(0xFF4A5D9E),
-    onSurface: Color(0xFFFBEAEB),
-    tertiary: Color(0xFF89ABE3),
+    surface: Color(0xFF1b234b),
+    primary: Color.fromARGB(255, 65, 78, 143),
+    onPrimary: Color.fromARGB(255, 79, 90, 143),
+    inversePrimary: Color(0xFFFBEAEB),
+    secondary: Color(0xFF4b60ca),
+    onSurface: Color(0xFF8E9DE7),
+    tertiary: Color(0xFFFBEAEB),
   ),
-  textTheme: const TextTheme(
-    displayLarge: TextStyle(color: Color(0xFFFBEAEB)),
-    displayMedium: TextStyle(color: Color(0xFFFBEAEB)),
+  textTheme: GoogleFonts.openSansTextTheme(
+    const TextTheme(
+      displayLarge: TextStyle(color: Color(0xFFFBEAEB)),
+      displayMedium: TextStyle(color: Color(0xFFFBEAEB)),
+      displaySmall: TextStyle(color: Color(0xFFFBEAEB)),
+      headlineLarge: TextStyle(color: Color(0xFFFBEAEB)),
+      headlineMedium: TextStyle(color: Color(0xFFFBEAEB)),
+      headlineSmall: TextStyle(color: Color(0xFFFBEAEB)),
+      labelLarge: TextStyle(color: Color(0xFFFBEAEB)),
+      labelMedium: TextStyle(color: Color(0xFFFBEAEB)),
+      labelSmall: TextStyle(color: Color(0xFFFBEAEB)),
+      titleLarge: TextStyle(color: Color(0xFFFBEAEB)),
+      titleMedium: TextStyle(color: Color(0xFFFBEAEB)),
+      titleSmall: TextStyle(color: Color(0xFFFBEAEB)),
+      bodyLarge: TextStyle(color: Color(0xFFFBEAEB)),
+      bodyMedium: TextStyle(color: Color(0xFFFBEAEB)),
+      bodySmall: TextStyle(color: Color(0xFFFBEAEB)),
+    ),
+  ),
+  textSelectionTheme: const TextSelectionThemeData(
+    selectionColor: Color.fromARGB(60, 251, 234, 235),
+    cursorColor: Color(0xFFFBEAEB),
+  ),
+  iconButtonTheme: const IconButtonThemeData(
+    style: ButtonStyle(
+      iconColor: WidgetStatePropertyAll(
+        Color(0xFF8E9DE7),
+      ),
+    ),
   ),
 );
 
 ThemeData lightTheme1 = ThemeData(
   brightness: Brightness.light,
-  scaffoldBackgroundColor: const Color(0xFFFBEAEB),
+  scaffoldBackgroundColor: const Color.fromARGB(255, 240, 243, 255),
   colorScheme: const ColorScheme.light(
-    surface: Color(0xFFFFFFFF),
-    primary: Color(0xFF2F3C7E),
-    onPrimary: Color(0xFFFBEAEB),
+    surface: Color.fromARGB(255, 211, 217, 248),
+    primary: Color.fromARGB(255, 150, 162, 225),
+    onPrimary: Color.fromARGB(255, 175, 186, 240),
     inversePrimary: Color(0xFF2F3C7E),
-    secondary: Color(0xFF89ABE3),
-    onSurface: Color(0xFF202A50),
-    tertiary: Color(0xFF4A5D9E),
+    secondary: Color.fromARGB(255, 124, 139, 214),
+    onSurface: Color.fromARGB(255, 58, 67, 112),
+    tertiary: Color(0xFF2F3C7E),
   ),
   textTheme: const TextTheme(
-    displayLarge: TextStyle(color: Color(0xFF2F3C7E)),
-    displayMedium: TextStyle(color: Color(0xFF2F3C7E)),
+    displayLarge: TextStyle(
+      color: Color(0xFF2F3C7E),
+      fontFamily: 'SF',
+    ),
+    displayMedium: TextStyle(
+      color: Color(0xFF2F3C7E),
+      fontFamily: 'SF',
+    ),
+    displaySmall: TextStyle(
+      color: Color(0xFF2F3C7E),
+      fontFamily: 'SF',
+    ),
+    headlineLarge: TextStyle(
+      color: Color(0xFF2F3C7E),
+      fontFamily: 'SF',
+    ),
+    headlineMedium: TextStyle(
+      color: Color(0xFF2F3C7E),
+      fontFamily: 'SF',
+    ),
+    headlineSmall: TextStyle(
+      color: Color(0xFF2F3C7E),
+      fontFamily: 'SF',
+    ),
+    labelLarge: TextStyle(
+      color: Color(0xFF2F3C7E),
+      fontFamily: 'SF',
+    ),
+    labelMedium: TextStyle(
+      color: Color(0xFF2F3C7E),
+      fontFamily: 'SF',
+    ),
+    labelSmall: TextStyle(
+      color: Color(0xFF2F3C7E),
+      fontFamily: 'SF',
+    ),
+    titleLarge: TextStyle(
+      color: Color(0xFF2F3C7E),
+      fontFamily: 'SF',
+    ),
+    titleMedium: TextStyle(
+      color: Color(0xFF2F3C7E),
+      fontFamily: 'SF',
+    ),
+    titleSmall: TextStyle(
+      color: Color(0xFF2F3C7E),
+      fontFamily: 'SF',
+    ),
+    bodyLarge: TextStyle(
+      color: Color(0xFF2F3C7E),
+      fontFamily: 'SF',
+    ),
+    bodyMedium: TextStyle(
+      color: Color(0xFF2F3C7E),
+      fontFamily: 'SF',
+    ),
+    bodySmall: TextStyle(
+      color: Color(0xFF2F3C7E),
+      fontFamily: 'SF',
+    ),
+  ),
+  textSelectionTheme: const TextSelectionThemeData(
+    selectionColor: Color.fromARGB(60, 47, 60, 126),
+    cursorColor: Color(0xFF2F3C7E),
+  ),
+  iconButtonTheme: const IconButtonThemeData(
+    style: ButtonStyle(
+      iconColor: MaterialStatePropertyAll(
+        Color.fromARGB(255, 58, 67, 112),
+      ),
+    ),
   ),
 );
 

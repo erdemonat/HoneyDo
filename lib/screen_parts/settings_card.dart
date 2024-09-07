@@ -54,14 +54,8 @@ class SettingsCardState extends State<SettingsCard> {
                       ],
                       iconSize: screenWidth * 0.016,
                       activeBgColors: [
-                        [
-                          Theme.of(context).colorScheme.onSurface,
-                          Theme.of(context).colorScheme.onPrimary
-                        ],
-                        [
-                          Theme.of(context).colorScheme.onSurface,
-                          Theme.of(context).colorScheme.onPrimary
-                        ]
+                        [Colors.amber, Colors.red],
+                        [Colors.amber, Colors.red]
                       ],
                       animate: true,
                       curve: Curves.bounceInOut,
@@ -81,20 +75,22 @@ class SettingsCardState extends State<SettingsCard> {
                       Row(
                         children: [
                           ColorThemeBox(
-                              boxColor: Colors.red,
+                              index: 0,
                               onTap: () {
                                 themeProvider.switchThemeIndex(0);
                               }),
                           ColorThemeBox(
-                              boxColor: Colors.purpleAccent,
-                              onTap: () {
-                                themeProvider.switchThemeIndex(1);
-                              }),
+                            index: 1,
+                            onTap: () {
+                              themeProvider.switchThemeIndex(1);
+                            },
+                          ),
                           ColorThemeBox(
-                              boxColor: Colors.greenAccent,
-                              onTap: () {
-                                themeProvider.switchThemeIndex(2);
-                              }),
+                            index: 2,
+                            onTap: () {
+                              themeProvider.switchThemeIndex(2);
+                            },
+                          ),
                         ],
                       ),
                     ],
@@ -105,20 +101,23 @@ class SettingsCardState extends State<SettingsCard> {
                       Row(
                         children: [
                           ColorThemeBox(
-                              boxColor: Colors.yellow,
-                              onTap: () {
-                                themeProvider.switchThemeIndex(3);
-                              }),
+                            index: 3,
+                            onTap: () {
+                              themeProvider.switchThemeIndex(3);
+                            },
+                          ),
                           ColorThemeBox(
-                              boxColor: Colors.orange,
-                              onTap: () {
-                                themeProvider.switchThemeIndex(4);
-                              }),
+                            index: 4,
+                            onTap: () {
+                              themeProvider.switchThemeIndex(4);
+                            },
+                          ),
                           ColorThemeBox(
-                              boxColor: Colors.deepPurple,
-                              onTap: () {
-                                themeProvider.switchThemeIndex(5);
-                              }),
+                            index: 5,
+                            onTap: () {
+                              themeProvider.switchThemeIndex(5);
+                            },
+                          ),
                         ],
                       ),
                     ],
@@ -179,16 +178,17 @@ class SettingsCardState extends State<SettingsCard> {
 }
 
 class ColorThemeBox extends StatelessWidget {
-  final Color boxColor;
+  final int index;
   final void Function() onTap;
   const ColorThemeBox({
     super.key,
-    required this.boxColor,
     required this.onTap,
+    required this.index,
   });
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
     return Padding(
@@ -197,8 +197,29 @@ class ColorThemeBox extends StatelessWidget {
         onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(6),
-            color: boxColor,
+            border: Border.all(
+              color: Theme.of(context).colorScheme.onSurface,
+              width: 2,
+            ),
+            borderRadius: themeProvider.currentThemeIndex == index
+                ? BorderRadius.circular(8)
+                : BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.2),
+                blurRadius: 5,
+                offset: const Offset(2, 2),
+              ),
+            ],
+            gradient: LinearGradient(
+              colors: [
+                themeProvider.getThemePrimaryColor(index),
+                themeProvider.getThemeTertiaryColor(index),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              stops: const [0.5, 0.5],
+            ),
           ),
           height: screenHeight * 0.05,
           width: screenHeight * 0.05,
