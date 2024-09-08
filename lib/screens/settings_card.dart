@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:honeydo/components/pomodoro_components/pomodoro_settings.dart';
 import 'package:honeydo/components/titled_container.dart';
+import 'package:honeydo/providers/pomodoro_provider.dart';
 import 'package:honeydo/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
@@ -15,6 +16,8 @@ class SettingsCard extends StatefulWidget {
 class SettingsCardState extends State<SettingsCard> {
   @override
   Widget build(BuildContext context) {
+    final pomodoroProvider =
+        Provider.of<PomodoroProvider>(context, listen: false);
     final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
@@ -128,48 +131,29 @@ class SettingsCardState extends State<SettingsCard> {
             TitledContainer(
               titleText: 'Pomodoro',
               child: PomodoroSettings(
-                userPomodoroDuration: 25,
-                userShortBreakDuration: 5,
-                userLongBreakDuration: 15,
-                userSetCount: 4,
+                userPomodoroDuration:
+                    pomodoroProvider.pomodoroDuration.inMinutes,
+                userShortBreakDuration:
+                    pomodoroProvider.shortBreakDuration.inMinutes,
+                userLongBreakDuration:
+                    pomodoroProvider.longBreakDuration.inMinutes,
+                userSetCount: pomodoroProvider.setCount,
+                autoBreak: pomodoroProvider.autoBreak,
+                autoPomodoro: pomodoroProvider.autoPomodoro,
                 onSettingsChanged: (pomodoro, shortBreak, longBreak, setCount,
-                    autoShortBreak, autoPomodoro) {},
+                    autoBreak, autoPomodoro) {
+                  setState(() {
+                    pomodoroProvider.setAllPomodoroSettings(
+                        Duration(minutes: pomodoro),
+                        Duration(minutes: shortBreak),
+                        Duration(minutes: longBreak),
+                        setCount,
+                        autoBreak,
+                        autoPomodoro);
+                  });
+                },
               ),
             ),
-            // ToggleSwitch(
-            //   isVertical: true,
-            //   // animationduration widgetin flexible olma süresinide belirliyor.
-            //   animationDuration: 200,
-            //   minHeight: screenHeight * 0.045,
-            //   minWidth: screenWidth * 0.045,
-            //   initialLabelIndex: 0,
-            //   cornerRadius: 12,
-            //   activeFgColor: Theme.of(context).colorScheme.tertiary,
-            //   inactiveBgColor: Theme.of(context).colorScheme.secondary,
-            //   inactiveFgColor: Theme.of(context).colorScheme.surface,
-            //   activeBgColors: [
-            //     [
-            //       Theme.of(context).colorScheme.onSurface,
-            //       Theme.of(context).colorScheme.onPrimary
-            //     ],
-            //     [
-            //       Theme.of(context).colorScheme.onSurface,
-            //       Theme.of(context).colorScheme.onPrimary
-            //     ]
-            //   ],
-            //   totalSwitches: 2,
-            //   centerText: true,
-            //   fontSize: screenWidth * 0.012,
-            //   labels: const [
-            //     'Tr',
-            //     'En',
-            //   ],
-            //   animate: true,
-            //   curve: Curves.linear,
-            //   onToggle: (index) {
-            //     print('switched to: $index');
-            //   },
-            // ),
           ],
         ),
       ),

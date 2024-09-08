@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:honeydo/components/todo_task_screen_components/task_title.dart';
-import 'package:honeydo/components/todo_task_screen_components/subtitle_add_textfield.dart';
-import 'package:honeydo/components/todo_task_screen_components/subtitle_list_tile.dart';
-import 'package:honeydo/components/todo_task_screen_components/subtitleitem_model.dart';
-import 'package:honeydo/components/todo_task_screen_components/progress_bar.dart';
-import 'package:honeydo/main.dart';
+import 'package:honeydo/components/task_card_components/task_title.dart';
+import 'package:honeydo/components/task_card_components/subtitle_add_textfield.dart';
+import 'package:honeydo/components/task_card_components/subtitle_list_tile.dart';
+import 'package:honeydo/model/subtitle_model.dart';
+import 'package:honeydo/components/task_card_components/progress_bar.dart';
 import 'package:honeydo/model/task_model.dart';
 
 class TaskCardTile extends StatefulWidget {
@@ -119,61 +118,13 @@ class TaskCardTileState extends State<TaskCardTile> {
       }
     });
 
-    await isar.writeTxn(() async {
-      for (final subTask in widget.tasks.subtasks) {
-        subTask.isChecked = isChecked;
-        await isar.subTasks.put(subTask);
-      }
-
-      widget.tasks.isChecked = isChecked;
-      await isar.tasks.put(widget.tasks);
-    });
-
     _loadSubTasks();
-  }
-
-  Future<void> _addSubtitle(String subtitleText) async {
-    final subTask = SubTask()
-      ..name = subtitleText
-      ..isChecked = false;
-
-    await isar.writeTxn(() async {
-      subTask.task.value = widget.tasks;
-      await isar.subTasks.put(subTask);
-      widget.tasks.subtasks.add(subTask);
-      await widget.tasks.subtasks.save();
-    });
-
-    if (!mounted) return;
-
-    await _loadSubTasks();
-    _subtitleController.clear();
-  }
-
-  Future<void> _deleteSubtitle(int index, String subtitleText) async {
-    final subTask =
-        widget.tasks.subtasks.where((st) => st.name == subtitleText).first;
-
-    await isar.writeTxn(() async {
-      widget.tasks.subtasks.remove(subTask);
-      await widget.tasks.subtasks.save();
-      await isar.subTasks.delete(subTask.id);
-    });
-
-    if (!mounted) return;
-
-    await _loadSubTasks();
   }
 
   void _updateSubtitleCheckStatus(int index, bool? value) async {
     final subTask = widget.tasks.subtasks
         .where((st) => st.name == _subtitles[index].text)
         .first;
-
-    await isar.writeTxn(() async {
-      subTask.isChecked = value ?? false;
-      await isar.subTasks.put(subTask);
-    });
 
     if (!mounted) return;
 
@@ -188,10 +139,6 @@ class TaskCardTileState extends State<TaskCardTile> {
       } else {
         widget.tasks.isChecked = false;
       }
-
-      isar.writeTxn(() async {
-        await isar.tasks.put(widget.tasks);
-      });
 
       completionPercentage = (_subtitles.isNotEmpty
               ? (completedSubtasks + (widget.tasks.isChecked ? 1 : 0)) /
@@ -265,7 +212,7 @@ class TaskCardTileState extends State<TaskCardTile> {
                     TaskTitle(
                       task: widget.tasks,
                       onPressed: _toggleCardHeight,
-                      onTaskChecked: _isTaskChecked,
+                      onTaskChecked: (p0) {}, //_isTaskChecked
                     ),
                     if (_cardHeight > _collapsedHeight)
                       const SizedBox(height: 20),
@@ -276,12 +223,13 @@ class TaskCardTileState extends State<TaskCardTile> {
                             children: [
                               SubtitleListTile(
                                 subtitles: _subtitles,
-                                onDelete: _deleteSubtitle,
-                                onUpdateCheckStatus: _updateSubtitleCheckStatus,
+                                onDelete: (p0, p1) {}, //_deleteSubtitle
+                                onUpdateCheckStatus:
+                                    (p0, p1) {}, //_updateSubtitleCheckStatus
                               ),
                               SubTitleAddTextField(
                                 controller: _subtitleController,
-                                onSubmitted: _addSubtitle,
+                                onSubmitted: (p0) {}, //_addSubtitle
                                 hintext: 'Bir görev ekle',
                               ),
                             ],

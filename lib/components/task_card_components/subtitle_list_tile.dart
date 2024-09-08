@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:honeydo/components/constants.dart';
-import 'package:honeydo/components/todo_task_screen_components/subtitleitem_model.dart';
+import 'package:honeydo/constants/constants.dart';
+import 'package:honeydo/model/subtitle_model.dart';
 
 class SubtitleListTile extends StatelessWidget {
   final List<SubtitleItem> subtitles;

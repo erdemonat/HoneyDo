@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:honeydo/components/constants.dart';
-import 'package:honeydo/components/todo_task_screen_components/meal_subtitle_add_textfield.dart';
-import 'package:honeydo/components/todo_task_screen_components/meal_subtitle_list_tile.dart';
-import 'package:honeydo/components/todo_task_screen_components/subtitleitem_model.dart';
+import 'package:honeydo/constants/constants.dart';
+import 'package:honeydo/components/task_card_components/meal_subtitle_add_textfield.dart';
+import 'package:honeydo/components/task_card_components/meal_subtitle_list_tile.dart';
+import 'package:honeydo/model/subtitle_model.dart';
 import 'package:honeydo/main.dart';
 import 'package:honeydo/model/task_model.dart';
 
@@ -73,36 +73,37 @@ class MealCardTileState extends State<MealCardTile> {
     });
   }
 
-  Future<void> _addSubtitle(String subtitleText) async {
-    final subMeal = SubMeal()..name = subtitleText;
+  // Future<void> _addSubtitle(String subtitleText) async {
 
-    await isar.writeTxn(() async {
-      subMeal.meal.value = widget.meals;
-      await isar.subMeals.put(subMeal);
-      widget.meals.submeals.add(subMeal);
-      await widget.meals.submeals.save();
-    });
+  //   final subMeal = SubMeal()..name = subtitleText;
 
-    if (!mounted) return;
+  //   await isar.writeTxn(() async {
+  //     subMeal.meal.value = widget.meals;
+  //     await isar.subMeals.put(subMeal);
+  //     widget.meals.submeals.add(subMeal);
+  //     await widget.meals.submeals.save();
+  //   });
 
-    await _loadSubMeals();
-    _subtitleController.clear();
-  }
+  //   if (!mounted) return;
 
-  Future<void> _deleteSubtitle(int index, String subtitleText) async {
-    final subMeal =
-        widget.meals.submeals.where((st) => st.name == subtitleText).first;
+  //   await _loadSubMeals();
+  //   _subtitleController.clear();
+  // }
 
-    await isar.writeTxn(() async {
-      widget.meals.submeals.remove(subMeal);
-      await widget.meals.submeals.save();
-      await isar.subMeals.delete(subMeal.id);
-    });
+  // Future<void> _deleteSubtitle(int index, String subtitleText) async {
+  //   final subMeal =
+  //       widget.meals.submeals.where((st) => st.name == subtitleText).first;
 
-    if (!mounted) return;
+  //   await isar.writeTxn(() async {
+  //     widget.meals.submeals.remove(subMeal);
+  //     await widget.meals.submeals.save();
+  //     await isar.subMeals.delete(subMeal.id);
+  //   });
 
-    await _loadSubMeals();
-  }
+  //   if (!mounted) return;
+
+  //   await _loadSubMeals();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -144,11 +145,11 @@ class MealCardTileState extends State<MealCardTile> {
                             children: [
                               MealSubtitleListTile(
                                 subtitles: _subtitles,
-                                onDelete: _deleteSubtitle,
+                                onDelete: (p0, p1) {}, //_deleteSubtitle
                               ),
                               MealSubTitleAddTextField(
                                 controller: _subtitleController,
-                                onSubmitted: _addSubtitle,
+                                onSubmitted: (p0) {}, //_addSubtitle
                                 hintext: 'Yediklerini yaz',
                               ),
                             ],

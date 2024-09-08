@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:honeydo/theme.dart';
+import 'package:honeydo/constants/theme.dart';
 
 TextStyle cardTitleTextStyle(BuildContext context) {
   return TextStyle(

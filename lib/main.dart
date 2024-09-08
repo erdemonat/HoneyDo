@@ -1,42 +1,35 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-import 'package:honeydo/model/focus_date_model.dart';
+import 'package:honeydo/isar_service.dart';
+import 'package:honeydo/providers/focus_date_provider.dart';
+import 'package:honeydo/providers/pomodoro_provider.dart';
 import 'package:honeydo/providers/settings_provider.model.dart';
-import 'package:honeydo/model/task_model.dart';
 import 'package:honeydo/providers/theme_provider.dart';
 import 'package:honeydo/screens/homescreen.dart';
-import 'package:isar/isar.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-late Isar isar;
+// late Isar isar;
+late IsarService isarService;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final dir = await getApplicationDocumentsDirectory();
-  isar = await Isar.open(
-    [
-      HoneyDoDataSchema,
-      DateLinksSchema,
-      TaskSchema,
-      SubTaskSchema,
-      MealSchema,
-      SubMealSchema,
-    ],
-    directory: dir.path,
-  );
+  isarService = IsarService();
+  //await isarService.db;
   appWindow.size = const Size(1200, 675);
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(
-        create: (BuildContext context) => FocusDateModel(),
+        create: (BuildContext context) => FocusDateProvider(),
       ),
       ChangeNotifierProvider(
         create: (_) => SettingsProvider(),
       ),
       ChangeNotifierProvider(
         create: (_) => ThemeProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => PomodoroProvider(),
       ),
     ],
     child: const MyApp(),

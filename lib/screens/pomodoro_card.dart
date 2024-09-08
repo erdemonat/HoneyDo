@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:honeydo/components/pomodoro_components/pomodoro_settings.dart';
-import 'package:honeydo/providers/settings_provider.model.dart';
 import 'package:provider/provider.dart';
+import 'package:honeydo/providers/pomodoro_provider.dart';
+import 'package:honeydo/providers/settings_provider.model.dart';
 
 class PomodoroCard extends StatefulWidget {
   const PomodoroCard({super.key});
@@ -13,25 +13,22 @@ class PomodoroCard extends StatefulWidget {
 class _PomodoroCardState extends State<PomodoroCard>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+  late PomodoroProvider pomodoroProvider;
   String pomodoroStatus = "Hazır";
   bool _isPlay = false;
-  int selectedSet = 4;
   int currentSet = 1;
 
-  static Duration pomodoroDuration = const Duration(minutes: 25);
-  static Duration shortBreakDuration = const Duration(minutes: 5);
-  static Duration longBreakDuration = const Duration(minutes: 15);
-
-  Duration remainingPomodoroDuration = pomodoroDuration;
-
+  Duration remainingPomodoroDuration = const Duration(minutes: 25);
   String currentPhase = "Pomodoro";
 
   @override
   void initState() {
     super.initState();
+    pomodoroProvider = Provider.of<PomodoroProvider>(context, listen: false);
+    remainingPomodoroDuration = pomodoroProvider.pomodoroDuration;
     _controller = AnimationController(
       vsync: this,
-      duration: pomodoroDuration,
+      duration: pomodoroProvider.pomodoroDuration,
     )
       ..addListener(() {
         setState(() {
@@ -51,18 +48,18 @@ class _PomodoroCardState extends State<PomodoroCard>
   Duration getCurrentDuration() {
     switch (currentPhase) {
       case "Short Break":
-        return shortBreakDuration;
+        return pomodoroProvider.shortBreakDuration;
       case "Long Break":
-        return longBreakDuration;
+        return pomodoroProvider.longBreakDuration;
       default:
-        return pomodoroDuration;
+        return pomodoroProvider.pomodoroDuration;
     }
   }
 
   void onTimerComplete() {
     switch (currentPhase) {
       case "Pomodoro":
-        if (currentSet < selectedSet) {
+        if (currentSet < pomodoroProvider.setCount) {
           setState(() {
             currentPhase = "Short Break";
             pomodoroStatus = "Kısa Mola";
@@ -122,7 +119,7 @@ class _PomodoroCardState extends State<PomodoroCard>
       currentSet = 1;
       currentPhase = "Pomodoro";
       pomodoroStatus = "Hazır";
-      remainingPomodoroDuration = pomodoroDuration;
+      remainingPomodoroDuration = pomodoroProvider.pomodoroDuration;
     });
   }
 
@@ -193,7 +190,7 @@ class _PomodoroCardState extends State<PomodoroCard>
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(selectedSet, (index) {
+              children: List.generate(pomodoroProvider.setCount, (index) {
                 int setNumber = index + 1;
                 bool isCurrent = setNumber == currentSet;
 
@@ -246,7 +243,7 @@ class _PomodoroCardState extends State<PomodoroCard>
                       showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
-                          title: const Text('Emin misan?'),
+                          title: const Text('Emin misiniz?'),
                           actions: [
                             TextButton(
                               onPressed: () {

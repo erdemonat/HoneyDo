@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:honeydo/components/colorie_info_dialog.dart';
-import 'package:honeydo/components/todo_task_screen_components/meal_card_tile.dart';
-import 'package:honeydo/components/todo_task_screen_components/task_card_tile.dart';
-import 'package:honeydo/components/todo_task_screen_components/task_text_field.dart';
-import 'package:honeydo/main.dart';
-import 'package:honeydo/model/focus_date_model.dart';
+import 'package:honeydo/components/task_card_components/meal_card_tile.dart';
+import 'package:honeydo/components/task_card_components/task_card_tile.dart';
+import 'package:honeydo/components/task_card_components/task_text_field.dart';
+import 'package:honeydo/providers/focus_date_provider.dart';
 import 'package:intl/intl.dart';
-import 'package:isar/isar.dart';
 import 'package:honeydo/model/task_model.dart';
 import 'package:provider/provider.dart';
 
@@ -19,209 +16,40 @@ class TasksCard extends StatefulWidget {
 
 TextEditingController taskTextController = TextEditingController();
 
-Future<HoneyDoData?> getTaskDataByName(String name) async {
-  return await isar.honeyDoDatas.filter().nameEqualTo(name).findFirst();
-}
-
-Future<DateLinks?> getTaskDateByDate(
-    HoneyDoData honeyDoData, String date) async {
-  await honeyDoData.dateLinks.load();
-  return honeyDoData.dateLinks.filter().dateEqualTo(date).findFirst();
-}
-
-Future<void> createOrUpdateTaskData(
-    String taskDataName, String date, String taskName) async {
-  await isar.writeTxn(() async {
-    HoneyDoData? honeyDoData = await getTaskDataByName(taskDataName);
-    if (honeyDoData == null) {
-      honeyDoData = HoneyDoData()..name = taskDataName;
-      await isar.honeyDoDatas.put(honeyDoData);
-    }
-    DateLinks? dateLink = await getTaskDateByDate(honeyDoData, date);
-    if (dateLink == null) {
-      dateLink = DateLinks()..date = date;
-      await isar.dateLinks.put(dateLink);
-      honeyDoData.dateLinks.add(dateLink);
-      await honeyDoData.dateLinks.save();
-    }
-    await dateLink.tasks.load();
-    int nextOrder = dateLink.tasks.length;
-
-    final task = Task()
-      ..name = taskName
-      ..order = nextOrder
-      ..isMarked = false
-      ..markColor = "4294198070"
-      ..isChecked = false;
-    await isar.tasks.put(task);
-    dateLink.tasks.add(task);
-    await dateLink.tasks.save();
-  });
-}
-
-Future<void> createOrUpdateMealData(
-    String mealDataName, String date, String mealName) async {
-  await isar.writeTxn(() async {
-    HoneyDoData? honeyDoData = await getTaskDataByName(mealDataName);
-    if (honeyDoData == null) {
-      honeyDoData = HoneyDoData()..name = mealDataName;
-      await isar.honeyDoDatas.put(honeyDoData);
-    }
-    DateLinks? dateLink = await getTaskDateByDate(honeyDoData, date);
-    if (dateLink == null) {
-      dateLink = DateLinks()..date = date;
-      await isar.dateLinks.put(dateLink);
-      honeyDoData.dateLinks.add(dateLink);
-      await honeyDoData.dateLinks.save();
-    }
-    await dateLink.meals.load();
-    int nextOrder = dateLink.meals.length;
-
-    final meal = Meal()
-      ..name = mealName
-      ..order = nextOrder;
-    await isar.meals.put(meal);
-    dateLink.meals.add(meal);
-    await dateLink.meals.save();
-  });
-}
-
 class _TasksCardState extends State<TasksCard> {
   List<Task> tasks = [];
-  List<Meal> meals = [];
+  static List<Meal> meals = [];
   bool isDragging = false;
   bool taskMealToggle = false;
 
   @override
   void initState() {
     super.initState();
-    loadTasks();
-    loadMeals();
 
-    final focusDateModel = Provider.of<FocusDateModel>(context, listen: false);
-    focusDateModel.addListener(() {
-      loadTasks();
-      loadMeals();
-    });
+    final focusDateModel =
+        Provider.of<FocusDateProvider>(context, listen: false);
+    focusDateModel.addListener(() {});
   }
 
   @override
   void dispose() {
-    final focusDateModel = Provider.of<FocusDateModel>(context, listen: false);
-    focusDateModel.removeListener(loadTasks);
+    final focusDateModel =
+        Provider.of<FocusDateProvider>(context, listen: false);
     super.dispose();
   }
 
-  Future<void> loadTasks() async {
-    final focusDateModel = Provider.of<FocusDateModel>(context, listen: false);
-    String taskDate = DateFormat('ddMMyyyy').format(focusDateModel.focusDate);
-    setState(() {
-      tasks = [];
-    });
-    HoneyDoData? honeyDoData = await getTaskDataByName('HoneyDo Data');
-    if (honeyDoData != null) {
-      DateLinks? taskDateObj = await getTaskDateByDate(honeyDoData, taskDate);
-      if (taskDateObj != null) {
-        await taskDateObj.tasks.load();
-        tasks = taskDateObj.tasks.toList()
-          ..sort((a, b) => a.order.compareTo(b.order));
-        setState(() {});
-      }
-    }
-  }
-
-  Future<void> loadMeals() async {
-    final focusDateModel = Provider.of<FocusDateModel>(context, listen: false);
-    String mealDate = DateFormat('ddMMyyyy').format(focusDateModel.focusDate);
-    setState(() {
-      meals = [];
-    });
-    HoneyDoData? honeyDoData = await getTaskDataByName('HoneyDo Data');
-    if (honeyDoData != null) {
-      DateLinks? mealDateObj = await getTaskDateByDate(honeyDoData, mealDate);
-      if (mealDateObj != null) {
-        await mealDateObj.meals.load();
-        meals = mealDateObj.meals.toList()
-          ..sort((a, b) => a.order.compareTo(b.order));
-        setState(() {});
-      }
-    }
-  }
-
-  Future<void> _deleteTask(int index) async {
-    final task = tasks[index];
-    await isar.writeTxn(() async {
-      await isar.tasks.delete(task.id);
-    });
-    setState(() {
-      tasks.removeAt(index);
-    });
-  }
-
-  Future<void> _deleteMeal(int index) async {
-    final meal = meals[index];
-    await isar.writeTxn(() async {
-      await isar.meals.delete(meal.id);
-    });
-    setState(() {
-      meals.removeAt(index);
-    });
-  }
-
-  Future<void> _onReorderTask(int oldIndex, int newIndex) async {
-    setState(() {
-      if (newIndex > oldIndex) {
-        newIndex -= 1;
-      }
-      final Task item = tasks.removeAt(oldIndex);
-      tasks.insert(newIndex, item);
-    });
-
-    await isar.writeTxn(() async {
-      for (int i = 0; i < tasks.length; i++) {
-        tasks[i].order = i;
-        await isar.tasks.put(tasks[i]);
-      }
-    });
-  }
-
-  Future<void> _onReorderMeal(int oldIndex, int newIndex) async {
-    setState(() {
-      if (newIndex > oldIndex) {
-        newIndex -= 1;
-      }
-      final Meal item = meals.removeAt(oldIndex);
-      meals.insert(newIndex, item);
-    });
-
-    await isar.writeTxn(() async {
-      for (int i = 0; i < meals.length; i++) {
-        meals[i].order = i;
-        await isar.meals.put(meals[i]);
-      }
-    });
-  }
-
   void onTaskPressed() async {
-    final focusDateModel = Provider.of<FocusDateModel>(context, listen: false);
+    final focusDateModel =
+        Provider.of<FocusDateProvider>(context, listen: false);
     String taskName = taskTextController.text;
     String taskDate = DateFormat('ddMMyyyy').format(focusDateModel.focusDate);
-    if (taskName.isNotEmpty) {
-      await createOrUpdateTaskData('HoneyDo Data', taskDate, taskName);
-    }
-    taskTextController.clear();
-    loadTasks();
   }
 
   void onMealPressed() async {
-    final focusDateModel = Provider.of<FocusDateModel>(context, listen: false);
+    final focusDateModel =
+        Provider.of<FocusDateProvider>(context, listen: false);
     String mealName = taskTextController.text;
     String mealDate = DateFormat('ddMMyyyy').format(focusDateModel.focusDate);
-    if (mealName.isNotEmpty) {
-      await createOrUpdateMealData('HoneyDo Data', mealDate, mealName);
-    }
-    taskTextController.clear();
-    loadMeals();
   }
 
   @override
@@ -246,7 +74,7 @@ class _TasksCardState extends State<TasksCard> {
                             return DragTarget<int>(
                               onAcceptWithDetails: (details) {
                                 int oldIndex = details.data;
-                                _onReorderMeal(oldIndex, index);
+                                // _onReorderMeal(oldIndex, index);
                               },
                               builder: (context, candidateData, rejectedData) {
                                 return Draggable<int>(
@@ -291,7 +119,7 @@ class _TasksCardState extends State<TasksCard> {
                             return DragTarget<int>(
                               onAcceptWithDetails: (details) {
                                 int oldIndex = details.data;
-                                _onReorderTask(oldIndex, index);
+                                // _onReorderTask(oldIndex, index);
                               },
                               builder: (context, candidateData, rejectedData) {
                                 return Draggable<int>(
@@ -330,17 +158,6 @@ class _TasksCardState extends State<TasksCard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              if (taskMealToggle)
-                IconButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) => ColorieInfoDialog(),
-                    );
-                  },
-                  icon: Icon(Icons.help_outline),
-                  iconSize: 30,
-                ),
               if (!taskMealToggle)
                 SizedBox(
                   width: 46,
@@ -371,9 +188,9 @@ class _TasksCardState extends State<TasksCard> {
                   visible: isDragging,
                   child: DragTarget<int>(
                     onAcceptWithDetails: (details) {
-                      taskMealToggle
-                          ? _deleteMeal(details.data)
-                          : _deleteTask(details.data);
+                      // taskMealToggle
+                      //     ? _deleteMeal(details.data)
+                      //     : _deleteTask(details.data);
                     },
                     builder: (context, candidateData, rejectedData) {
                       return Padding(

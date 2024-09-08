@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:honeydo/components/constants.dart';
+import 'package:honeydo/constants/constants.dart';
 import 'package:honeydo/components/pomodoro_components/digit_text_field.dart';
 import 'package:honeydo/providers/settings_provider.model.dart';
 import 'package:provider/provider.dart';
@@ -9,9 +9,11 @@ class PomodoroSettings extends StatefulWidget {
   final int userShortBreakDuration;
   final int userLongBreakDuration;
   final int userSetCount;
+  final bool autoBreak;
+  final bool autoPomodoro;
 
   final Function(int pomodoro, int shortBreak, int longBreak, int setCount,
-      bool autoShortBreak, bool autoPomodoro) onSettingsChanged;
+      bool autoBreak, bool autoPomodoro) onSettingsChanged;
   const PomodoroSettings({
     super.key,
     required this.userPomodoroDuration,
@@ -19,6 +21,8 @@ class PomodoroSettings extends StatefulWidget {
     required this.userLongBreakDuration,
     required this.userSetCount,
     required this.onSettingsChanged,
+    required this.autoBreak,
+    required this.autoPomodoro,
   });
 
   @override
@@ -30,8 +34,8 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
   late int shortBreakDuration;
   late int longBreakDuration;
   late int setCount;
-  bool isAutoShortBreak = true;
-  bool isAutoPomodoro = true;
+  late bool autoBreak;
+  late bool autoPomodoro;
 
   @override
   void initState() {
@@ -40,6 +44,8 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
     shortBreakDuration = widget.userShortBreakDuration;
     longBreakDuration = widget.userLongBreakDuration;
     setCount = widget.userSetCount;
+    autoBreak = widget.autoBreak;
+    autoPomodoro = widget.autoPomodoro;
   }
 
   @override
@@ -94,10 +100,10 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
               'Oto. Mola',
               style: pomodoroSettingsTextStyle(context),
             ),
-            value: isAutoShortBreak,
+            value: autoBreak,
             onChanged: (bool value) {
               setState(() {
-                isAutoShortBreak = !isAutoShortBreak;
+                autoBreak = !autoBreak;
               });
             },
           ),
@@ -106,11 +112,11 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
               'Oto. Pomodoro',
               style: pomodoroSettingsTextStyle(context),
             ),
-            value: isAutoPomodoro,
+            value: autoPomodoro,
             onChanged: (bool value) {
               setState(() {
-                isAutoPomodoro = !isAutoPomodoro;
-                print(isAutoPomodoro.toString());
+                autoPomodoro = !autoPomodoro;
+                print(autoPomodoro.toString());
               });
             },
           ),
@@ -131,8 +137,8 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
                     shortBreakDuration,
                     longBreakDuration,
                     setCount,
-                    isAutoShortBreak,
-                    isAutoPomodoro,
+                    autoBreak,
+                    autoPomodoro,
                   );
                   settingsProvider.toggleSettingsCard();
                 },

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class FocusDateModel with ChangeNotifier {
+class FocusDateProvider with ChangeNotifier {
   DateTime _focusDate = DateTime.now();
 
   DateTime get focusDate => _focusDate;

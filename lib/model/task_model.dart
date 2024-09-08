@@ -69,3 +69,20 @@ class SubTask {
 
   final task = IsarLink<Task>();
 }
+
+@Collection()
+class PomodoroSettings {
+  Id id = 1;
+
+  late int pomodoroDuration;
+
+  late int shortBreakDuration;
+
+  late int longBreakDuration;
+
+  late int setCount;
+
+  late bool autoBreak;
+
+  late bool autoPomodoro;
+}

@@ -1,12 +1,9 @@
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
-import 'package:honeydo/components/constants.dart';
-import 'package:honeydo/main.dart';
-import 'package:honeydo/model/focus_date_model.dart';
-import 'package:honeydo/model/task_model.dart';
-import 'package:honeydo/screen_parts/large_calendart_card.dart';
-import 'package:honeydo/screen_parts/todo_tasks_card.dart';
-import 'package:honeydo/theme.dart';
+import 'package:honeydo/constants/constants.dart';
+import 'package:honeydo/providers/focus_date_provider.dart';
+import 'package:honeydo/screens/large_calendart_card.dart';
+import 'package:honeydo/constants/theme.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -23,24 +20,6 @@ DateTime now = DateTime.now();
 DateTime firstDate = DateTime(1900);
 DateTime lastDate = DateTime(2100);
 
-Future<void> _createEmptyTaskDate(String taskDataName, String date) async {
-  await isar.writeTxn(() async {
-    HoneyDoData? honeyDoData = await getTaskDataByName(taskDataName);
-    if (honeyDoData == null) {
-      honeyDoData = HoneyDoData()..name = taskDataName;
-      await isar.honeyDoDatas.put(honeyDoData);
-    }
-    DateLinks? dateLink = await getTaskDateByDate(honeyDoData, date);
-    if (dateLink == null) {
-      dateLink = DateLinks()..date = date;
-      await isar.dateLinks.put(dateLink);
-      honeyDoData.dateLinks.add(dateLink);
-      await honeyDoData.dateLinks.save();
-    }
-    await dateLink.tasks.load();
-  });
-}
-
 class _CalenderCardState extends State<CalenderCard> {
   @override
   Widget build(BuildContext context) {
@@ -51,7 +30,7 @@ class _CalenderCardState extends State<CalenderCard> {
     final double heightContainerSize = screenHeight * 0.085;
     final double paddingSize = screenWidth * 0.02;
 
-    final focusDateModel = Provider.of<FocusDateModel>(context);
+    final focusDateModel = Provider.of<FocusDateProvider>(context);
 
     return Row(
       children: [
@@ -180,10 +159,6 @@ class _CalenderCardState extends State<CalenderCard> {
                   setState(
                     () {
                       focusDateModel.updateFocusDate(selectedDate);
-                      _createEmptyTaskDate(
-                        'HoneyDo Data',
-                        DateFormat('ddMMyyyy').format(focusDateModel.focusDate),
-                      );
                     },
                   );
                 },

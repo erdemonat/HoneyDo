@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:honeydo/components/constants.dart';
-import 'package:honeydo/model/task_model.dart';
+import 'package:honeydo/constants/constants.dart';
+import 'package:honeydo/isar_service.dart';
 import 'package:honeydo/main.dart';
+import 'package:honeydo/model/task_model.dart';
+import 'package:honeydo/providers/focus_date_provider.dart';
+import 'package:intl/intl.dart';
+import 'package:isar/isar.dart';
+import 'package:provider/provider.dart';
 
 class TaskTitle extends StatefulWidget {
   final Task task;
@@ -20,34 +25,13 @@ class TaskTitle extends StatefulWidget {
 }
 
 class TaskTitleState extends State<TaskTitle> {
-  void _updateTaskCheckedStatus(bool? value) async {
-    final isChecked = value ?? false;
-
-    setState(() {
-      widget.task.isChecked = isChecked;
-    });
-
-    await isar.writeTxn(() async {
-      if (isChecked) {
-        await widget.task.subtasks.load();
-        for (final subtask in widget.task.subtasks) {
-          subtask.isChecked = true;
-          await isar.subTasks.put(subtask);
-        }
-      }
-      await isar.tasks.put(widget.task);
-    });
-
-    widget.onTaskChecked(isChecked);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Checkbox(
           value: widget.task.isChecked,
-          onChanged: _updateTaskCheckedStatus,
+          onChanged: (value) {}, //_updateTaskCheckedStatus
           activeColor: const Color(0xff0DC9AB),
           checkColor: Theme.of(context).colorScheme.surface,
           side: BorderSide(
@@ -70,7 +54,7 @@ class TaskTitleState extends State<TaskTitle> {
                   widget.task.name,
                   style: widget.task.isMarked
                       ? TextStyle(
-                          fontSize: 4.5,
+                          fontSize: 18,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
                           decoration: TextDecoration.lineThrough,
@@ -123,15 +107,15 @@ class TaskTitleState extends State<TaskTitle> {
                     ),
                     child: IconButton(
                         onPressed: () async {
-                          setState(() {
-                            widget.task.isMarked = false;
-                          });
+                          // setState(() {
+                          //   widget.task.isMarked = false;
+                          // });
 
-                          await isar.writeTxn(
-                            () async {
-                              await isar.tasks.put(widget.task);
-                            },
-                          );
+                          // await isar.writeTxn(
+                          //   () async {
+                          //     await isar.tasks.put(widget.task);
+                          //   },
+                          // );
                           Navigator.of(context).pop();
                         },
                         icon: Icon(
@@ -142,24 +126,43 @@ class TaskTitleState extends State<TaskTitle> {
                   ),
                 ],
               ),
+              Row(
+                children: [
+                  MoveToNextDayButton(
+                    taskId: widget.task.id,
+                    context: context,
+                    daysToDelay: 1,
+                  ),
+                  MoveToNextDayButton(
+                    taskId: widget.task.id,
+                    context: context,
+                    daysToDelay: 2,
+                  ),
+                  MoveToNextDayButton(
+                    taskId: widget.task.id,
+                    context: context,
+                    daysToDelay: 3,
+                  ),
+                ],
+              ),
             ],
           ),
         ),
       ],
     );
 
-    if (selectedColor != null) {
-      setState(() {
-        widget.task.markColor = selectedColor.value.toString();
-        widget.task.isMarked = true;
-      });
+    // if (selectedColor != null) {
+    //   setState(() {
+    //     widget.task.markColor = selectedColor.value.toString();
+    //     widget.task.isMarked = true;
+    //   });
 
-      await isar.writeTxn(
-        () async {
-          await isar.tasks.put(widget.task);
-        },
-      );
-    }
+    //   await isar.writeTxn(
+    //     () async {
+    //       await isar.tasks.put(widget.task);
+    //     },
+    //   );
+    // }
   }
 
   Widget _buildColorBox(BuildContext context, Color color) {
@@ -175,6 +178,46 @@ class TaskTitleState extends State<TaskTitle> {
         width: 30,
         height: 30,
         margin: const EdgeInsets.all(4.0),
+      ),
+    );
+  }
+}
+
+class MoveToNextDayButton extends StatelessWidget {
+  const MoveToNextDayButton({
+    super.key,
+    required this.context,
+    required this.daysToDelay,
+    required this.taskId,
+  });
+
+  final int daysToDelay;
+  final BuildContext context;
+  final int taskId;
+
+  @override
+  Widget build(BuildContext context) {
+    var delayedDate = DateFormat('ddMMyyyy').format(
+        Provider.of<FocusDateProvider>(context)
+            .focusDate
+            .add(Duration(days: daysToDelay)));
+
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        margin: const EdgeInsets.all(4.0),
+        height: 30,
+        width: 30,
+        decoration: BoxDecoration(
+          border: Border.all(
+              width: 2.0, color: Theme.of(context).colorScheme.tertiary),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Center(
+            child: Text(
+          '+$daysToDelay',
+          style: TextStyle(color: Theme.of(context).colorScheme.tertiary),
+        )),
       ),
     );
   }
