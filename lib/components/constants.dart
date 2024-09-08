@@ -33,9 +33,12 @@ TextStyle calendarDayTextStyle(BuildContext context) {
 }
 
 TextStyle pomodoroSettingsTextStyle(BuildContext context) {
+  // Metin boyutunu ekrana göre ayarlama
+
   return TextStyle(
     color: Theme.of(context).colorScheme.tertiary,
     fontSize: 14,
+    // fontFeatures: const [FontFeature.enable('smcp')],
   );
 }
 

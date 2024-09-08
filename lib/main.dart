@@ -1,6 +1,5 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:honeydo/model/focus_date_model.dart';
 import 'package:honeydo/providers/settings_provider.model.dart';
 import 'package:honeydo/model/task_model.dart';

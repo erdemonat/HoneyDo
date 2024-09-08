@@ -66,10 +66,11 @@ class TaskTitleState extends State<TaskTitle> {
                   _showColorMenu(details.globalPosition);
                 },
                 child: Text(
+                  textScaler: MediaQuery.textScalerOf(context),
                   widget.task.name,
                   style: widget.task.isMarked
                       ? TextStyle(
-                          fontSize: 18,
+                          fontSize: 4.5,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
                           decoration: TextDecoration.lineThrough,

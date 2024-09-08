@@ -47,7 +47,6 @@ dependencies:
   auto_size_text: ^3.0.0
   google_generative_ai: ^0.4.6
   toggle_switch: ^2.3.0
-  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
@@ -90,27 +89,12 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   
-  fonts:
-    - family: SF
-      fonts:
-        - asset: assets/fonts/SF-Pro-Rounded-Black.otf
-          weight: 900
-        - asset: assets/fonts/SF-Pro-Rounded-Bold.otf
-          weight: 700
-        - asset: assets/fonts/SF-Pro-Rounded-Heavy.otf
-          weight: 800
-        - asset: assets/fonts/SF-Pro-Rounded-Light.otf
-          weight: 300
-        - asset: assets/fonts/SF-Pro-Rounded-Medium.otf
-          weight: 500
-        - asset: assets/fonts/SF-Pro-Rounded-Regular.otf
-          weight: 400
-        - asset: assets/fonts/SF-Pro-Rounded-Semibold.otf
-          weight: 600
-        - asset: assets/fonts/SF-Pro-Rounded-Thin.otf
-          weight: 100
-        - asset: assets/fonts/SF-Pro-Rounded-Ultralight.otf
-          weight: 200
+  # fonts:
+  #   - family: SF
+  #     fonts:
+  #       - asset: assets/fonts/SF-Pro-Rounded-Black.otf
+  #         weight: 900
+        
 
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic

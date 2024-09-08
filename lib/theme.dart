@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 const Color customWhite = Color.fromARGB(255, 225, 230, 240);
 const Color customBlack = Colors.black;
@@ -105,24 +104,22 @@ ThemeData darkTheme1 = ThemeData(
     onSurface: Color(0xFF8E9DE7),
     tertiary: Color(0xFFFBEAEB),
   ),
-  textTheme: GoogleFonts.openSansTextTheme(
-    const TextTheme(
-      displayLarge: TextStyle(color: Color(0xFFFBEAEB)),
-      displayMedium: TextStyle(color: Color(0xFFFBEAEB)),
-      displaySmall: TextStyle(color: Color(0xFFFBEAEB)),
-      headlineLarge: TextStyle(color: Color(0xFFFBEAEB)),
-      headlineMedium: TextStyle(color: Color(0xFFFBEAEB)),
-      headlineSmall: TextStyle(color: Color(0xFFFBEAEB)),
-      labelLarge: TextStyle(color: Color(0xFFFBEAEB)),
-      labelMedium: TextStyle(color: Color(0xFFFBEAEB)),
-      labelSmall: TextStyle(color: Color(0xFFFBEAEB)),
-      titleLarge: TextStyle(color: Color(0xFFFBEAEB)),
-      titleMedium: TextStyle(color: Color(0xFFFBEAEB)),
-      titleSmall: TextStyle(color: Color(0xFFFBEAEB)),
-      bodyLarge: TextStyle(color: Color(0xFFFBEAEB)),
-      bodyMedium: TextStyle(color: Color(0xFFFBEAEB)),
-      bodySmall: TextStyle(color: Color(0xFFFBEAEB)),
-    ),
+  textTheme: const TextTheme(
+    displayLarge: TextStyle(color: Color(0xFFFBEAEB)),
+    displayMedium: TextStyle(color: Color(0xFFFBEAEB)),
+    displaySmall: TextStyle(color: Color(0xFFFBEAEB)),
+    headlineLarge: TextStyle(color: Color(0xFFFBEAEB)),
+    headlineMedium: TextStyle(color: Color(0xFFFBEAEB)),
+    headlineSmall: TextStyle(color: Color(0xFFFBEAEB)),
+    labelLarge: TextStyle(color: Color(0xFFFBEAEB)),
+    labelMedium: TextStyle(color: Color(0xFFFBEAEB)),
+    labelSmall: TextStyle(color: Color(0xFFFBEAEB)),
+    titleLarge: TextStyle(color: Color(0xFFFBEAEB)),
+    titleMedium: TextStyle(color: Color(0xFFFBEAEB)),
+    titleSmall: TextStyle(color: Color(0xFFFBEAEB)),
+    bodyLarge: TextStyle(color: Color(0xFFFBEAEB)),
+    bodyMedium: TextStyle(color: Color(0xFFFBEAEB)),
+    bodySmall: TextStyle(color: Color(0xFFFBEAEB)),
   ),
   textSelectionTheme: const TextSelectionThemeData(
     selectionColor: Color.fromARGB(60, 251, 234, 235),
@@ -150,66 +147,21 @@ ThemeData lightTheme1 = ThemeData(
     tertiary: Color(0xFF2F3C7E),
   ),
   textTheme: const TextTheme(
-    displayLarge: TextStyle(
-      color: Color(0xFF2F3C7E),
-      fontFamily: 'SF',
-    ),
-    displayMedium: TextStyle(
-      color: Color(0xFF2F3C7E),
-      fontFamily: 'SF',
-    ),
-    displaySmall: TextStyle(
-      color: Color(0xFF2F3C7E),
-      fontFamily: 'SF',
-    ),
-    headlineLarge: TextStyle(
-      color: Color(0xFF2F3C7E),
-      fontFamily: 'SF',
-    ),
-    headlineMedium: TextStyle(
-      color: Color(0xFF2F3C7E),
-      fontFamily: 'SF',
-    ),
-    headlineSmall: TextStyle(
-      color: Color(0xFF2F3C7E),
-      fontFamily: 'SF',
-    ),
-    labelLarge: TextStyle(
-      color: Color(0xFF2F3C7E),
-      fontFamily: 'SF',
-    ),
-    labelMedium: TextStyle(
-      color: Color(0xFF2F3C7E),
-      fontFamily: 'SF',
-    ),
-    labelSmall: TextStyle(
-      color: Color(0xFF2F3C7E),
-      fontFamily: 'SF',
-    ),
-    titleLarge: TextStyle(
-      color: Color(0xFF2F3C7E),
-      fontFamily: 'SF',
-    ),
-    titleMedium: TextStyle(
-      color: Color(0xFF2F3C7E),
-      fontFamily: 'SF',
-    ),
-    titleSmall: TextStyle(
-      color: Color(0xFF2F3C7E),
-      fontFamily: 'SF',
-    ),
-    bodyLarge: TextStyle(
-      color: Color(0xFF2F3C7E),
-      fontFamily: 'SF',
-    ),
-    bodyMedium: TextStyle(
-      color: Color(0xFF2F3C7E),
-      fontFamily: 'SF',
-    ),
-    bodySmall: TextStyle(
-      color: Color(0xFF2F3C7E),
-      fontFamily: 'SF',
-    ),
+    displayLarge: TextStyle(color: Color(0xFF2F3C7E)),
+    displayMedium: TextStyle(color: Color(0xFF2F3C7E)),
+    displaySmall: TextStyle(color: Color(0xFF2F3C7E)),
+    headlineLarge: TextStyle(color: Color(0xFF2F3C7E)),
+    headlineMedium: TextStyle(color: Color(0xFF2F3C7E)),
+    headlineSmall: TextStyle(color: Color(0xFF2F3C7E)),
+    labelLarge: TextStyle(color: Color(0xFF2F3C7E)),
+    labelMedium: TextStyle(color: Color(0xFF2F3C7E)),
+    labelSmall: TextStyle(color: Color(0xFF2F3C7E)),
+    titleLarge: TextStyle(color: Color(0xFF2F3C7E)),
+    titleMedium: TextStyle(color: Color(0xFF2F3C7E)),
+    titleSmall: TextStyle(color: Color(0xFF2F3C7E)),
+    bodyLarge: TextStyle(color: Color(0xFF2F3C7E)),
+    bodyMedium: TextStyle(color: Color(0xFF2F3C7E)),
+    bodySmall: TextStyle(color: Color(0xFF2F3C7E)),
   ),
   textSelectionTheme: const TextSelectionThemeData(
     selectionColor: Color.fromARGB(60, 47, 60, 126),
@@ -217,7 +169,7 @@ ThemeData lightTheme1 = ThemeData(
   ),
   iconButtonTheme: const IconButtonThemeData(
     style: ButtonStyle(
-      iconColor: MaterialStatePropertyAll(
+      iconColor: WidgetStatePropertyAll(
         Color.fromARGB(255, 58, 67, 112),
       ),
     ),
