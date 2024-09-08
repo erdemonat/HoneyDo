@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:honeydo/theme.dart';
+import 'package:honeydo/constants/theme.dart';
 
 class ThemeProvider extends ChangeNotifier {
   // Tema listeleri (6 dark, 6 light)

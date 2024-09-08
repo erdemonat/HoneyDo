@@ -1,13 +1,12 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-import 'package:honeydo/components/settings_button.dart';
 import 'package:honeydo/providers/settings_provider.model.dart';
-import 'package:honeydo/screen_parts/calender_card.dart';
-import 'package:honeydo/screen_parts/motivation_card.dart';
-import 'package:honeydo/screen_parts/pomodoro_card.dart';
-import 'package:honeydo/components/window_buttons.dart';
-import 'package:honeydo/screen_parts/settings_card.dart';
-import 'package:honeydo/screen_parts/todo_tasks_card.dart';
+import 'package:honeydo/screens/calender_card.dart';
+import 'package:honeydo/screens/motivation_card.dart';
+import 'package:honeydo/screens/pomodoro_card.dart';
+import 'package:honeydo/constants/window_buttons.dart';
+import 'package:honeydo/screens/settings_card.dart';
+import 'package:honeydo/screens/todo_tasks_card.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
