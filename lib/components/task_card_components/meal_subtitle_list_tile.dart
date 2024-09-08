@@ -25,7 +25,7 @@ class MealSubtitleListTile extends StatelessWidget {
           child: ListTile(
             title: Text(
               subtitles[index].text,
-              style: cardSubTitleTextStyle(context),
+              style: kCardSubTitleTextStyle(context),
             ),
           ),
         );

@@ -63,7 +63,7 @@ class TaskTitleState extends State<TaskTitle> {
                               Color(int.parse(widget.task.markColor))
                                   .withOpacity(0.25),
                         )
-                      : cardTitleTextStyle(context),
+                      : kCardTitleTextStyle(context),
                 ),
               ),
             ),

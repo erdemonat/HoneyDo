@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:honeydo/constants/theme.dart';
 
-TextStyle cardTitleTextStyle(BuildContext context) {
+TextStyle kCardTitleTextStyle(BuildContext context) {
   return TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w500,
@@ -9,7 +9,7 @@ TextStyle cardTitleTextStyle(BuildContext context) {
   );
 }
 
-TextStyle cardSubTitleTextStyle(BuildContext context) {
+TextStyle kCardSubTitleTextStyle(BuildContext context) {
   return const TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.w300,
@@ -17,7 +17,7 @@ TextStyle cardSubTitleTextStyle(BuildContext context) {
   );
 }
 
-TextStyle calendarDayNumberTextStyle(BuildContext context) {
+TextStyle kCalendarDayNumberTextStyle(BuildContext context) {
   return TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.w500,
@@ -25,14 +25,14 @@ TextStyle calendarDayNumberTextStyle(BuildContext context) {
   );
 }
 
-TextStyle calendarDayTextStyle(BuildContext context) {
+TextStyle kCalendarDayTextStyle(BuildContext context) {
   return TextStyle(
     fontWeight: FontWeight.bold,
     color: customWhite,
   );
 }
 
-TextStyle pomodoroSettingsTextStyle(BuildContext context) {
+TextStyle kPomodoroSettingsTextStyle(BuildContext context) {
   // Metin boyutunu ekrana göre ayarlama
 
   return TextStyle(
@@ -42,7 +42,7 @@ TextStyle pomodoroSettingsTextStyle(BuildContext context) {
   );
 }
 
-TextStyle calendarMonthYearTextStyle(BuildContext context) {
+TextStyle kCalendarMonthYearTextStyle(BuildContext context) {
   return TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.bold,
@@ -56,4 +56,15 @@ TextStyle calendarMonthYearTextStyle(BuildContext context) {
       ),
     ],
   );
+}
+
+TextStyle kPomodoroStatusTextStyle(BuildContext context) {
+  // Metin boyutunu ekrana göre ayarlama
+
+  return TextStyle(
+      color: Theme.of(context).colorScheme.tertiary,
+      fontSize: 18,
+      fontWeight: FontWeight.bold
+      // fontFeatures: const [FontFeature.enable('smcp')],
+      );
 }

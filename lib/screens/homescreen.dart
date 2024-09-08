@@ -1,5 +1,6 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:honeydo/components/banner.dart';
 import 'package:honeydo/providers/settings_provider.model.dart';
 import 'package:honeydo/screens/calender_card.dart';
 import 'package:honeydo/screens/motivation_card.dart';
@@ -30,17 +31,7 @@ class HomeScreenState extends State<HomeScreen> {
             child: MoveWindow(
               child: Row(
                 children: [
-                  const Center(
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 15),
-                      child: Icon(
-                        Icons.donut_small_sharp,
-                        size: 18,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 6),
-                  const Center(child: Text('HoneyDo')),
+                  const HoneydoBanner(),
                   Expanded(
                     child: Row(
                       children: [

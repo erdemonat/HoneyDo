@@ -130,7 +130,7 @@ class MealCardTileState extends State<MealCardTile> {
                               onPressed: _toggleCardHeight,
                               child: Text(
                                 widget.meals.name,
-                                style: cardTitleTextStyle(context),
+                                style: kCardTitleTextStyle(context),
                               ),
                             ),
                           ),

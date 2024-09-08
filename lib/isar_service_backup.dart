@@ -1,5 +1,7 @@
+import 'package:honeydo/main.dart';
 import 'package:honeydo/model/pomodoro_model.dart' as pomodoro_model;
 import 'package:honeydo/model/task_model.dart' as task_model;
+import 'package:honeydo/screens/todo_tasks_card.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -124,4 +126,80 @@ class IsarService {
       await dateLink.meals.save();
     });
   }
+
+  // Future<void> onReorderMeal(int oldIndex, int newIndex) async {
+  //   final isar = await db;
+
+  //   if (newIndex > oldIndex) {
+  //     newIndex -= 1;
+  //   }
+  //   final task_model.Meal item = meals.removeAt(oldIndex);
+  //   meals.insert(newIndex, item);
+
+  //   await isar.writeTxn(() async {
+  //     for (int i = 0; i < meals.length; i++) {
+  //       meals[i].order = i;
+  //       await isar.meals.put(meals[i]);
+  //     }
+  //   });
+  // }
+
+  // Future<void> _onReorderTask(int oldIndex, int newIndex) async {
+  //   setState(() {
+  //     if (newIndex > oldIndex) {
+  //       newIndex -= 1;
+  //     }
+  //     final Task item = tasks.removeAt(oldIndex);
+  //     tasks.insert(newIndex, item);
+  //   });
+
+  //   await isar.writeTxn(() async {
+  //     for (int i = 0; i < tasks.length; i++) {
+  //       tasks[i].order = i;
+  //       await isar.tasks.put(tasks[i]);
+  //     }
+  //   });
+  // }
+
+  //  Future<void> _deleteTask(int index) async {
+  //   final task = tasks[index];
+  //   await isar.writeTxn(() async {
+  //     await isar.tasks.delete(task.id);
+  //   });
+  //   setState(() {
+  //     tasks.removeAt(index);
+  //   });
+  // }
+
+  // Future<void> _deleteMeal(int index) async {
+  //   final meal = meals[index];
+  //   await isar.writeTxn(() async {
+  //     await isar.meals.delete(meal.id);
+  //   });
+  //   setState(() {
+  //     meals.removeAt(index);
+  //   });
+  // }
+
+  // Future<void> _updateTaskCheckedStatus(bool? value) async {
+  //   final isar = isarService.db;
+  //   final isChecked = value ?? false;
+
+  //   setState(() {
+  //     widget.task.isChecked = isChecked;
+  //   });
+
+  //   await isar.writeTxn(() async {
+  //     if (isChecked) {
+  //       await widget.task.subtasks.load();
+  //       for (final subtask in widget.task.subtasks) {
+  //         subtask.isChecked = true;
+  //         await isar.subTasks.put(subtask);
+  //       }
+  //     }
+  //     await isar.tasks.put(widget.task);
+  //   });
+
+  //   widget.onTaskChecked(isChecked);
+  // }
 }

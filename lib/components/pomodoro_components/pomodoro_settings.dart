@@ -65,6 +65,7 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
                 onChanged: (String value) {
                   pomodoroDuration = int.tryParse(value) ?? pomodoroDuration;
                 },
+                maxValue: 300,
               ),
               DigitTextField(
                 labelText: "Set",
@@ -72,6 +73,7 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
                 onChanged: (value) {
                   setCount = int.tryParse(value) ?? setCount;
                 },
+                maxValue: 12,
               ),
             ],
           ),
@@ -84,6 +86,7 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
                   shortBreakDuration =
                       int.tryParse(value) ?? shortBreakDuration;
                 },
+                maxValue: 300,
               ),
               DigitTextField(
                 labelText: "Uzun Mola",
@@ -91,6 +94,7 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
                 onChanged: (String value) {
                   longBreakDuration = int.tryParse(value) ?? longBreakDuration;
                 },
+                maxValue: 300,
               ),
             ],
           ),
@@ -98,7 +102,7 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
           SwitchListTile(
             title: Text(
               'Oto. Mola',
-              style: pomodoroSettingsTextStyle(context),
+              style: kPomodoroSettingsTextStyle(context),
             ),
             value: autoBreak,
             onChanged: (bool value) {
@@ -110,7 +114,7 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
           SwitchListTile(
             title: Text(
               'Oto. Pomodoro',
-              style: pomodoroSettingsTextStyle(context),
+              style: kPomodoroSettingsTextStyle(context),
             ),
             value: autoPomodoro,
             onChanged: (bool value) {
@@ -129,6 +133,19 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
                   settingsProvider.toggleSettingsCard();
                 },
                 icon: const Icon(Icons.close),
+              ),
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    pomodoroDuration = 25;
+                    shortBreakDuration = 5;
+                    longBreakDuration = 15;
+                    setCount = 4;
+                    autoBreak = false;
+                    autoPomodoro = false;
+                  });
+                },
+                icon: const Icon(Icons.refresh_rounded),
               ),
               IconButton(
                 onPressed: () {

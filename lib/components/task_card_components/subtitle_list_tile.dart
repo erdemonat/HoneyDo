@@ -38,7 +38,7 @@ class SubtitleListTile extends StatelessWidget {
             onChanged: (value) => onUpdateCheckStatus(index, value),
             title: Text(
               subtitles[index].text,
-              style: cardSubTitleTextStyle(context),
+              style: kCardSubTitleTextStyle(context),
             ),
           ),
         );

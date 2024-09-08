@@ -127,21 +127,21 @@ class _CalenderCardState extends State<CalenderCard> {
                           Text(
                             dayName,
                             style: isSelected
-                                ? calendarDayTextStyle(context)
+                                ? kCalendarDayTextStyle(context)
                                 : null,
                           ),
                           Text(
                             date.day.toString(),
                             style: isSelected
-                                ? calendarDayNumberTextStyle(context)
+                                ? kCalendarDayNumberTextStyle(context)
                                     .copyWith(color: customWhite)
-                                : calendarDayNumberTextStyle(context),
+                                : kCalendarDayNumberTextStyle(context),
                           ),
                           if (isSelected)
                             Text(
                               DateFormat('MMMM yyyy', 'tr_TR')
                                   .format(focusDateModel.focusDate),
-                              style: calendarDayTextStyle(context),
+                              style: kCalendarDayTextStyle(context),
                             ),
                         ],
                       ),
@@ -174,7 +174,7 @@ class _CalenderCardState extends State<CalenderCard> {
                   child: Center(
                     child: Text(
                       "Upcoming",
-                      style: calendarMonthYearTextStyle(context),
+                      style: kCalendarMonthYearTextStyle(context),
                     ),
                   ),
                 ),
