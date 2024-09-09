@@ -4,26 +4,24 @@ import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
 class IsarService {
-  late Future<Isar> db;
-
-  IsarService() {
-    db = _initDB();
-  }
-
-  Future<Isar> _initDB() async {
-    final dir = await getApplicationDocumentsDirectory();
-    return await Isar.open(
-      [
-        pomodoro_model.PomodoroSettingsSchema,
-        task_model.HoneyDoDataSchema,
-        task_model.DateLinksSchema,
-        task_model.TaskSchema,
-        task_model.SubTaskSchema,
-        task_model.MealSchema,
-        task_model.SubMealSchema,
-      ],
-      directory: dir.path,
-    );
+  static Isar? _isar; // Singleton pattern için static bir örnek
+  Future<Isar> get db async {
+    if (_isar == null) {
+      final dir = await getApplicationDocumentsDirectory();
+      _isar = await Isar.open(
+        [
+          pomodoro_model.PomodoroSettingsSchema,
+          task_model.HoneyDoDataSchema,
+          task_model.DateLinksSchema,
+          task_model.TaskSchema,
+          task_model.SubTaskSchema,
+          task_model.MealSchema,
+          task_model.SubMealSchema,
+        ],
+        directory: dir.path,
+      );
+    }
+    return _isar!;
   }
 
   // Pomodoro ayarlarını kaydetmek veya güncellemek için
@@ -48,12 +46,12 @@ class IsarService {
         .findAll(); // HoneyDoDatas'a erişim sağlama
   }
 
-  Future<task_model.HoneyDoData?> getTaskDataByName(String name) async {
+  Future<task_model.HoneyDoData?> getTaskDataByName() async {
     final isar = await db;
     return await isar.honeyDoDatas
         .filter()
-        .nameEqualTo(name)
-        .findFirst(); // Filtreleme işlemi
+        .nameEqualTo("HoneyDoData")
+        .findFirst();
   }
 
   Future<task_model.DateLinks?> getTaskDateByDate(
@@ -62,14 +60,13 @@ class IsarService {
     return honeyDoData.dateLinks.filter().dateEqualTo(date).findFirst();
   }
 
-  Future<void> createOrUpdateTaskData(
-      String taskDataName, String date, String taskName) async {
+  Future<void> createOrUpdateTaskData(String date, String taskName) async {
     final isar = await db;
+    const String dataName = "HoneyDoData";
     await isar.writeTxn(() async {
-      task_model.HoneyDoData? honeyDoData =
-          await getTaskDataByName(taskDataName);
+      task_model.HoneyDoData? honeyDoData = await getTaskDataByName();
       if (honeyDoData == null) {
-        honeyDoData = task_model.HoneyDoData()..name = taskDataName;
+        honeyDoData = task_model.HoneyDoData()..name = dataName;
         await isar.honeyDoDatas.put(honeyDoData);
       }
       task_model.DateLinks? dateLink =
@@ -95,14 +92,14 @@ class IsarService {
     });
   }
 
-  Future<void> createOrUpdateMealData(
-      String mealDataName, String date, String mealName) async {
+  Future<void> createOrUpdateMealData(String date, String mealName) async {
     final isar = await db;
+    const String dataName = "HoneyDoData";
+
     await isar.writeTxn(() async {
-      task_model.HoneyDoData? honeyDoData =
-          await getTaskDataByName(mealDataName);
+      task_model.HoneyDoData? honeyDoData = await getTaskDataByName();
       if (honeyDoData == null) {
-        honeyDoData = task_model.HoneyDoData()..name = mealDataName;
+        honeyDoData = task_model.HoneyDoData()..name = dataName;
         await isar.honeyDoDatas.put(honeyDoData);
       }
       task_model.DateLinks? dateLink =
@@ -122,6 +119,22 @@ class IsarService {
       await isar.meals.put(meal);
       dateLink.meals.add(meal);
       await dateLink.meals.save();
+    });
+  }
+
+  Future<void> deleteMeal(int index, List<task_model.Meal> meals) async {
+    final isar = await db;
+    final meal = meals[index];
+    await isar.writeTxn(() async {
+      await isar.meals.delete(meal.id);
+    });
+  }
+
+  Future<void> deleteTask(int index, List<task_model.Task> tasks) async {
+    final isar = await db;
+    final task = tasks[index];
+    await isar.writeTxn(() async {
+      await isar.tasks.delete(task.id);
     });
   }
 }

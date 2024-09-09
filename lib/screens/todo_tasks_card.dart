@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:honeydo/components/task_card_components/meal_card_tile.dart';
 import 'package:honeydo/components/task_card_components/task_card_tile.dart';
 import 'package:honeydo/components/task_card_components/task_text_field.dart';
+import 'package:honeydo/isar_service.dart';
+import 'package:honeydo/main.dart';
 import 'package:honeydo/providers/focus_date_provider.dart';
-import 'package:intl/intl.dart';
 import 'package:honeydo/model/task_model.dart';
 import 'package:provider/provider.dart';
 
@@ -18,38 +19,88 @@ TextEditingController taskTextController = TextEditingController();
 
 class _TasksCardState extends State<TasksCard> {
   List<Task> tasks = [];
-  static List<Meal> meals = [];
+  List<Meal> meals = [];
   bool isDragging = false;
   bool taskMealToggle = false;
 
   @override
   void initState() {
+    loadTasks();
+    loadMeals();
     super.initState();
-
-    final focusDateModel =
-        Provider.of<FocusDateProvider>(context, listen: false);
-    focusDateModel.addListener(() {});
   }
 
   @override
   void dispose() {
-    final focusDateModel =
-        Provider.of<FocusDateProvider>(context, listen: false);
     super.dispose();
   }
 
+  Future<void> _deleteTask(int index) async {
+    isarService.deleteTask(index, tasks);
+    setState(() {
+      tasks.removeAt(index);
+    });
+  }
+
+  Future<void> _deleteMeal(int index) async {
+    isarService.deleteMeal(index, meals);
+    setState(() {
+      meals.removeAt(index);
+    });
+  }
+
+  Future<void> loadTasks() async {
+    String taskDate =
+        Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
+    setState(() {
+      tasks = [];
+    });
+    HoneyDoData? honeyDoData = await isarService.getTaskDataByName();
+    if (honeyDoData != null) {
+      DateLinks? taskDateObj =
+          await isarService.getTaskDateByDate(honeyDoData, taskDate);
+      if (taskDateObj != null) {
+        await taskDateObj.tasks.load();
+        tasks = taskDateObj.tasks.toList()
+          ..sort((a, b) => a.order.compareTo(b.order));
+        setState(() {});
+      }
+    }
+  }
+
+  Future<void> loadMeals() async {
+    String mealDate =
+        Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
+    setState(() {
+      meals = [];
+    });
+    HoneyDoData? honeyDoData = await isarService.getTaskDataByName();
+    if (honeyDoData != null) {
+      DateLinks? mealDateObj =
+          await isarService.getTaskDateByDate(honeyDoData, mealDate);
+      if (mealDateObj != null) {
+        await mealDateObj.meals.load();
+        meals = mealDateObj.meals.toList()
+          ..sort((a, b) => a.order.compareTo(b.order));
+        setState(() {});
+      }
+    }
+  }
+
   void onTaskPressed() async {
-    final focusDateModel =
-        Provider.of<FocusDateProvider>(context, listen: false);
     String taskName = taskTextController.text;
-    String taskDate = DateFormat('ddMMyyyy').format(focusDateModel.focusDate);
+    String taskDate =
+        Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
+    IsarService().createOrUpdateTaskData(taskDate, taskName);
+    loadTasks();
   }
 
   void onMealPressed() async {
-    final focusDateModel =
-        Provider.of<FocusDateProvider>(context, listen: false);
     String mealName = taskTextController.text;
-    String mealDate = DateFormat('ddMMyyyy').format(focusDateModel.focusDate);
+    String mealDate =
+        Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
+    IsarService().createOrUpdateMealData(mealDate, mealName);
+    loadMeals();
   }
 
   @override
@@ -158,11 +209,10 @@ class _TasksCardState extends State<TasksCard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              if (!taskMealToggle)
-                SizedBox(
-                  width: 46,
-                  height: 46,
-                ),
+              const SizedBox(
+                width: 46,
+                height: 46,
+              ),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: TaskTextField(
@@ -188,9 +238,9 @@ class _TasksCardState extends State<TasksCard> {
                   visible: isDragging,
                   child: DragTarget<int>(
                     onAcceptWithDetails: (details) {
-                      // taskMealToggle
-                      //     ? _deleteMeal(details.data)
-                      //     : _deleteTask(details.data);
+                      taskMealToggle
+                          ? _deleteMeal(details.data)
+                          : _deleteTask(details.data);
                     },
                     builder: (context, candidateData, rejectedData) {
                       return Padding(

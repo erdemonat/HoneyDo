@@ -15,7 +15,7 @@ late IsarService isarService;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   isarService = IsarService();
-  //await isarService.db;
+  await isarService.db;
   appWindow.size = const Size(1200, 675);
   runApp(MultiProvider(
     providers: [
