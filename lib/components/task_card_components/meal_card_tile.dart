@@ -3,7 +3,6 @@ import 'package:honeydo/constants/constants.dart';
 import 'package:honeydo/components/task_card_components/meal_subtitle_add_textfield.dart';
 import 'package:honeydo/components/task_card_components/meal_subtitle_list_tile.dart';
 import 'package:honeydo/model/subtitle_model.dart';
-import 'package:honeydo/main.dart';
 import 'package:honeydo/model/task_model.dart';
 
 class MealCardTile extends StatefulWidget {

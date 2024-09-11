@@ -26,10 +26,31 @@ class DigitTextField extends StatelessWidget {
         child: TextField(
           controller: controller,
           decoration: InputDecoration(
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-            counterText: '',
-            labelText: labelText,
-          ),
+              hoverColor: Theme.of(context).colorScheme.secondary,
+              focusColor: Theme.of(context).colorScheme.tertiary,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .secondary), // Normal border rengi
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.tertiary,
+                    width: 2), // Tıklandığında border rengi
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.secondary,
+                    width: 1), // Enabled border rengi
+              ),
+              labelText: labelText,
+              counterText: '',
+              floatingLabelStyle:
+                  TextStyle(color: Theme.of(context).colorScheme.tertiary)),
           maxLength: 3,
           keyboardType: TextInputType.number,
           inputFormatters: <TextInputFormatter>[

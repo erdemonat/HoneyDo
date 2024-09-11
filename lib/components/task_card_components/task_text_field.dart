@@ -23,6 +23,23 @@ class TaskTextField extends StatelessWidget {
       child: TextFormField(
         controller: textcontroller,
         decoration: InputDecoration(
+          hoverColor: Theme.of(context).colorScheme.secondary,
+          focusColor: Theme.of(context).colorScheme.tertiary,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide:
+                BorderSide(color: Theme.of(context).colorScheme.surface),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.tertiary, width: 2),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.secondary, width: 1),
+          ),
           prefixIcon: IconButton(
             onPressed: onTaskMealToggle,
             icon: Icon(taskMealIcon),
@@ -43,9 +60,6 @@ class TaskTextField extends StatelessWidget {
           hintText: hintext,
           hintStyle: TextStyle(
               color: Theme.of(context).colorScheme.tertiary.withOpacity(0.15)),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
         ),
       ),
     );

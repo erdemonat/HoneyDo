@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:honeydo/constants/constants.dart';
-import 'package:honeydo/isar_service.dart';
-import 'package:honeydo/main.dart';
 import 'package:honeydo/model/task_model.dart';
 import 'package:honeydo/providers/focus_date_provider.dart';
 import 'package:intl/intl.dart';
-import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
 
 class TaskTitle extends StatefulWidget {

@@ -16,10 +16,10 @@ class ProgressBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Brightness brightness = Theme.of(context).brightness;
-    const Color activeColor = Color(0xff0DC9AB);
+    Color activeColor = Theme.of(context).colorScheme.tertiary;
     final Color inactiveColor = brightness == Brightness.dark
-        ? const Color.fromARGB(255, 76, 83, 102)
-        : const Color(0xFFD1D9DD);
+        ? Theme.of(context).colorScheme.inversePrimary.withOpacity(0.4)
+        : Theme.of(context).colorScheme.inversePrimary.withOpacity(0.4);
 
     List<LinearMarkerPointer> markerPointers = [];
 
@@ -34,7 +34,7 @@ class ProgressBar extends StatelessWidget {
             width: 24,
             height: 24,
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
+              color: Theme.of(context).colorScheme.primary,
               border: Border.all(
                   width: 4,
                   color: completedTasks > 0 ? activeColor : inactiveColor),
@@ -42,8 +42,7 @@ class ProgressBar extends StatelessWidget {
             ),
             child: Center(
               child: completedTasks > 0
-                  ? const Icon(Icons.check_rounded,
-                      size: 14, color: activeColor)
+                  ? Icon(Icons.check_rounded, size: 14, color: activeColor)
                   : const SizedBox(),
             ),
           ),
@@ -62,7 +61,7 @@ class ProgressBar extends StatelessWidget {
             width: 24,
             height: 24,
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
+              color: Theme.of(context).colorScheme.primary,
               border: Border.all(
                   width: 4,
                   color: i < completedTasks ? activeColor : inactiveColor),
@@ -70,8 +69,7 @@ class ProgressBar extends StatelessWidget {
             ),
             child: Center(
               child: i < completedTasks
-                  ? const Icon(Icons.check_rounded,
-                      size: 14, color: activeColor)
+                  ? Icon(Icons.check_rounded, size: 14, color: activeColor)
                   : const SizedBox(),
             ),
           ),
@@ -87,14 +85,14 @@ class ProgressBar extends StatelessWidget {
           width: 24,
           height: 24,
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
+            color: Theme.of(context).colorScheme.primary,
             border: Border.all(
                 width: 4, color: isTaskChecked ? activeColor : inactiveColor),
             borderRadius: const BorderRadius.all(Radius.circular(12)),
           ),
           child: Center(
             child: isTaskChecked
-                ? const Icon(Icons.check_rounded, size: 14, color: activeColor)
+                ? Icon(Icons.check_rounded, size: 14, color: activeColor)
                 : const SizedBox(),
           ),
         ),

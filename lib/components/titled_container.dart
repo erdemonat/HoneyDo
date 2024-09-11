@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 
 class TitledContainer extends StatelessWidget {
-  const TitledContainer(
-      {required this.titleText, required this.child, this.idden = 10, Key? key})
-      : super(key: key);
   final String titleText;
   final double idden;
   final Widget child;
+  final double borderCutWidth;
+  const TitledContainer(
+      {required this.titleText,
+      required this.child,
+      this.idden = 10,
+      super.key,
+      required this.borderCutWidth});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +32,7 @@ class TitledContainer extends StatelessWidget {
           child: Align(
             alignment: Alignment.topCenter,
             child: Container(
-              width: 80,
+              width: borderCutWidth,
               color: Theme.of(context).colorScheme.surface,
               child: Center(
                   child: Text(titleText, overflow: TextOverflow.ellipsis)),

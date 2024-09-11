@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:honeydo/constants/theme.dart';
 
 TextStyle kCardTitleTextStyle(BuildContext context) {
   return TextStyle(
@@ -28,7 +27,7 @@ TextStyle kCalendarDayNumberTextStyle(BuildContext context) {
 TextStyle kCalendarDayTextStyle(BuildContext context) {
   return TextStyle(
     fontWeight: FontWeight.bold,
-    color: customWhite,
+    color: Theme.of(context).colorScheme.tertiary,
   );
 }
 

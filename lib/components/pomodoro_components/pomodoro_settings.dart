@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:honeydo/constants/constants.dart';
 import 'package:honeydo/components/pomodoro_components/digit_text_field.dart';
@@ -100,6 +101,13 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
           ),
           const SizedBox(height: 16),
           SwitchListTile(
+            activeColor: Theme.of(context).colorScheme.primary,
+            activeTrackColor: Theme.of(context).colorScheme.tertiary,
+            inactiveThumbColor: Theme.of(context).colorScheme.tertiary,
+            inactiveTrackColor: Theme.of(context).colorScheme.surface,
+            splashRadius: 0,
+            trackOutlineColor:
+                WidgetStatePropertyAll(Theme.of(context).colorScheme.tertiary),
             title: Text(
               'Oto. Mola',
               style: kPomodoroSettingsTextStyle(context),
@@ -112,6 +120,13 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
             },
           ),
           SwitchListTile(
+            activeColor: Theme.of(context).colorScheme.primary,
+            activeTrackColor: Theme.of(context).colorScheme.tertiary,
+            inactiveThumbColor: Theme.of(context).colorScheme.tertiary,
+            inactiveTrackColor: Theme.of(context).colorScheme.surface,
+            splashRadius: 0,
+            trackOutlineColor:
+                WidgetStatePropertyAll(Theme.of(context).colorScheme.tertiary),
             title: Text(
               'Oto. Pomodoro',
               style: kPomodoroSettingsTextStyle(context),

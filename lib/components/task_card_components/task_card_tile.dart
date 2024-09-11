@@ -174,8 +174,9 @@ class TaskCardTileState extends State<TaskCardTile> {
                       children: [
                         Text(
                           '${completionPercentage.toStringAsFixed(0)}%',
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 14),
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              fontSize: 14),
                         ),
                         SizedBox(
                           width: 30,
@@ -187,7 +188,7 @@ class TaskCardTileState extends State<TaskCardTile> {
                                 .withOpacity(0.3),
                             strokeCap: StrokeCap.round,
                             value: completionPercentage / 100,
-                            color: const Color(0xff0DC9AB),
+                            color: Theme.of(context).colorScheme.tertiary,
                             strokeAlign: 3,
                           ),
                         )

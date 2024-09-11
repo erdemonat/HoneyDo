@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:honeydo/constants/constants.dart';
 import 'package:honeydo/providers/focus_date_provider.dart';
 import 'package:honeydo/screens/large_calendart_card.dart';
-import 'package:honeydo/constants/theme.dart';
-import 'package:honeydo/screens/todo_tasks_card.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -135,7 +133,6 @@ class _CalenderCardState extends State<CalenderCard> {
                             date.day.toString(),
                             style: isSelected
                                 ? kCalendarDayNumberTextStyle(context)
-                                    .copyWith(color: customWhite)
                                 : kCalendarDayNumberTextStyle(context),
                           ),
                           if (isSelected)

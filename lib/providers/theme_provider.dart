@@ -10,6 +10,9 @@ class ThemeProvider extends ChangeNotifier {
     darkTheme4,
     darkTheme5,
     darkTheme6,
+    darkTheme7,
+    darkTheme8,
+    darkTheme9,
   ];
 
   final List<ThemeData> _lightThemes = [
@@ -19,6 +22,9 @@ class ThemeProvider extends ChangeNotifier {
     lightTheme4,
     lightTheme5,
     lightTheme6,
+    lightTheme7,
+    lightTheme8,
+    lightTheme9,
   ];
 
   bool _isDarkMode = true; // Dark mode açık mı?
