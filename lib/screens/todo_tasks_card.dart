@@ -5,7 +5,7 @@ import 'package:honeydo/components/task_card_components/task_text_field.dart';
 import 'package:honeydo/isar_service.dart';
 import 'package:honeydo/main.dart';
 import 'package:honeydo/providers/focus_date_provider.dart';
-import 'package:honeydo/model/task_model.dart';
+import 'package:honeydo/providers/tasks_meals_provider.dart';
 import 'package:provider/provider.dart';
 
 class TasksCard extends StatefulWidget {
@@ -18,15 +18,16 @@ class TasksCard extends StatefulWidget {
 TextEditingController taskTextController = TextEditingController();
 
 class _TasksCardState extends State<TasksCard> {
-  List<Task> tasks = [];
-  List<Meal> meals = [];
+  late TasksMealsProvider tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
   bool isDragging = false;
   bool taskMealToggle = false;
 
   @override
   void initState() {
-    loadTasks();
-    loadMeals();
+    tasksMealsProvider.meals;
+    tasksMealsProvider.tasks;
+    tasksMealsProvider.loadMeals(context);
+    tasksMealsProvider.loadTasks(context);
     super.initState();
   }
 
@@ -36,71 +37,37 @@ class _TasksCardState extends State<TasksCard> {
   }
 
   Future<void> _deleteTask(int index) async {
-    isarService.deleteTask(index, tasks);
+    isarService.deleteTask(index, tasksMealsProvider.tasks);
     setState(() {
-      tasks.removeAt(index);
+      tasksMealsProvider.removeTask(index);
     });
   }
 
   Future<void> _deleteMeal(int index) async {
-    isarService.deleteMeal(index, meals);
+    isarService.deleteMeal(index, tasksMealsProvider.meals);
     setState(() {
-      meals.removeAt(index);
+      tasksMealsProvider.removeMeal(index);
     });
-  }
-
-  Future<void> loadTasks() async {
-    String taskDate =
-        Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
-    setState(() {
-      tasks = [];
-    });
-    HoneyDoData? honeyDoData = await isarService.getTaskDataByName();
-    if (honeyDoData != null) {
-      DateLinks? taskDateObj =
-          await isarService.getTaskDateByDate(honeyDoData, taskDate);
-      if (taskDateObj != null) {
-        await taskDateObj.tasks.load();
-        tasks = taskDateObj.tasks.toList()
-          ..sort((a, b) => a.order.compareTo(b.order));
-        setState(() {});
-      }
-    }
-  }
-
-  Future<void> loadMeals() async {
-    String mealDate =
-        Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
-    setState(() {
-      meals = [];
-    });
-    HoneyDoData? honeyDoData = await isarService.getTaskDataByName();
-    if (honeyDoData != null) {
-      DateLinks? mealDateObj =
-          await isarService.getTaskDateByDate(honeyDoData, mealDate);
-      if (mealDateObj != null) {
-        await mealDateObj.meals.load();
-        meals = mealDateObj.meals.toList()
-          ..sort((a, b) => a.order.compareTo(b.order));
-        setState(() {});
-      }
-    }
   }
 
   void onTaskPressed() async {
     String taskName = taskTextController.text;
-    String taskDate =
-        Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
-    IsarService().createOrUpdateTaskData(taskDate, taskName);
-    loadTasks();
+    String taskDate = Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
+    setState(() {
+      IsarService().createOrUpdateTaskData(taskDate, taskName);
+      tasksMealsProvider.loadMeals(context);
+      tasksMealsProvider.loadTasks(context);
+    });
   }
 
   void onMealPressed() async {
     String mealName = taskTextController.text;
-    String mealDate =
-        Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
-    IsarService().createOrUpdateMealData(mealDate, mealName);
-    loadMeals();
+    String mealDate = Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
+    setState(() {
+      IsarService().createOrUpdateMealData(mealDate, mealName);
+      tasksMealsProvider.loadMeals(context);
+      tasksMealsProvider.loadTasks(context);
+    });
   }
 
   @override
@@ -117,26 +84,22 @@ class _TasksCardState extends State<TasksCard> {
         children: [
           taskMealToggle
               ? Expanded(
-                  child: meals.isEmpty
+                  child: tasksMealsProvider.meals.isEmpty
                       ? const Text('Yediklerin yazılmamış..')
                       : ListView.builder(
-                          itemCount: meals.length,
+                          itemCount: tasksMealsProvider.meals.length,
                           itemBuilder: (context, index) {
                             return DragTarget<int>(
                               onAcceptWithDetails: (details) {
                                 int oldIndex = details.data;
-                                // _onReorderMeal(oldIndex, index);
+                                isarService.onReorderMeal(context, oldIndex, index);
                               },
                               builder: (context, candidateData, rejectedData) {
                                 return Draggable<int>(
                                   data: index,
                                   feedback: Material(
                                     color: Colors.transparent,
-                                    child: SizedBox(
-                                        height: 90,
-                                        width: double.maxFinite,
-                                        child:
-                                            MealCardTile(meals: meals[index])),
+                                    child: SizedBox(height: 90, width: double.maxFinite, child: MealCardTile(meals: tasksMealsProvider.meals[index])),
                                   ),
                                   childWhenDragging: Container(),
                                   onDragStarted: () {
@@ -154,7 +117,7 @@ class _TasksCardState extends State<TasksCard> {
                                       isDragging = false;
                                     });
                                   },
-                                  child: MealCardTile(meals: meals[index]),
+                                  child: MealCardTile(meals: tasksMealsProvider.meals[index]),
                                 );
                               },
                             );
@@ -162,26 +125,22 @@ class _TasksCardState extends State<TasksCard> {
                         ),
                 )
               : Expanded(
-                  child: tasks.isEmpty
+                  child: tasksMealsProvider.tasks.isEmpty
                       ? const Text('Yapılacaklar yazılmamış ....')
                       : ListView.builder(
-                          itemCount: tasks.length,
+                          itemCount: tasksMealsProvider.tasks.length,
                           itemBuilder: (context, index) {
                             return DragTarget<int>(
                               onAcceptWithDetails: (details) {
                                 int oldIndex = details.data;
-                                // _onReorderTask(oldIndex, index);
+                                isarService.onReorderTask(context, oldIndex, index);
                               },
                               builder: (context, candidateData, rejectedData) {
                                 return Draggable<int>(
                                   data: index,
                                   feedback: Material(
                                     color: Colors.transparent,
-                                    child: SizedBox(
-                                        height: 90,
-                                        width: double.maxFinite,
-                                        child:
-                                            TaskCardTile(tasks: tasks[index])),
+                                    child: SizedBox(height: 90, width: double.maxFinite, child: TaskCardTile(tasks: tasksMealsProvider.tasks[index])),
                                   ),
                                   childWhenDragging: Container(),
                                   onDragStarted: () {
@@ -199,7 +158,7 @@ class _TasksCardState extends State<TasksCard> {
                                       isDragging = false;
                                     });
                                   },
-                                  child: TaskCardTile(tasks: tasks[index]),
+                                  child: TaskCardTile(tasks: tasksMealsProvider.tasks[index]),
                                 );
                               },
                             );
@@ -222,14 +181,9 @@ class _TasksCardState extends State<TasksCard> {
                     setState(() {
                       taskMealToggle = !taskMealToggle;
                     });
-                    print(taskMealToggle);
                   },
-                  taskMealIcon: taskMealToggle
-                      ? Icons.restaurant
-                      : Icons.library_add_sharp,
-                  hintext: taskMealToggle
-                      ? "Bugün ne yedin?"
-                      : "Her şey bir adımla başlar!",
+                  taskMealIcon: taskMealToggle ? Icons.restaurant : Icons.library_add_sharp,
+                  hintext: taskMealToggle ? "Bugün ne yedin?" : "Her şey bir adımla başlar!",
                 ),
               ),
               Align(
@@ -238,9 +192,7 @@ class _TasksCardState extends State<TasksCard> {
                   visible: isDragging,
                   child: DragTarget<int>(
                     onAcceptWithDetails: (details) {
-                      taskMealToggle
-                          ? _deleteMeal(details.data)
-                          : _deleteTask(details.data);
+                      taskMealToggle ? _deleteMeal(details.data) : _deleteTask(details.data);
                     },
                     builder: (context, candidateData, rejectedData) {
                       return Padding(

@@ -1,7 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:honeydo/model/pomodoro_model.dart' as pomodoro_model;
 import 'package:honeydo/model/task_model.dart' as task_model;
+import 'package:honeydo/model/weather_model.dart';
+import 'package:honeydo/providers/tasks_meals_provider.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 
 class IsarService {
   static Isar? _isar; // Singleton pattern için static bir örnek
@@ -17,6 +21,7 @@ class IsarService {
           task_model.SubTaskSchema,
           task_model.MealSchema,
           task_model.SubMealSchema,
+          WeatherDataSchema,
         ],
         directory: dir.path,
       );
@@ -25,8 +30,7 @@ class IsarService {
   }
 
   // Pomodoro ayarlarını kaydetmek veya güncellemek için
-  Future<void> savePomodoroSettings(
-      pomodoro_model.PomodoroSettings settings) async {
+  Future<void> savePomodoroSettings(pomodoro_model.PomodoroSettings settings) async {
     final isar = await db;
     await isar.writeTxn(() async {
       await isar.pomodoroSettings.put(settings);
@@ -41,21 +45,15 @@ class IsarService {
 
   Future<List<task_model.HoneyDoData>> getAllHoneyDoData() async {
     final isar = await db;
-    return await isar.honeyDoDatas
-        .where()
-        .findAll(); // HoneyDoDatas'a erişim sağlama
+    return await isar.honeyDoDatas.where().findAll(); // HoneyDoDatas'a erişim sağlama
   }
 
   Future<task_model.HoneyDoData?> getTaskDataByName() async {
     final isar = await db;
-    return await isar.honeyDoDatas
-        .filter()
-        .nameEqualTo("HoneyDoData")
-        .findFirst();
+    return await isar.honeyDoDatas.filter().nameEqualTo("HoneyDoData").findFirst();
   }
 
-  Future<task_model.DateLinks?> getTaskDateByDate(
-      task_model.HoneyDoData honeyDoData, String date) async {
+  Future<task_model.DateLinks?> getTaskDateByDate(task_model.HoneyDoData honeyDoData, String date) async {
     await honeyDoData.dateLinks.load();
     return honeyDoData.dateLinks.filter().dateEqualTo(date).findFirst();
   }
@@ -69,8 +67,7 @@ class IsarService {
         honeyDoData = task_model.HoneyDoData()..name = dataName;
         await isar.honeyDoDatas.put(honeyDoData);
       }
-      task_model.DateLinks? dateLink =
-          await getTaskDateByDate(honeyDoData, date);
+      task_model.DateLinks? dateLink = await getTaskDateByDate(honeyDoData, date);
       if (dateLink == null) {
         dateLink = task_model.DateLinks()..date = date;
         await isar.dateLinks.put(dateLink);
@@ -102,8 +99,7 @@ class IsarService {
         honeyDoData = task_model.HoneyDoData()..name = dataName;
         await isar.honeyDoDatas.put(honeyDoData);
       }
-      task_model.DateLinks? dateLink =
-          await getTaskDateByDate(honeyDoData, date);
+      task_model.DateLinks? dateLink = await getTaskDateByDate(honeyDoData, date);
       if (dateLink == null) {
         dateLink = task_model.DateLinks()..date = date;
         await isar.dateLinks.put(dateLink);
@@ -135,6 +131,31 @@ class IsarService {
     final task = tasks[index];
     await isar.writeTxn(() async {
       await isar.tasks.delete(task.id);
+    });
+  }
+
+  Future<void> onReorderMeal(BuildContext context, int oldIndex, int newIndex) async {
+    TasksMealsProvider tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
+    final isar = await db;
+    tasksMealsProvider.onReorderMeal(oldIndex, newIndex);
+
+    await isar.writeTxn(() async {
+      for (int i = 0; i < tasksMealsProvider.meals.length; i++) {
+        tasksMealsProvider.meals[i].order = i;
+        await isar.meals.put(tasksMealsProvider.meals[i]);
+      }
+    });
+  }
+
+  Future<void> onReorderTask(BuildContext context, int oldIndex, int newIndex) async {
+    TasksMealsProvider tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
+    final isar = await db;
+    tasksMealsProvider.onReorderTask(oldIndex, newIndex);
+    await isar.writeTxn(() async {
+      for (int i = 0; i < tasksMealsProvider.tasks.length; i++) {
+        tasksMealsProvider.tasks[i].order = i;
+        await isar.tasks.put(tasksMealsProvider.tasks[i]);
+      }
     });
   }
 }

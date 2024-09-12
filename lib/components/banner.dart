@@ -12,7 +12,6 @@ class HoneydoBannerState extends State<HoneydoBanner> {
   late Timer _timer;
   String _currentWeatherTitle = '31 °C';
   int _weatherTitleIndex = 0;
-
   final List<String> _weatherTitles = [
     '31 °C',
     'Hava Bulutlu',

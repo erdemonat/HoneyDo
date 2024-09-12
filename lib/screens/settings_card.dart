@@ -16,8 +16,7 @@ class SettingsCard extends StatefulWidget {
 class SettingsCardState extends State<SettingsCard> {
   @override
   Widget build(BuildContext context) {
-    final pomodoroProvider =
-        Provider.of<PomodoroProvider>(context, listen: false);
+    final pomodoroProvider = Provider.of<PomodoroProvider>(context, listen: false);
     final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
@@ -135,25 +134,15 @@ class SettingsCardState extends State<SettingsCard> {
               titleText: 'Pomodoro',
               borderCutWidth: 80,
               child: PomodoroSettings(
-                userPomodoroDuration:
-                    pomodoroProvider.pomodoroDuration.inMinutes,
-                userShortBreakDuration:
-                    pomodoroProvider.shortBreakDuration.inMinutes,
-                userLongBreakDuration:
-                    pomodoroProvider.longBreakDuration.inMinutes,
+                userPomodoroDuration: pomodoroProvider.pomodoroDuration.inMinutes,
+                userShortBreakDuration: pomodoroProvider.shortBreakDuration.inMinutes,
+                userLongBreakDuration: pomodoroProvider.longBreakDuration.inMinutes,
                 userSetCount: pomodoroProvider.setCount,
                 autoBreak: pomodoroProvider.autoBreak,
                 autoPomodoro: pomodoroProvider.autoPomodoro,
-                onSettingsChanged: (pomodoro, shortBreak, longBreak, setCount,
-                    autoBreak, autoPomodoro) {
+                onSettingsChanged: (pomodoro, shortBreak, longBreak, setCount, autoBreak, autoPomodoro) {
                   setState(() {
-                    pomodoroProvider.setAllPomodoroSettings(
-                        Duration(minutes: pomodoro),
-                        Duration(minutes: shortBreak),
-                        Duration(minutes: longBreak),
-                        setCount,
-                        autoBreak,
-                        autoPomodoro);
+                    pomodoroProvider.setAllPomodoroSettings(Duration(minutes: pomodoro), Duration(minutes: shortBreak), Duration(minutes: longBreak), setCount, autoBreak, autoPomodoro);
                   });
                 },
               ),
@@ -189,9 +178,7 @@ class ColorThemeBox extends StatelessWidget {
               color: Theme.of(context).colorScheme.onSurface,
               width: 2,
             ),
-            borderRadius: themeProvider.currentThemeIndex == index
-                ? BorderRadius.circular(8)
-                : BorderRadius.circular(16),
+            borderRadius: themeProvider.currentThemeIndex == index ? BorderRadius.circular(8) : BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.2),
@@ -206,7 +193,10 @@ class ColorThemeBox extends StatelessWidget {
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              stops: const [0.5, 0.5],
+              stops: const [
+                0.5,
+                0.5
+              ],
             ),
           ),
           height: screenHeight * 0.05,

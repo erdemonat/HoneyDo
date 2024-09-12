@@ -2,6 +2,7 @@ import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:honeydo/constants/constants.dart';
 import 'package:honeydo/providers/focus_date_provider.dart';
+import 'package:honeydo/providers/tasks_meals_provider.dart';
 import 'package:honeydo/screens/large_calendart_card.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -13,8 +14,7 @@ class CalenderCard extends StatefulWidget {
   State<CalenderCard> createState() => _CalenderCardState();
 }
 
-final EasyInfiniteDateTimelineController _controller =
-    EasyInfiniteDateTimelineController();
+final EasyInfiniteDateTimelineController _controller = EasyInfiniteDateTimelineController();
 DateTime now = DateTime.now();
 DateTime firstDate = DateTime(1900);
 DateTime lastDate = DateTime(2100);
@@ -29,7 +29,8 @@ class _CalenderCardState extends State<CalenderCard> {
     final double heightContainerSize = screenHeight * 0.085;
     final double paddingSize = screenWidth * 0.02;
 
-    final focusDateModel = Provider.of<FocusDateProvider>(context);
+    final focusDateModel = Provider.of<FocusDateProvider>(context, listen: false);
+    final tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
 
     return Row(
       children: [
@@ -78,8 +79,7 @@ class _CalenderCardState extends State<CalenderCard> {
                         child: LargeCalendartCard(
                           onSelectionChanged: (args) {
                             setState(() {
-                              focusDateModel
-                                  .updateFocusDate(args.value as DateTime);
+                              focusDateModel.updateFocusDate(args.value as DateTime);
                               _controller.animateToDate(
                                 focusDateModel.focusDate,
                                 duration: const Duration(milliseconds: 500),
@@ -115,9 +115,7 @@ class _CalenderCardState extends State<CalenderCard> {
                     onTap: onTap,
                     child: Container(
                       decoration: BoxDecoration(
-                        color: isSelected
-                            ? Theme.of(context).colorScheme.secondary
-                            : Theme.of(context).colorScheme.surface,
+                        color: isSelected ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Column(
@@ -125,20 +123,15 @@ class _CalenderCardState extends State<CalenderCard> {
                         children: [
                           Text(
                             dayName,
-                            style: isSelected
-                                ? kCalendarDayTextStyle(context)
-                                : null,
+                            style: isSelected ? kCalendarDayTextStyle(context) : null,
                           ),
                           Text(
                             date.day.toString(),
-                            style: isSelected
-                                ? kCalendarDayNumberTextStyle(context)
-                                : kCalendarDayNumberTextStyle(context),
+                            style: isSelected ? kCalendarDayNumberTextStyle(context) : kCalendarDayNumberTextStyle(context),
                           ),
                           if (isSelected)
                             Text(
-                              DateFormat('MMMM yyyy', 'tr_TR')
-                                  .format(focusDateModel.focusDate),
+                              DateFormat('MMMM yyyy', 'tr_TR').format(focusDateModel.focusDate),
                               style: kCalendarDayTextStyle(context),
                             ),
                         ],
@@ -157,7 +150,8 @@ class _CalenderCardState extends State<CalenderCard> {
                   setState(
                     () {
                       focusDateModel.updateFocusDate(selectedDate);
-                      // TasksCardState().loadTasks();
+                      tasksMealsProvider.loadTasks(context);
+                      tasksMealsProvider.loadMeals(context);
                     },
                   );
                 },
@@ -167,9 +161,7 @@ class _CalenderCardState extends State<CalenderCard> {
                   margin: EdgeInsets.only(top: 0.01 * screenHeight),
                   width: double.infinity,
                   height: double.infinity,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: Theme.of(context).colorScheme.surface),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Theme.of(context).colorScheme.surface),
                   child: Center(
                     child: Text(
                       "Upcoming",

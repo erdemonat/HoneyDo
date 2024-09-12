@@ -4,6 +4,7 @@ import 'package:honeydo/isar_service.dart';
 import 'package:honeydo/providers/focus_date_provider.dart';
 import 'package:honeydo/providers/pomodoro_provider.dart';
 import 'package:honeydo/providers/settings_provider.model.dart';
+import 'package:honeydo/providers/tasks_meals_provider.dart';
 import 'package:honeydo/providers/theme_provider.dart';
 import 'package:honeydo/screens/homescreen.dart';
 import 'package:provider/provider.dart';
@@ -31,6 +32,9 @@ void main() async {
       ChangeNotifierProvider(
         create: (_) => PomodoroProvider(),
       ),
+      ChangeNotifierProvider(
+        create: (_) => TasksMealsProvider(),
+      )
     ],
     child: const MyApp(),
   ));
@@ -58,7 +62,9 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       locale: const Locale('tr', 'TR'),
-      supportedLocales: const [Locale('tr', 'TR')],
+      supportedLocales: const [
+        Locale('tr', 'TR')
+      ],
       theme: Provider.of<ThemeProvider>(context).getThemeData,
       debugShowCheckedModeBanner: false,
       home: const HomeScreen(),
