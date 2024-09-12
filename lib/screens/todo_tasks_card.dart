@@ -24,11 +24,14 @@ class _TasksCardState extends State<TasksCard> {
 
   @override
   void initState() {
-    tasksMealsProvider.meals;
-    tasksMealsProvider.tasks;
-    tasksMealsProvider.loadMeals(context);
-    tasksMealsProvider.loadTasks(context);
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) async {
+        await tasksMealsProvider.loadTasks(context);
+        await tasksMealsProvider.loadMeals(context);
+        setState(() {});
+      },
+    );
   }
 
   @override
@@ -37,37 +40,33 @@ class _TasksCardState extends State<TasksCard> {
   }
 
   Future<void> _deleteTask(int index) async {
-    isarService.deleteTask(index, tasksMealsProvider.tasks);
-    setState(() {
-      tasksMealsProvider.removeTask(index);
-    });
+    await isarService.deleteTask(index, tasksMealsProvider.tasks);
+    await tasksMealsProvider.loadTasks(context);
+    setState(() {});
   }
 
   Future<void> _deleteMeal(int index) async {
-    isarService.deleteMeal(index, tasksMealsProvider.meals);
-    setState(() {
-      tasksMealsProvider.removeMeal(index);
-    });
+    await isarService.deleteMeal(index, tasksMealsProvider.meals);
+    await tasksMealsProvider.loadMeals(context);
+    setState(() {});
   }
 
   void onTaskPressed() async {
     String taskName = taskTextController.text;
     String taskDate = Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
-    setState(() {
-      IsarService().createOrUpdateTaskData(taskDate, taskName);
-      tasksMealsProvider.loadMeals(context);
-      tasksMealsProvider.loadTasks(context);
-    });
+    await IsarService().createOrUpdateTaskData(taskDate, taskName);
+    await tasksMealsProvider.loadTasks(context);
+    taskTextController.clear();
+    setState(() {});
   }
 
   void onMealPressed() async {
     String mealName = taskTextController.text;
     String mealDate = Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
-    setState(() {
-      IsarService().createOrUpdateMealData(mealDate, mealName);
-      tasksMealsProvider.loadMeals(context);
-      tasksMealsProvider.loadTasks(context);
-    });
+    await IsarService().createOrUpdateMealData(mealDate, mealName);
+    await tasksMealsProvider.loadMeals(context);
+    taskTextController.clear();
+    setState(() {});
   }
 
   @override
@@ -92,7 +91,7 @@ class _TasksCardState extends State<TasksCard> {
                             return DragTarget<int>(
                               onAcceptWithDetails: (details) {
                                 int oldIndex = details.data;
-                                isarService.onReorderMeal(context, oldIndex, index);
+                                tasksMealsProvider.onReorderMeal(context, oldIndex, index);
                               },
                               builder: (context, candidateData, rejectedData) {
                                 return Draggable<int>(
@@ -133,7 +132,7 @@ class _TasksCardState extends State<TasksCard> {
                             return DragTarget<int>(
                               onAcceptWithDetails: (details) {
                                 int oldIndex = details.data;
-                                isarService.onReorderTask(context, oldIndex, index);
+                                tasksMealsProvider.onReorderTask(context, oldIndex, index);
                               },
                               builder: (context, candidateData, rejectedData) {
                                 return Draggable<int>(

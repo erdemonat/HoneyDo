@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:honeydo/isar_service.dart';
 import 'package:honeydo/main.dart';
 import 'package:honeydo/model/task_model.dart';
 import 'package:honeydo/providers/focus_date_provider.dart';
@@ -14,8 +15,6 @@ class TasksMealsProvider with ChangeNotifier {
   Future<void> loadTasks(BuildContext context) async {
     String taskDate = Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
 
-    // _tasks = [];
-
     HoneyDoData? honeyDoData = await isarService.getTaskDataByName();
     if (honeyDoData != null) {
       DateLinks? taskDateObj = await isarService.getTaskDateByDate(honeyDoData, taskDate);
@@ -24,13 +23,11 @@ class TasksMealsProvider with ChangeNotifier {
         _tasks = taskDateObj.tasks.toList()..sort((a, b) => a.order.compareTo(b.order));
       }
     }
-    notifyListeners();
+    notifyListeners(); // UI'yi güncelle
   }
 
   Future<void> loadMeals(BuildContext context) async {
     String mealDate = Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
-
-    // _meals = [];
 
     HoneyDoData? honeyDoData = await isarService.getTaskDataByName();
     if (honeyDoData != null) {
@@ -40,34 +37,45 @@ class TasksMealsProvider with ChangeNotifier {
         _meals = mealDateObj.meals.toList()..sort((a, b) => a.order.compareTo(b.order));
       }
     }
-    notifyListeners();
+
+    notifyListeners(); // UI'yi güncelle
   }
 
-  void removeTask(int index) {
+  void removeTask(BuildContext context, int index) async {
+    await IsarService().deleteTask(index, _tasks);
     _tasks.removeAt(index);
     notifyListeners();
   }
 
-  void removeMeal(int index) {
+  void removeMeal(BuildContext context, int index) async {
+    await IsarService().deleteMeal(index, _meals);
     _meals.removeAt(index);
     notifyListeners();
   }
 
-  Future<void> onReorderMeal(int oldIndex, int newIndex) async {
+  Future<void> onReorderMeal(BuildContext context, int oldIndex, int newIndex) async {
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }
+
     final Meal item = _meals.removeAt(oldIndex);
     _meals.insert(newIndex, item);
+
+    await IsarService().onReorderMeal(context, oldIndex, newIndex);
+
     notifyListeners();
   }
 
-  Future<void> onReorderTask(int oldIndex, int newIndex) async {
+  Future<void> onReorderTask(BuildContext context, int oldIndex, int newIndex) async {
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }
+
     final Task item = _tasks.removeAt(oldIndex);
-    tasks.insert(newIndex, item);
+    _tasks.insert(newIndex, item);
+
+    await IsarService().onReorderTask(context, oldIndex, newIndex);
+
     notifyListeners();
   }
 }

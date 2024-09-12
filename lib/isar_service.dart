@@ -137,7 +137,6 @@ class IsarService {
   Future<void> onReorderMeal(BuildContext context, int oldIndex, int newIndex) async {
     TasksMealsProvider tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
     final isar = await db;
-    tasksMealsProvider.onReorderMeal(oldIndex, newIndex);
 
     await isar.writeTxn(() async {
       for (int i = 0; i < tasksMealsProvider.meals.length; i++) {
@@ -150,7 +149,7 @@ class IsarService {
   Future<void> onReorderTask(BuildContext context, int oldIndex, int newIndex) async {
     TasksMealsProvider tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
     final isar = await db;
-    tasksMealsProvider.onReorderTask(oldIndex, newIndex);
+
     await isar.writeTxn(() async {
       for (int i = 0; i < tasksMealsProvider.tasks.length; i++) {
         tasksMealsProvider.tasks[i].order = i;
