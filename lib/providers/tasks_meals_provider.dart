@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:honeydo/isar_service.dart';
 import 'package:honeydo/main.dart';
+import 'package:honeydo/model/subtitle_model.dart';
 import 'package:honeydo/model/task_model.dart';
 import 'package:honeydo/providers/focus_date_provider.dart';
 import 'package:provider/provider.dart';
@@ -8,9 +9,18 @@ import 'package:provider/provider.dart';
 class TasksMealsProvider with ChangeNotifier {
   List<Task> _tasks = [];
   List<Meal> _meals = [];
+  List<SubtitleItem> _subtitles = [];
 
   List<Task> get tasks => _tasks;
   List<Meal> get meals => _meals;
+  List<SubtitleItem> get subtitles => _subtitles;
+
+  Future<void> createEmptyTaskDate(BuildContext context, String date) async {
+    await isarService.createEmptyTaskDate(date);
+    await loadTasks(context);
+    await loadMeals(context);
+    notifyListeners();
+  }
 
   Future<void> loadTasks(BuildContext context) async {
     String taskDate = Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
@@ -23,7 +33,7 @@ class TasksMealsProvider with ChangeNotifier {
         _tasks = taskDateObj.tasks.toList()..sort((a, b) => a.order.compareTo(b.order));
       }
     }
-    notifyListeners(); // UI'yi güncelle
+    notifyListeners();
   }
 
   Future<void> loadMeals(BuildContext context) async {
@@ -38,7 +48,7 @@ class TasksMealsProvider with ChangeNotifier {
       }
     }
 
-    notifyListeners(); // UI'yi güncelle
+    notifyListeners();
   }
 
   void removeTask(BuildContext context, int index) async {
@@ -76,6 +86,31 @@ class TasksMealsProvider with ChangeNotifier {
 
     await IsarService().onReorderTask(context, oldIndex, newIndex);
 
+    notifyListeners();
+  }
+
+  Future<void> addSubtitle(Task tasks, String subtitleText) async {
+    final subTask = SubTask()
+      ..name = subtitleText
+      ..isChecked = false;
+
+    await isarService.addSubtitle(tasks, subTask, subtitleText);
+    // await _loadSubTasks();
+
+    notifyListeners();
+  }
+
+  Future<void> updateSubtitleCheckStatus(Task task, String subtitleText, bool isChecked) async {
+    // Find the specific SubTask from the task's subtasks based on the subtitleText
+    final subTask = task.subtasks.where((st) => st.name == subtitleText).first;
+
+    // Update the isChecked status
+    subTask.isChecked = isChecked;
+
+    // Update the subtask in the Isar database
+    await isarService.updateSubtitleCheckStatus(task, subTask);
+
+    // Reload the tasks to reflect the change in the UI
     notifyListeners();
   }
 }

@@ -5,9 +5,12 @@ import 'package:honeydo/components/task_card_components/subtitle_list_tile.dart'
 import 'package:honeydo/model/subtitle_model.dart';
 import 'package:honeydo/components/task_card_components/progress_bar.dart';
 import 'package:honeydo/model/task_model.dart';
+import 'package:honeydo/providers/tasks_meals_provider.dart';
+import 'package:provider/provider.dart';
 
 class TaskCardTile extends StatefulWidget {
   final Task tasks;
+
   const TaskCardTile({
     super.key,
     required this.tasks,
@@ -43,7 +46,6 @@ class TaskCardTileState extends State<TaskCardTile> {
   @override
   void initState() {
     super.initState();
-    _loadSubTasks();
   }
 
   @override
@@ -52,109 +54,9 @@ class TaskCardTileState extends State<TaskCardTile> {
     super.dispose();
   }
 
-  Future<void> _loadSubTasks() async {
-    await widget.tasks.subtasks.load();
-    if (!mounted) return;
-
-    completedSubtasks = 0;
-
-    setState(() {
-      _subtitles.clear();
-      for (final subTask in widget.tasks.subtasks) {
-        _subtitles.add(
-          SubtitleItem(text: subTask.name, isChecked: subTask.isChecked),
-        );
-        if (subTask.isChecked) {
-          completedSubtasks++;
-        }
-      }
-
-      final totalItems = _subtitles.length;
-      if (totalItems > 0) {
-        completionPercentage = (completedSubtasks / totalItems) * 100;
-      } else {
-        // Reflect task completion status when no subtasks are present
-        completionPercentage = widget.tasks.isChecked ? 100.0 : 0.0;
-      }
-
-      // Ensure the percentage doesn't exceed 100%
-      if (completionPercentage > 100) {
-        completionPercentage = 100.0;
-      }
-
-      _currentExpandedHeight =
-          _expandedBaseHeight + _subtitles.length * _subtitleHeightIncrement;
-
-      if (_cardHeight > _collapsedHeight) {
-        _cardHeight = _currentExpandedHeight;
-      }
-    });
-  }
-
-  void _isTaskChecked(bool isChecked) async {
-    setState(() {
-      if (isChecked) {
-        completedSubtasks = _subtitles.length;
-        for (var subtitle in _subtitles) {
-          subtitle.isChecked = true;
-        }
-      } else {
-        completedSubtasks = 0;
-        for (var subtitle in _subtitles) {
-          subtitle.isChecked = false;
-        }
-      }
-
-      // Update completion percentage when there are no subtasks
-      if (_subtitles.isEmpty) {
-        completionPercentage = isChecked ? 100.0 : 0.0;
-      } else {
-        completionPercentage = (completedSubtasks / _subtitles.length) * 100;
-      }
-
-      // Ensure the percentage doesn't exceed 100%
-      if (completionPercentage > 100) {
-        completionPercentage = 100.0;
-      }
-    });
-
-    _loadSubTasks();
-  }
-
-  void _updateSubtitleCheckStatus(int index, bool? value) async {
-    final subTask = widget.tasks.subtasks
-        .where((st) => st.name == _subtitles[index].text)
-        .first;
-
-    if (!mounted) return;
-
-    setState(() {
-      _subtitles[index].isChecked = value ?? false;
-
-      completedSubtasks =
-          _subtitles.where((subtask) => subtask.isChecked).length;
-
-      if (completedSubtasks == _subtitles.length && _subtitles.isNotEmpty) {
-        widget.tasks.isChecked = true;
-      } else {
-        widget.tasks.isChecked = false;
-      }
-
-      completionPercentage = (_subtitles.isNotEmpty
-              ? (completedSubtasks + (widget.tasks.isChecked ? 1 : 0)) /
-                  (_subtitles.length)
-              : 0.0) *
-          100;
-
-      // Ensure the percentage doesn't exceed 100%
-      if (completionPercentage > 100) {
-        completionPercentage = 100.0;
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       height: _cardHeight,
@@ -174,18 +76,13 @@ class TaskCardTileState extends State<TaskCardTile> {
                       children: [
                         Text(
                           '${completionPercentage.toStringAsFixed(0)}%',
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary,
-                              fontSize: 14),
+                          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontSize: 14),
                         ),
                         SizedBox(
                           width: 30,
                           height: 30,
                           child: CircularProgressIndicator(
-                            backgroundColor: Theme.of(context)
-                                .colorScheme
-                                .tertiary
-                                .withOpacity(0.3),
+                            backgroundColor: Theme.of(context).colorScheme.tertiary.withOpacity(0.3),
                             strokeCap: StrokeCap.round,
                             value: completionPercentage / 100,
                             color: Theme.of(context).colorScheme.tertiary,
@@ -215,8 +112,7 @@ class TaskCardTileState extends State<TaskCardTile> {
                       onPressed: _toggleCardHeight,
                       onTaskChecked: (p0) {}, //_isTaskChecked
                     ),
-                    if (_cardHeight > _collapsedHeight)
-                      const SizedBox(height: 20),
+                    if (_cardHeight > _collapsedHeight) const SizedBox(height: 20),
                     if (_cardHeight > _collapsedHeight)
                       Expanded(
                         child: SingleChildScrollView(
@@ -225,12 +121,16 @@ class TaskCardTileState extends State<TaskCardTile> {
                               SubtitleListTile(
                                 subtitles: _subtitles,
                                 onDelete: (p0, p1) {}, //_deleteSubtitle
-                                onUpdateCheckStatus:
-                                    (p0, p1) {}, //_updateSubtitleCheckStatus
+                                onUpdateCheckStatus: (p0, p1) {
+                                  tasksMealsProvider.updateSubtitleCheckStatus;
+                                },
                               ),
                               SubTitleAddTextField(
                                 controller: _subtitleController,
-                                onSubmitted: (p0) {}, //_addSubtitle
+                                onSubmitted: (p0) {
+                                  tasksMealsProvider.addSubtitle(widget.tasks, _subtitleController.text);
+                                  _subtitleController.clear();
+                                },
                                 hintext: 'Bir görev ekle',
                               ),
                             ],

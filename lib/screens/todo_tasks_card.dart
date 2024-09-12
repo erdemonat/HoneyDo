@@ -51,7 +51,9 @@ class _TasksCardState extends State<TasksCard> {
   void onTaskPressed() async {
     String taskName = taskTextController.text;
     String taskDate = Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
-    await IsarService().createOrUpdateTaskData(taskDate, taskName);
+    if (taskTextController.text.isNotEmpty) {
+      await IsarService().createOrUpdateTaskData(taskDate, taskName);
+    }
     await tasksMealsProvider.loadTasks(context);
     taskTextController.clear();
   }
@@ -59,7 +61,9 @@ class _TasksCardState extends State<TasksCard> {
   void onMealPressed() async {
     String mealName = taskTextController.text;
     String mealDate = Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
-    await IsarService().createOrUpdateMealData(mealDate, mealName);
+    if (taskTextController.text.isNotEmpty) {
+      await IsarService().createOrUpdateMealData(mealDate, mealName);
+    }
     await tasksMealsProvider.loadMeals(context);
     taskTextController.clear();
   }
@@ -134,7 +138,12 @@ class _TasksCardState extends State<TasksCard> {
                                   data: index,
                                   feedback: Material(
                                     color: Colors.transparent,
-                                    child: SizedBox(height: 90, width: double.maxFinite, child: TaskCardTile(tasks: tasksMealsProvider.tasks[index])),
+                                    child: SizedBox(
+                                        height: 90,
+                                        width: double.maxFinite,
+                                        child: TaskCardTile(
+                                          tasks: tasksMealsProvider.tasks[index],
+                                        )),
                                   ),
                                   childWhenDragging: Container(),
                                   onDragStarted: () {
@@ -152,7 +161,9 @@ class _TasksCardState extends State<TasksCard> {
                                       isDragging = false;
                                     });
                                   },
-                                  child: TaskCardTile(tasks: tasksMealsProvider.tasks[index]),
+                                  child: TaskCardTile(
+                                    tasks: tasksMealsProvider.tasks[index],
+                                  ),
                                 );
                               },
                             );

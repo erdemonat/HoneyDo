@@ -118,6 +118,25 @@ class IsarService {
     });
   }
 
+  Future<void> createEmptyTaskDate(String date) async {
+    final isar = await db;
+    await isar.writeTxn(() async {
+      task_model.HoneyDoData? honeyDoData = await getTaskDataByName();
+      if (honeyDoData == null) {
+        honeyDoData = task_model.HoneyDoData()..name = "HoneyDoData";
+        await isar.honeyDoDatas.put(honeyDoData);
+      }
+      task_model.DateLinks? dateLink = await getTaskDateByDate(honeyDoData, date);
+      if (dateLink == null) {
+        dateLink = task_model.DateLinks()..date = date;
+        await isar.dateLinks.put(dateLink);
+        honeyDoData.dateLinks.add(dateLink);
+        await honeyDoData.dateLinks.save();
+      }
+      await dateLink.tasks.load();
+    });
+  }
+
   Future<void> deleteMeal(int index, List<task_model.Meal> meals) async {
     final isar = await db;
     final meal = meals[index];
@@ -155,6 +174,25 @@ class IsarService {
         tasksMealsProvider.tasks[i].order = i;
         await isar.tasks.put(tasksMealsProvider.tasks[i]);
       }
+    });
+  }
+
+  Future<void> addSubtitle(task_model.Task tasks, task_model.SubTask subTask, String subtitleText) async {
+    final isar = await db;
+    await isar.writeTxn(() async {
+      subTask.task.value = tasks;
+      await isar.subTasks.put(subTask);
+      tasks.subtasks.add(subTask);
+      await tasks.subtasks.save();
+    });
+  }
+
+  Future<void> updateSubtitleCheckStatus(task_model.Task task, task_model.SubTask subTask) async {
+    final isar = await db;
+    await isar.writeTxn(() async {
+      await isar.subTasks.put(subTask);
+
+      await isar.tasks.put(task);
     });
   }
 }

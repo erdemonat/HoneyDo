@@ -30,7 +30,7 @@ class _CalenderCardState extends State<CalenderCard> {
     final double paddingSize = screenWidth * 0.02;
 
     final focusDateModel = Provider.of<FocusDateProvider>(context, listen: false);
-    final tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
+    final tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: true);
 
     return Row(
       children: [
@@ -147,13 +147,8 @@ class _CalenderCardState extends State<CalenderCard> {
                 focusDate: focusDateModel.focusDate,
                 lastDate: lastDate,
                 onDateChange: (selectedDate) {
-                  setState(
-                    () {
-                      focusDateModel.updateFocusDate(selectedDate);
-                      tasksMealsProvider.loadTasks(context);
-                      tasksMealsProvider.loadMeals(context);
-                    },
-                  );
+                  focusDateModel.updateFocusDate(selectedDate);
+                  tasksMealsProvider.createEmptyTaskDate(context, focusDateModel.getFocusDate());
                 },
               ),
               Flexible(
