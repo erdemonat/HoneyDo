@@ -18,7 +18,7 @@ class TasksCard extends StatefulWidget {
 TextEditingController taskTextController = TextEditingController();
 
 class _TasksCardState extends State<TasksCard> {
-  late TasksMealsProvider tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
+  late TasksMealsProvider tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: true);
   bool isDragging = false;
   bool taskMealToggle = false;
 
@@ -29,7 +29,6 @@ class _TasksCardState extends State<TasksCard> {
       (_) async {
         await tasksMealsProvider.loadTasks(context);
         await tasksMealsProvider.loadMeals(context);
-        setState(() {});
       },
     );
   }
@@ -42,13 +41,11 @@ class _TasksCardState extends State<TasksCard> {
   Future<void> _deleteTask(int index) async {
     await isarService.deleteTask(index, tasksMealsProvider.tasks);
     await tasksMealsProvider.loadTasks(context);
-    setState(() {});
   }
 
   Future<void> _deleteMeal(int index) async {
     await isarService.deleteMeal(index, tasksMealsProvider.meals);
     await tasksMealsProvider.loadMeals(context);
-    setState(() {});
   }
 
   void onTaskPressed() async {
@@ -57,7 +54,6 @@ class _TasksCardState extends State<TasksCard> {
     await IsarService().createOrUpdateTaskData(taskDate, taskName);
     await tasksMealsProvider.loadTasks(context);
     taskTextController.clear();
-    setState(() {});
   }
 
   void onMealPressed() async {
@@ -66,7 +62,6 @@ class _TasksCardState extends State<TasksCard> {
     await IsarService().createOrUpdateMealData(mealDate, mealName);
     await tasksMealsProvider.loadMeals(context);
     taskTextController.clear();
-    setState(() {});
   }
 
   @override
