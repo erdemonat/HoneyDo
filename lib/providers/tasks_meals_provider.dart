@@ -9,11 +9,11 @@ import 'package:provider/provider.dart';
 class TasksMealsProvider with ChangeNotifier {
   List<Task> _tasks = [];
   List<Meal> _meals = [];
-  //List<SubtitleItem> _subtitles = [];
+
+  Map<int, List<SubtitleItem>> _subMeals = {};
 
   List<Task> get tasks => _tasks;
   List<Meal> get meals => _meals;
-  //List<SubtitleItem> get subtitles => _subtitles;
 
   Future<void> createEmptyTaskDate(BuildContext context, String date) async {
     await isarService.createEmptyTaskDate(date);
@@ -71,7 +71,8 @@ class TasksMealsProvider with ChangeNotifier {
     final Meal item = _meals.removeAt(oldIndex);
     _meals.insert(newIndex, item);
 
-    await IsarService().onReorderMeal(context, oldIndex, newIndex);
+    await IsarService().updateMealOrderInDatabase(_meals);
+    loadMeals(context);
 
     notifyListeners();
   }
@@ -95,7 +96,6 @@ class TasksMealsProvider with ChangeNotifier {
       ..isChecked = false;
 
     await isarService.addSubTask(tasks, subTask, subtitleText);
-    // await _loadSubTasks();
 
     notifyListeners();
   }
@@ -104,38 +104,45 @@ class TasksMealsProvider with ChangeNotifier {
     final subMeal = SubMeal()..name = subtitleText;
 
     await isarService.addSubMeal(meals, subMeal, subtitleText);
-    // await _loadSubTasks();
 
     notifyListeners();
   }
 
   Future<void> updateSubtitleCheckStatus(Task task, String subtitleText, bool isChecked) async {
-    // Find the specific SubTask from the task's subtasks based on the subtitleText
     final subTask = task.subtasks.where((st) => st.name == subtitleText).first;
 
-    // Update the isChecked status
     subTask.isChecked = isChecked;
 
-    // Update the subtask in the Isar database
     await isarService.updateSubtitleCheckStatus(task, subTask);
 
-    // Reload the tasks to reflect the change in the UI
     notifyListeners();
   }
 
   Future<void> deleteSubMeal(int mealId, String subtitleText) async {
-    // İlgili Meal'i bul
     final meal = _meals.firstWhere((meal) => meal.id == mealId);
 
-    // Meal altındaki doğru SubMeal'i bul
     final subMeal = meal.submeals.firstWhere((sm) => sm.name == subtitleText);
 
-    // SubMeal ID'sini al ve IsarService'deki fonksiyonu çağır
     await isarService.deleteSubMealById(meal.id, subMeal.id);
 
-    // Meal altındaki SubMeal'i listeden kaldır
     meal.submeals.remove(subMeal);
 
+    notifyListeners();
+  }
+
+  List<SubtitleItem> getSubMeals(int mealId) {
+    return _subMeals[mealId] ?? [];
+  }
+
+  Future<void> loadSubMeals(Meal meal) async {
+    await meal.submeals.load();
+
+    List<SubtitleItem> subtitles = [];
+    for (final subMeal in meal.submeals) {
+      subtitles.add(SubtitleItem(text: subMeal.name));
+    }
+
+    _subMeals[meal.id] = subtitles;
     notifyListeners();
   }
 }

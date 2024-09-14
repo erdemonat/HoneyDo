@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:honeydo/components/task_card_components/sub_item_text_field.dart';
 import 'package:honeydo/constants/constants.dart';
 import 'package:honeydo/components/task_card_components/meal_subtitle_list_tile.dart';
-import 'package:honeydo/model/subtitle_model.dart';
 import 'package:honeydo/model/task_model.dart';
 import 'package:honeydo/providers/tasks_meals_provider.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +18,6 @@ class MealCardTile extends StatefulWidget {
 }
 
 class MealCardTileState extends State<MealCardTile> {
-  final List<SubtitleItem> _subtitles = [];
   final TextEditingController _subtitleController = TextEditingController();
 
   static const double _collapsedHeight = 100.0;
@@ -44,7 +42,10 @@ class MealCardTileState extends State<MealCardTile> {
   @override
   void initState() {
     super.initState();
-    _loadSubMeals();
+    Future.microtask(() {
+      final tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
+      tasksMealsProvider.loadSubMeals(widget.meals);
+    });
   }
 
   @override
@@ -53,41 +54,26 @@ class MealCardTileState extends State<MealCardTile> {
     super.dispose();
   }
 
-  Future<void> _loadSubMeals() async {
-    await widget.meals.submeals.load();
-    if (!mounted) return;
-
-    setState(() {
-      _subtitles.clear();
-      for (final subMeal in widget.meals.submeals) {
-        _subtitles.add(
-          SubtitleItem(text: subMeal.name),
-        );
-      }
-
-      _currentExpandedHeight = _expandedBaseHeight + _subtitles.length * _subtitleHeightIncrement;
-
-      if (_cardHeight > _collapsedHeight) {
-        _cardHeight = _currentExpandedHeight;
-      }
-    });
-  }
-
   Future<void> _deleteSubMeal(int mealId, String subtitleText) async {
+    final tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
     try {
-      // Silme işlemi öncesinde herhangi bir transaction olmadığından emin olalım
-      await Provider.of<TasksMealsProvider>(context, listen: false).deleteSubMeal(mealId, subtitleText);
+      await tasksMealsProvider.deleteSubMeal(mealId, subtitleText);
     } catch (e) {
       print("SubMeal silinirken hata oluştu: $e");
-    } finally {
-      // SubMeals'ı tekrar yükleyerek UI'ı güncelle
-      await _loadSubMeals();
-    }
+    } finally {}
+    await tasksMealsProvider.loadSubMeals(widget.meals);
   }
 
   @override
   Widget build(BuildContext context) {
-    final taskMealsProvider = Provider.of<TasksMealsProvider>(context);
+    final taskMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
+
+    final subMeals = taskMealsProvider.getSubMeals(widget.meals.id);
+
+    _currentExpandedHeight = _expandedBaseHeight + subMeals.length * _subtitleHeightIncrement;
+    if (_cardHeight > _collapsedHeight) {
+      _cardHeight = _currentExpandedHeight;
+    }
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       height: _cardHeight,
@@ -125,16 +111,16 @@ class MealCardTileState extends State<MealCardTile> {
                           child: Column(
                             children: [
                               MealSubtitleListTile(
-                                subMealTitles: _subtitles,
+                                subMealTitles: subMeals,
                                 onDelete: (p0, p1) {
-                                  _deleteSubMeal(widget.meals.id, p1); // Burada silme işlemi çağrılıyor
+                                  _deleteSubMeal(widget.meals.id, p1);
                                 },
                               ),
                               SubItemTextField(
                                 controller: _subtitleController,
                                 onSubmitted: (p0) {
                                   taskMealsProvider.addSubMeal(widget.meals, _subtitleController.text);
-                                  _loadSubMeals();
+                                  taskMealsProvider.loadSubMeals(widget.meals);
                                   _subtitleController.clear();
                                 },
                                 hintext: 'Yediklerini yaz',

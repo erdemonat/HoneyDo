@@ -153,14 +153,13 @@ class IsarService {
     });
   }
 
-  Future<void> onReorderMeal(BuildContext context, int oldIndex, int newIndex) async {
-    TasksMealsProvider tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
+  Future<void> updateMealOrderInDatabase(List<task_model.Meal> meals) async {
     final isar = await db;
 
     await isar.writeTxn(() async {
-      for (int i = 0; i < tasksMealsProvider.meals.length; i++) {
-        tasksMealsProvider.meals[i].order = i;
-        await isar.meals.put(tasksMealsProvider.meals[i]);
+      for (int i = 0; i < meals.length; i++) {
+        meals[i].order = i; // Sıralamayı güncelle
+        await isar.meals.put(meals[i]);
       }
     });
   }
@@ -209,31 +208,16 @@ class IsarService {
   Future<void> deleteSubMealById(int mealId, int subMealId) async {
     final isar = await db;
 
-    print("Transaction başlıyor...");
-
     await isar.writeTxn(() async {
       final meal = await isar.meals.get(mealId);
       final subMeal = await isar.subMeals.get(subMealId);
 
       if (meal != null && subMeal != null) {
-        print("SubMeal bulunuyor ve silme işlemi başlıyor...");
-
-        // SubMeals'i yüklüyoruz
         await meal.submeals.load();
-
-        // SubMeal'i Meal'den çıkarıyoruz
         meal.submeals.removeWhere((sm) => sm.id == subMealId);
-        print("SubMeal listeden kaldırıldı.");
-
-        // SubMeals'ı kaydediyoruz
         await meal.submeals.save();
-
-        // Veritabanından SubMeal'i siliyoruz
         await isar.subMeals.delete(subMealId);
-        print("SubMeal veritabanından silindi.");
       }
-    }).catchError((e) {
-      print("Transaction içinde hata oluştu: $e");
     });
   }
 }
