@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:honeydo/components/task_card_components/sub_item_text_field.dart';
 import 'package:honeydo/components/task_card_components/task_title.dart';
-import 'package:honeydo/components/task_card_components/subtitle_add_textfield.dart';
-import 'package:honeydo/components/task_card_components/subtitle_list_tile.dart';
 import 'package:honeydo/model/subtitle_model.dart';
 import 'package:honeydo/components/task_card_components/progress_bar.dart';
 import 'package:honeydo/model/task_model.dart';
@@ -118,20 +117,13 @@ class TaskCardTileState extends State<TaskCardTile> {
                         child: SingleChildScrollView(
                           child: Column(
                             children: [
-                              SubtitleListTile(
-                                subtitles: _subtitles,
-                                onDelete: (p0, p1) {}, //_deleteSubtitle
-                                onUpdateCheckStatus: (p0, p1) {
-                                  tasksMealsProvider.updateSubtitleCheckStatus;
-                                },
-                              ),
-                              SubTitleAddTextField(
+                              SubItemTextField(
                                 controller: _subtitleController,
                                 onSubmitted: (p0) {
-                                  tasksMealsProvider.addSubtitle(widget.tasks, _subtitleController.text);
+                                  tasksMealsProvider.addSubTask(widget.tasks, _subtitleController.text);
                                   _subtitleController.clear();
                                 },
-                                hintext: 'Bir görev ekle',
+                                hintext: 'Yaptıklarını yazacaksın',
                               ),
                             ],
                           ),

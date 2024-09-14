@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:honeydo/components/task_card_components/sub_item_text_field.dart';
 import 'package:honeydo/constants/constants.dart';
-import 'package:honeydo/components/task_card_components/meal_subtitle_add_textfield.dart';
 import 'package:honeydo/components/task_card_components/meal_subtitle_list_tile.dart';
 import 'package:honeydo/model/subtitle_model.dart';
 import 'package:honeydo/model/task_model.dart';
+import 'package:honeydo/providers/tasks_meals_provider.dart';
+import 'package:provider/provider.dart';
 
 class MealCardTile extends StatefulWidget {
   final Meal meals;
@@ -63,8 +65,7 @@ class MealCardTileState extends State<MealCardTile> {
         );
       }
 
-      _currentExpandedHeight =
-          _expandedBaseHeight + _subtitles.length * _subtitleHeightIncrement;
+      _currentExpandedHeight = _expandedBaseHeight + _subtitles.length * _subtitleHeightIncrement;
 
       if (_cardHeight > _collapsedHeight) {
         _cardHeight = _currentExpandedHeight;
@@ -72,40 +73,21 @@ class MealCardTileState extends State<MealCardTile> {
     });
   }
 
-  // Future<void> _addSubtitle(String subtitleText) async {
-
-  //   final subMeal = SubMeal()..name = subtitleText;
-
-  //   await isar.writeTxn(() async {
-  //     subMeal.meal.value = widget.meals;
-  //     await isar.subMeals.put(subMeal);
-  //     widget.meals.submeals.add(subMeal);
-  //     await widget.meals.submeals.save();
-  //   });
-
-  //   if (!mounted) return;
-
-  //   await _loadSubMeals();
-  //   _subtitleController.clear();
-  // }
-
-  // Future<void> _deleteSubtitle(int index, String subtitleText) async {
-  //   final subMeal =
-  //       widget.meals.submeals.where((st) => st.name == subtitleText).first;
-
-  //   await isar.writeTxn(() async {
-  //     widget.meals.submeals.remove(subMeal);
-  //     await widget.meals.submeals.save();
-  //     await isar.subMeals.delete(subMeal.id);
-  //   });
-
-  //   if (!mounted) return;
-
-  //   await _loadSubMeals();
-  // }
+  Future<void> _deleteSubMeal(int mealId, String subtitleText) async {
+    try {
+      // Silme işlemi öncesinde herhangi bir transaction olmadığından emin olalım
+      await Provider.of<TasksMealsProvider>(context, listen: false).deleteSubMeal(mealId, subtitleText);
+    } catch (e) {
+      print("SubMeal silinirken hata oluştu: $e");
+    } finally {
+      // SubMeals'ı tekrar yükleyerek UI'ı güncelle
+      await _loadSubMeals();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final taskMealsProvider = Provider.of<TasksMealsProvider>(context);
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       height: _cardHeight,
@@ -143,12 +125,18 @@ class MealCardTileState extends State<MealCardTile> {
                           child: Column(
                             children: [
                               MealSubtitleListTile(
-                                subtitles: _subtitles,
-                                onDelete: (p0, p1) {}, //_deleteSubtitle
+                                subMealTitles: _subtitles,
+                                onDelete: (p0, p1) {
+                                  _deleteSubMeal(widget.meals.id, p1); // Burada silme işlemi çağrılıyor
+                                },
                               ),
-                              MealSubTitleAddTextField(
+                              SubItemTextField(
                                 controller: _subtitleController,
-                                onSubmitted: (p0) {}, //_addSubtitle
+                                onSubmitted: (p0) {
+                                  taskMealsProvider.addSubMeal(widget.meals, _subtitleController.text);
+                                  _loadSubMeals();
+                                  _subtitleController.clear();
+                                },
                                 hintext: 'Yediklerini yaz',
                               ),
                             ],

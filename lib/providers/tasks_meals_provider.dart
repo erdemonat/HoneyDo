@@ -9,11 +9,11 @@ import 'package:provider/provider.dart';
 class TasksMealsProvider with ChangeNotifier {
   List<Task> _tasks = [];
   List<Meal> _meals = [];
-  List<SubtitleItem> _subtitles = [];
+  //List<SubtitleItem> _subtitles = [];
 
   List<Task> get tasks => _tasks;
   List<Meal> get meals => _meals;
-  List<SubtitleItem> get subtitles => _subtitles;
+  //List<SubtitleItem> get subtitles => _subtitles;
 
   Future<void> createEmptyTaskDate(BuildContext context, String date) async {
     await isarService.createEmptyTaskDate(date);
@@ -89,12 +89,21 @@ class TasksMealsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addSubtitle(Task tasks, String subtitleText) async {
+  Future<void> addSubTask(Task tasks, String subtitleText) async {
     final subTask = SubTask()
       ..name = subtitleText
       ..isChecked = false;
 
-    await isarService.addSubtitle(tasks, subTask, subtitleText);
+    await isarService.addSubTask(tasks, subTask, subtitleText);
+    // await _loadSubTasks();
+
+    notifyListeners();
+  }
+
+  Future<void> addSubMeal(Meal meals, String subtitleText) async {
+    final subMeal = SubMeal()..name = subtitleText;
+
+    await isarService.addSubMeal(meals, subMeal, subtitleText);
     // await _loadSubTasks();
 
     notifyListeners();
@@ -111,6 +120,22 @@ class TasksMealsProvider with ChangeNotifier {
     await isarService.updateSubtitleCheckStatus(task, subTask);
 
     // Reload the tasks to reflect the change in the UI
+    notifyListeners();
+  }
+
+  Future<void> deleteSubMeal(int mealId, String subtitleText) async {
+    // İlgili Meal'i bul
+    final meal = _meals.firstWhere((meal) => meal.id == mealId);
+
+    // Meal altındaki doğru SubMeal'i bul
+    final subMeal = meal.submeals.firstWhere((sm) => sm.name == subtitleText);
+
+    // SubMeal ID'sini al ve IsarService'deki fonksiyonu çağır
+    await isarService.deleteSubMealById(meal.id, subMeal.id);
+
+    // Meal altındaki SubMeal'i listeden kaldır
+    meal.submeals.remove(subMeal);
+
     notifyListeners();
   }
 }

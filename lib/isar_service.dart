@@ -177,7 +177,7 @@ class IsarService {
     });
   }
 
-  Future<void> addSubtitle(task_model.Task tasks, task_model.SubTask subTask, String subtitleText) async {
+  Future<void> addSubTask(task_model.Task tasks, task_model.SubTask subTask, String subtitleText) async {
     final isar = await db;
     await isar.writeTxn(() async {
       subTask.task.value = tasks;
@@ -187,12 +187,53 @@ class IsarService {
     });
   }
 
+  Future<void> addSubMeal(task_model.Meal meals, task_model.SubMeal subMeal, String subtitleText) async {
+    final isar = await db;
+    await isar.writeTxn(() async {
+      subMeal.meal.value = meals;
+      await isar.subMeals.put(subMeal);
+      meals.submeals.add(subMeal);
+      await meals.submeals.save();
+    });
+  }
+
   Future<void> updateSubtitleCheckStatus(task_model.Task task, task_model.SubTask subTask) async {
     final isar = await db;
     await isar.writeTxn(() async {
       await isar.subTasks.put(subTask);
 
       await isar.tasks.put(task);
+    });
+  }
+
+  Future<void> deleteSubMealById(int mealId, int subMealId) async {
+    final isar = await db;
+
+    print("Transaction başlıyor...");
+
+    await isar.writeTxn(() async {
+      final meal = await isar.meals.get(mealId);
+      final subMeal = await isar.subMeals.get(subMealId);
+
+      if (meal != null && subMeal != null) {
+        print("SubMeal bulunuyor ve silme işlemi başlıyor...");
+
+        // SubMeals'i yüklüyoruz
+        await meal.submeals.load();
+
+        // SubMeal'i Meal'den çıkarıyoruz
+        meal.submeals.removeWhere((sm) => sm.id == subMealId);
+        print("SubMeal listeden kaldırıldı.");
+
+        // SubMeals'ı kaydediyoruz
+        await meal.submeals.save();
+
+        // Veritabanından SubMeal'i siliyoruz
+        await isar.subMeals.delete(subMealId);
+        print("SubMeal veritabanından silindi.");
+      }
+    }).catchError((e) {
+      print("Transaction içinde hata oluştu: $e");
     });
   }
 }

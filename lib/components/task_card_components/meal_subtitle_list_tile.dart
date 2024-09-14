@@ -3,12 +3,12 @@ import 'package:honeydo/constants/constants.dart';
 import 'package:honeydo/model/subtitle_model.dart';
 
 class MealSubtitleListTile extends StatelessWidget {
-  final List<SubtitleItem> subtitles;
+  final List<SubtitleItem> subMealTitles;
   final Function(int, String) onDelete;
 
   const MealSubtitleListTile({
     super.key,
-    required this.subtitles,
+    required this.subMealTitles,
     required this.onDelete,
   });
 
@@ -16,15 +16,19 @@ class MealSubtitleListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: subtitles.length,
+      itemCount: subMealTitles.length,
       itemBuilder: (context, index) {
         return InkWell(
           onLongPress: () {
-            onDelete(index, subtitles[index].text);
+            onDelete(index, subMealTitles[index].text);
           },
           child: ListTile(
+            leading: Text(
+              '•',
+              style: TextStyle(fontSize: 24),
+            ),
             title: Text(
-              subtitles[index].text,
+              subMealTitles[index].text,
               style: kCardSubTitleTextStyle(context),
             ),
           ),
