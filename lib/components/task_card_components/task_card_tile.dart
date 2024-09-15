@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:honeydo/components/task_card_components/sub_item_text_field.dart';
+import 'package:honeydo/components/task_card_components/task_subtitle_list_tile.dart';
 import 'package:honeydo/components/task_card_components/task_title.dart';
 import 'package:honeydo/model/subtitle_model.dart';
 import 'package:honeydo/components/task_card_components/progress_bar.dart';
@@ -45,6 +46,10 @@ class TaskCardTileState extends State<TaskCardTile> {
   @override
   void initState() {
     super.initState();
+    Future.microtask(() {
+      final tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
+      tasksMealsProvider.loadSubTasks(widget.tasks);
+    });
   }
 
   @override
@@ -53,9 +58,21 @@ class TaskCardTileState extends State<TaskCardTile> {
     super.dispose();
   }
 
+  Future<void> _deleteSubTask(int taskId, String subtitleText) async {
+    final tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
+    await tasksMealsProvider.deleteSubTask(taskId, subtitleText);
+    await tasksMealsProvider.loadSubTasks(widget.tasks);
+  }
+
   @override
   Widget build(BuildContext context) {
     final tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
+    final subTasks = tasksMealsProvider.getSubTask(widget.tasks.id);
+
+    _currentExpandedHeight = _expandedBaseHeight + subTasks.length * _subtitleHeightIncrement;
+    if (_cardHeight > _collapsedHeight) {
+      _cardHeight = _currentExpandedHeight;
+    }
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       height: _cardHeight,
@@ -117,10 +134,19 @@ class TaskCardTileState extends State<TaskCardTile> {
                         child: SingleChildScrollView(
                           child: Column(
                             children: [
+                              TaskSubtitleListTile(
+                                subTaskTitles: subTasks,
+                                onDelete: (p0, p1) {
+                                  _deleteSubTask(widget.tasks.id, p1);
+                                },
+                                onChanged: (p0) {},
+                                checkboxValue: false,
+                              ),
                               SubItemTextField(
                                 controller: _subtitleController,
                                 onSubmitted: (p0) {
                                   tasksMealsProvider.addSubTask(widget.tasks, _subtitleController.text);
+                                  tasksMealsProvider.loadSubTasks(widget.tasks);
                                   _subtitleController.clear();
                                 },
                                 hintext: 'Yaptıklarını yazacaksın',

@@ -1651,14 +1651,7 @@ const SubMealSchema = CollectionSchema(
   deserializeProp: _subMealDeserializeProp,
   idName: r'id',
   indexes: {},
-  links: {
-    r'meal': LinkSchema(
-      id: 8247986756260281625,
-      name: r'meal',
-      target: r'Meal',
-      single: true,
-    )
-  },
+  links: {},
   embeddedSchemas: {},
   getId: _subMealGetId,
   getLinks: _subMealGetLinks,
@@ -1716,12 +1709,11 @@ Id _subMealGetId(SubMeal object) {
 }
 
 List<IsarLinkBase<dynamic>> _subMealGetLinks(SubMeal object) {
-  return [object.meal];
+  return [];
 }
 
 void _subMealAttach(IsarCollection<dynamic> col, Id id, SubMeal object) {
   object.id = id;
-  object.meal.attach(col, col.isar.collection<Meal>(), r'meal', id);
 }
 
 extension SubMealQueryWhereSort on QueryBuilder<SubMeal, SubMeal, QWhere> {
@@ -1988,20 +1980,7 @@ extension SubMealQueryObject
     on QueryBuilder<SubMeal, SubMeal, QFilterCondition> {}
 
 extension SubMealQueryLinks
-    on QueryBuilder<SubMeal, SubMeal, QFilterCondition> {
-  QueryBuilder<SubMeal, SubMeal, QAfterFilterCondition> meal(
-      FilterQuery<Meal> q) {
-    return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'meal');
-    });
-  }
-
-  QueryBuilder<SubMeal, SubMeal, QAfterFilterCondition> mealIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'meal', 0, true, 0, true);
-    });
-  }
-}
+    on QueryBuilder<SubMeal, SubMeal, QFilterCondition> {}
 
 extension SubMealQuerySortBy on QueryBuilder<SubMeal, SubMeal, QSortBy> {
   QueryBuilder<SubMeal, SubMeal, QAfterSortBy> sortByName() {
@@ -2955,14 +2934,7 @@ const SubTaskSchema = CollectionSchema(
   deserializeProp: _subTaskDeserializeProp,
   idName: r'id',
   indexes: {},
-  links: {
-    r'task': LinkSchema(
-      id: 135278000390379861,
-      name: r'task',
-      target: r'Task',
-      single: true,
-    )
-  },
+  links: {},
   embeddedSchemas: {},
   getId: _subTaskGetId,
   getLinks: _subTaskGetLinks,
@@ -3024,12 +2996,11 @@ Id _subTaskGetId(SubTask object) {
 }
 
 List<IsarLinkBase<dynamic>> _subTaskGetLinks(SubTask object) {
-  return [object.task];
+  return [];
 }
 
 void _subTaskAttach(IsarCollection<dynamic> col, Id id, SubTask object) {
   object.id = id;
-  object.task.attach(col, col.isar.collection<Task>(), r'task', id);
 }
 
 extension SubTaskQueryWhereSort on QueryBuilder<SubTask, SubTask, QWhere> {
@@ -3306,20 +3277,7 @@ extension SubTaskQueryObject
     on QueryBuilder<SubTask, SubTask, QFilterCondition> {}
 
 extension SubTaskQueryLinks
-    on QueryBuilder<SubTask, SubTask, QFilterCondition> {
-  QueryBuilder<SubTask, SubTask, QAfterFilterCondition> task(
-      FilterQuery<Task> q) {
-    return QueryBuilder.apply(this, (query) {
-      return query.link(q, r'task');
-    });
-  }
-
-  QueryBuilder<SubTask, SubTask, QAfterFilterCondition> taskIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.linkLength(r'task', 0, true, 0, true);
-    });
-  }
-}
+    on QueryBuilder<SubTask, SubTask, QFilterCondition> {}
 
 extension SubTaskQuerySortBy on QueryBuilder<SubTask, SubTask, QSortBy> {
   QueryBuilder<SubTask, SubTask, QAfterSortBy> sortByIsChecked() {

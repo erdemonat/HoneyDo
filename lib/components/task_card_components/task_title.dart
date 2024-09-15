@@ -56,9 +56,7 @@ class TaskTitleState extends State<TaskTitle> {
                           color: Colors.white,
                           decoration: TextDecoration.lineThrough,
                           decorationThickness: 24,
-                          decorationColor:
-                              Color(int.parse(widget.task.markColor))
-                                  .withOpacity(0.25),
+                          decorationColor: Color(int.parse(widget.task.markColor)).withOpacity(0.25),
                         )
                       : kCardTitleTextStyle(context),
                 ),
@@ -74,8 +72,7 @@ class TaskTitleState extends State<TaskTitle> {
     final selectedColor = await showMenu<Color>(
       color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.25),
       context: context,
-      position: RelativeRect.fromLTRB(
-          position.dx, position.dy, position.dx, position.dy),
+      position: RelativeRect.fromLTRB(position.dx, position.dy, position.dx, position.dy),
       items: [
         PopupMenuItem(
           child: Column(
@@ -97,9 +94,7 @@ class TaskTitleState extends State<TaskTitle> {
                     height: 30,
                     width: 30,
                     decoration: BoxDecoration(
-                      border: Border.all(
-                          width: 2.0,
-                          color: Theme.of(context).colorScheme.tertiary),
+                      border: Border.all(width: 2.0, color: Theme.of(context).colorScheme.tertiary),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: IconButton(
@@ -194,10 +189,7 @@ class MoveToNextDayButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var delayedDate = DateFormat('ddMMyyyy').format(
-        Provider.of<FocusDateProvider>(context)
-            .focusDate
-            .add(Duration(days: daysToDelay)));
+    var delayedDate = DateFormat('ddMMyyyy').format(Provider.of<FocusDateProvider>(context).focusDate.add(Duration(days: daysToDelay)));
 
     return GestureDetector(
       onTap: () {},
@@ -206,8 +198,7 @@ class MoveToNextDayButton extends StatelessWidget {
         height: 30,
         width: 30,
         decoration: BoxDecoration(
-          border: Border.all(
-              width: 2.0, color: Theme.of(context).colorScheme.tertiary),
+          border: Border.all(width: 2.0, color: Theme.of(context).colorScheme.tertiary),
           borderRadius: BorderRadius.circular(4),
         ),
         child: Center(

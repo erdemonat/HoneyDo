@@ -48,7 +48,7 @@ class SubItemTextField extends StatelessWidget {
               dashLength: 5,
               dashGap: 5,
               direction: Axis.horizontal,
-              length: 75,
+              length: 175,
               dashColor: Theme.of(context).colorScheme.tertiary.withOpacity(0.3),
             ),
           ),

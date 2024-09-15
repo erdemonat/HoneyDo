@@ -141,6 +141,12 @@ class IsarService {
     final isar = await db;
     final meal = meals[index];
     await isar.writeTxn(() async {
+      await meal.submeals.load();
+
+      for (final subMeal in meal.submeals) {
+        await isar.subMeals.delete(subMeal.id);
+      }
+
       await isar.meals.delete(meal.id);
     });
   }
@@ -149,6 +155,12 @@ class IsarService {
     final isar = await db;
     final task = tasks[index];
     await isar.writeTxn(() async {
+      await task.subtasks.load();
+
+      for (final subTask in task.subtasks) {
+        await isar.subTasks.delete(subTask.id);
+      }
+
       await isar.tasks.delete(task.id);
     });
   }
@@ -179,7 +191,7 @@ class IsarService {
   Future<void> addSubTask(task_model.Task tasks, task_model.SubTask subTask, String subtitleText) async {
     final isar = await db;
     await isar.writeTxn(() async {
-      subTask.task.value = tasks;
+      //subTask.task.value = tasks;
       await isar.subTasks.put(subTask);
       tasks.subtasks.add(subTask);
       await tasks.subtasks.save();
@@ -189,7 +201,7 @@ class IsarService {
   Future<void> addSubMeal(task_model.Meal meals, task_model.SubMeal subMeal, String subtitleText) async {
     final isar = await db;
     await isar.writeTxn(() async {
-      subMeal.meal.value = meals;
+      //subMeal.meal.value = meals;
       await isar.subMeals.put(subMeal);
       meals.submeals.add(subMeal);
       await meals.submeals.save();
@@ -217,6 +229,22 @@ class IsarService {
         meal.submeals.removeWhere((sm) => sm.id == subMealId);
         await meal.submeals.save();
         await isar.subMeals.delete(subMealId);
+      }
+    });
+  }
+
+  Future<void> deleteSubTaskById(int taskId, int subTaskId) async {
+    final isar = await db;
+
+    await isar.writeTxn(() async {
+      final task = await isar.tasks.get(taskId);
+      final subTask = await isar.subTasks.get(subTaskId);
+
+      if (task != null && subTask != null) {
+        await task.subtasks.load();
+        task.subtasks.removeWhere((sm) => sm.id == subTaskId);
+        await task.subtasks.save();
+        await isar.subTasks.delete(subTaskId);
       }
     });
   }

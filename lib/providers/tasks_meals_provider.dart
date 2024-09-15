@@ -11,6 +11,7 @@ class TasksMealsProvider with ChangeNotifier {
   List<Meal> _meals = [];
 
   Map<int, List<SubtitleItem>> _subMeals = {};
+  Map<int, List<SubtitleItem>> _subTasks = {};
 
   List<Task> get tasks => _tasks;
   List<Meal> get meals => _meals;
@@ -130,9 +131,25 @@ class TasksMealsProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> deleteSubTask(int taskId, String subtitleText) async {
+    final task = _tasks.firstWhere((task) => task.id == taskId);
+
+    final subTask = task.subtasks.firstWhere((sm) => sm.name == subtitleText);
+
+    await isarService.deleteSubTaskById(task.id, subTask.id);
+
+    task.subtasks.remove(subTask);
+
+    notifyListeners();
+  }
+
+  //
+
   List<SubtitleItem> getSubMeals(int mealId) {
     return _subMeals[mealId] ?? [];
   }
+
+  //
 
   Future<void> loadSubMeals(Meal meal) async {
     await meal.submeals.load();
@@ -143,6 +160,22 @@ class TasksMealsProvider with ChangeNotifier {
     }
 
     _subMeals[meal.id] = subtitles;
+    notifyListeners();
+  }
+
+  List<SubtitleItem> getSubTask(int taskId) {
+    return _subTasks[taskId] ?? [];
+  }
+
+  Future<void> loadSubTasks(Task task) async {
+    await task.subtasks.load();
+
+    List<SubtitleItem> subtitles = [];
+    for (final subTask in task.subtasks) {
+      subtitles.add(SubtitleItem(text: subTask.name, isChecked: false));
+    }
+
+    _subTasks[task.id] = subtitles;
     notifyListeners();
   }
 }

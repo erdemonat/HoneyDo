@@ -38,8 +38,6 @@ class SubMeal {
   Id id = Isar.autoIncrement;
 
   late String name;
-
-  final meal = IsarLink<Meal>();
 }
 
 @Collection()
@@ -66,6 +64,4 @@ class SubTask {
   late String name;
 
   late bool isChecked;
-
-  final task = IsarLink<Task>();
 }
