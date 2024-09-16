@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:honeydo/components/task_card_components/sub_item_text_field.dart';
 import 'package:honeydo/components/task_card_components/task_subtitle_list_tile.dart';
 import 'package:honeydo/components/task_card_components/task_title.dart';
-import 'package:honeydo/model/subtitle_model.dart';
 import 'package:honeydo/components/task_card_components/progress_bar.dart';
+import 'package:honeydo/main.dart';
 import 'package:honeydo/model/task_model.dart';
 import 'package:honeydo/providers/tasks_meals_provider.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +21,6 @@ class TaskCardTile extends StatefulWidget {
 }
 
 class TaskCardTileState extends State<TaskCardTile> {
-  final List<SubtitleItem> _subtitles = [];
   final TextEditingController _subtitleController = TextEditingController();
 
   static const double _collapsedHeight = 100.0;
@@ -69,6 +68,13 @@ class TaskCardTileState extends State<TaskCardTile> {
     final tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
     final subTasks = tasksMealsProvider.getSubTask(widget.tasks.id);
 
+    void _toggleTaskChecked() {
+      final newStatus = !widget.tasks.isChecked;
+      setState(() {
+        widget.tasks.isChecked = newStatus;
+      });
+    }
+
     _currentExpandedHeight = _expandedBaseHeight + subTasks.length * _subtitleHeightIncrement;
     if (_cardHeight > _collapsedHeight) {
       _cardHeight = _currentExpandedHeight;
@@ -113,7 +119,7 @@ class TaskCardTileState extends State<TaskCardTile> {
                 Padding(
                   padding: const EdgeInsets.only(right: 10),
                   child: ProgressBar(
-                    subTaskLength: _subtitles.length,
+                    subTaskLength: 2, // geçici olarak 2 yazıldı
                     completedTasks: completedSubtasks,
                     isTaskChecked: widget.tasks.isChecked,
                   ),
@@ -126,7 +132,12 @@ class TaskCardTileState extends State<TaskCardTile> {
                     TaskTitle(
                       task: widget.tasks,
                       onPressed: _toggleCardHeight,
-                      onTaskChecked: (p0) {}, //_isTaskChecked
+                      onTaskChecked: (bool isChecked) {
+                        setState(() {
+                          widget.tasks.isChecked = isChecked;
+                        });
+                        isarService.updateTask(widget.tasks);
+                      }, //_isTaskChecked
                     ),
                     if (_cardHeight > _collapsedHeight) const SizedBox(height: 20),
                     if (_cardHeight > _collapsedHeight)
@@ -139,8 +150,10 @@ class TaskCardTileState extends State<TaskCardTile> {
                                 onDelete: (p0, p1) {
                                   _deleteSubTask(widget.tasks.id, p1);
                                 },
-                                onChanged: (p0) {},
-                                checkboxValue: false,
+                                onSubtaskChanged: (index, isChecked) {
+                                  int subTaskId = subTasks[index].id;
+                                  tasksMealsProvider.updateSubtaskCheckedStatus(widget.tasks.id, subTaskId, isChecked);
+                                },
                               ),
                               SubItemTextField(
                                 controller: _subtitleController,

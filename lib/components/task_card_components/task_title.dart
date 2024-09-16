@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:honeydo/constants/constants.dart';
 import 'package:honeydo/model/task_model.dart';
 import 'package:honeydo/providers/focus_date_provider.dart';
+import 'package:honeydo/providers/tasks_meals_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -28,7 +29,11 @@ class TaskTitleState extends State<TaskTitle> {
       children: [
         Checkbox(
           value: widget.task.isChecked,
-          onChanged: (value) {}, //_updateTaskCheckedStatus
+          onChanged: (value) {
+            if (value != null) {
+              widget.onTaskChecked(value);
+            }
+          },
           activeColor: const Color(0xff0DC9AB),
           checkColor: Theme.of(context).colorScheme.surface,
           side: BorderSide(
@@ -99,15 +104,7 @@ class TaskTitleState extends State<TaskTitle> {
                     ),
                     child: IconButton(
                         onPressed: () async {
-                          // setState(() {
-                          //   widget.task.isMarked = false;
-                          // });
-
-                          // await isar.writeTxn(
-                          //   () async {
-                          //     await isar.tasks.put(widget.task);
-                          //   },
-                          // );
+                          await Provider.of<TasksMealsProvider>(context, listen: false).updateTaskMarkStatus(widget.task, "", false);
                           Navigator.of(context).pop();
                         },
                         icon: Icon(
@@ -143,18 +140,14 @@ class TaskTitleState extends State<TaskTitle> {
       ],
     );
 
-    // if (selectedColor != null) {
-    //   setState(() {
-    //     widget.task.markColor = selectedColor.value.toString();
-    //     widget.task.isMarked = true;
-    //   });
+    if (selectedColor != null) {
+      setState(() {
+        widget.task.markColor = selectedColor.value.toString();
+        widget.task.isMarked = true;
+      });
 
-    //   await isar.writeTxn(
-    //     () async {
-    //       await isar.tasks.put(widget.task);
-    //     },
-    //   );
-    // }
+      Provider.of<TasksMealsProvider>(context, listen: false).updateTaskMarkStatus(widget.task, selectedColor.value.toString(), true);
+    }
   }
 
   Widget _buildColorBox(BuildContext context, Color color) {
@@ -192,7 +185,9 @@ class MoveToNextDayButton extends StatelessWidget {
     var delayedDate = DateFormat('ddMMyyyy').format(Provider.of<FocusDateProvider>(context).focusDate.add(Duration(days: daysToDelay)));
 
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Provider.of<TasksMealsProvider>(context, listen: false).shiftTaskDate(taskId, daysToDelay);
+      },
       child: Container(
         margin: const EdgeInsets.all(4.0),
         height: 30,

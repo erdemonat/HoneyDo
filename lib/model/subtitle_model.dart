@@ -1,6 +1,7 @@
 class SubtitleItem {
-  SubtitleItem({required this.text, this.isChecked = false});
+  SubtitleItem({required this.id, required this.text, this.isChecked = false});
 
-  String text;
+  final int id;
+  final String text;
   bool isChecked;
 }

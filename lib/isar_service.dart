@@ -208,15 +208,6 @@ class IsarService {
     });
   }
 
-  Future<void> updateSubtitleCheckStatus(task_model.Task task, task_model.SubTask subTask) async {
-    final isar = await db;
-    await isar.writeTxn(() async {
-      await isar.subTasks.put(subTask);
-
-      await isar.tasks.put(task);
-    });
-  }
-
   Future<void> deleteSubMealById(int mealId, int subMealId) async {
     final isar = await db;
 
@@ -246,6 +237,21 @@ class IsarService {
         await task.subtasks.save();
         await isar.subTasks.delete(subTaskId);
       }
+    });
+  }
+
+  Future<void> updateTask(task_model.Task task) async {
+    final isar = await db;
+    await isar.writeTxn(() async {
+      await isar.tasks.put(task);
+    });
+  }
+
+  Future<void> updateSubtaskCheckedStatus(task_model.Task task, task_model.SubTask subTask) async {
+    final isar = await db;
+    await isar.writeTxn(() async {
+      await isar.subTasks.put(subTask);
+      await isar.tasks.put(task);
     });
   }
 }

@@ -109,16 +109,6 @@ class TasksMealsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateSubtitleCheckStatus(Task task, String subtitleText, bool isChecked) async {
-    final subTask = task.subtasks.where((st) => st.name == subtitleText).first;
-
-    subTask.isChecked = isChecked;
-
-    await isarService.updateSubtitleCheckStatus(task, subTask);
-
-    notifyListeners();
-  }
-
   Future<void> deleteSubMeal(int mealId, String subtitleText) async {
     final meal = _meals.firstWhere((meal) => meal.id == mealId);
 
@@ -156,7 +146,7 @@ class TasksMealsProvider with ChangeNotifier {
 
     List<SubtitleItem> subtitles = [];
     for (final subMeal in meal.submeals) {
-      subtitles.add(SubtitleItem(text: subMeal.name));
+      subtitles.add(SubtitleItem(id: subMeal.id, text: subMeal.name));
     }
 
     _subMeals[meal.id] = subtitles;
@@ -172,10 +162,35 @@ class TasksMealsProvider with ChangeNotifier {
 
     List<SubtitleItem> subtitles = [];
     for (final subTask in task.subtasks) {
-      subtitles.add(SubtitleItem(text: subTask.name, isChecked: false));
+      subtitles.add(SubtitleItem(id: subTask.id, text: subTask.name, isChecked: false));
     }
 
     _subTasks[task.id] = subtitles;
+    notifyListeners();
+  }
+
+  Future<void> updateTaskMarkStatus(Task task, String color, bool isMarked) async {
+    task.markColor = color;
+    task.isMarked = isMarked;
+    await isarService.updateTask(task);
+    notifyListeners();
+  }
+
+  Future<void> shiftTaskDate(int taskId, int days) async {
+    Task task = _tasks.firstWhere((t) => t.id == taskId);
+
+    await isarService.updateTask(task);
+    notifyListeners();
+  }
+
+  Future<void> updateSubtaskCheckedStatus(int taskId, int subTaskId, bool isChecked) async {
+    Task task = _tasks.firstWhere((t) => t.id == taskId);
+
+    SubTask subTask = task.subtasks.firstWhere((st) => st.id == subTaskId);
+
+    subTask.isChecked = isChecked;
+
+    await isarService.updateSubtaskCheckedStatus(task, subTask);
     notifyListeners();
   }
 }

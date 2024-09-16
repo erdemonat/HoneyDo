@@ -5,15 +5,13 @@ import 'package:honeydo/model/subtitle_model.dart';
 class TaskSubtitleListTile extends StatelessWidget {
   final List<SubtitleItem> subTaskTitles;
   final Function(int, String) onDelete;
-  final void Function(bool?) onChanged;
-  final bool checkboxValue;
+  final Function(int, bool) onSubtaskChanged; // Updated to handle changes for individual subtasks
 
   const TaskSubtitleListTile({
     super.key,
     required this.subTaskTitles,
     required this.onDelete,
-    required this.onChanged,
-    required this.checkboxValue,
+    required this.onSubtaskChanged, // Updated signature
   });
 
   @override
@@ -28,8 +26,12 @@ class TaskSubtitleListTile extends StatelessWidget {
           },
           child: ListTile(
             leading: Checkbox(
-              value: checkboxValue,
-              onChanged: onChanged,
+              value: subTaskTitles[index].isChecked, // Reflects the individual isChecked state
+              onChanged: (bool? value) {
+                if (value != null) {
+                  onSubtaskChanged(index, value); // Pass the index and new value
+                }
+              },
             ),
             title: Text(
               subTaskTitles[index].text,
