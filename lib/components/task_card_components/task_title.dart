@@ -34,12 +34,8 @@ class TaskTitleState extends State<TaskTitle> {
               widget.onTaskChecked(value);
             }
           },
-          activeColor: const Color(0xff0DC9AB),
-          checkColor: Theme.of(context).colorScheme.surface,
-          side: BorderSide(
-            color: Theme.of(context).colorScheme.tertiary.withOpacity(0.3),
-            width: 1.5,
-          ),
+          activeColor: Theme.of(context).colorScheme.surface,
+          checkColor: Theme.of(context).colorScheme.tertiary,
           materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         ),
         Expanded(

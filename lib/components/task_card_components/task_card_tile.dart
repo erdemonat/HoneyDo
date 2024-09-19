@@ -29,7 +29,6 @@ class TaskCardTileState extends State<TaskCardTile> {
 
   double _cardHeight = _collapsedHeight;
   double _currentExpandedHeight = _expandedBaseHeight;
-  double completionPercentage = 0.0;
   int completedSubtasks = 0;
 
   void _toggleCardHeight() {
@@ -67,8 +66,9 @@ class TaskCardTileState extends State<TaskCardTile> {
   Widget build(BuildContext context) {
     final tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
     final subTasks = tasksMealsProvider.getSubTask(widget.tasks.id);
+    final completedPercantage = tasksMealsProvider.completedSubtasksPercentage(widget.tasks.id);
 
-    void _toggleTaskChecked() {
+    void toggleTaskChecked() {
       final newStatus = !widget.tasks.isChecked;
       setState(() {
         widget.tasks.isChecked = newStatus;
@@ -97,7 +97,7 @@ class TaskCardTileState extends State<TaskCardTile> {
                       alignment: Alignment.center,
                       children: [
                         Text(
-                          '${completionPercentage.toStringAsFixed(0)}%',
+                          '%${completedPercantage.toStringAsFixed(0)}',
                           style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontSize: 14),
                         ),
                         SizedBox(
@@ -106,7 +106,7 @@ class TaskCardTileState extends State<TaskCardTile> {
                           child: CircularProgressIndicator(
                             backgroundColor: Theme.of(context).colorScheme.tertiary.withOpacity(0.3),
                             strokeCap: StrokeCap.round,
-                            value: completionPercentage / 100,
+                            value: completedPercantage / 100,
                             color: Theme.of(context).colorScheme.tertiary,
                             strokeAlign: 3,
                           ),
@@ -119,8 +119,8 @@ class TaskCardTileState extends State<TaskCardTile> {
                 Padding(
                   padding: const EdgeInsets.only(right: 10),
                   child: ProgressBar(
-                    subTaskLength: 2, // geçici olarak 2 yazıldı
-                    completedTasks: completedSubtasks,
+                    subTaskLength: subTasks.length,
+                    completedTasks: tasksMealsProvider.completedSubTaskCount(widget.tasks.id),
                     isTaskChecked: widget.tasks.isChecked,
                   ),
                 ),
@@ -133,9 +133,7 @@ class TaskCardTileState extends State<TaskCardTile> {
                       task: widget.tasks,
                       onPressed: _toggleCardHeight,
                       onTaskChecked: (bool isChecked) {
-                        setState(() {
-                          widget.tasks.isChecked = isChecked;
-                        });
+                        toggleTaskChecked();
                         isarService.updateTask(widget.tasks);
                       }, //_isTaskChecked
                     ),
@@ -153,6 +151,7 @@ class TaskCardTileState extends State<TaskCardTile> {
                                 onSubtaskChanged: (index, isChecked) {
                                   int subTaskId = subTasks[index].id;
                                   tasksMealsProvider.updateSubtaskCheckedStatus(widget.tasks.id, subTaskId, isChecked);
+                                  print(subTasks[index].isChecked);
                                 },
                               ),
                               SubItemTextField(

@@ -34,7 +34,7 @@ void main() async {
       ),
       ChangeNotifierProvider(
         create: (_) => TasksMealsProvider(),
-      )
+      ),
     ],
     child: const MyApp(),
   ));

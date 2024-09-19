@@ -23,6 +23,31 @@ class TasksMealsProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  int completedSubTaskCount(int taskId) {
+    List<SubtitleItem> subtasks = _subTasks[taskId] ?? [];
+
+    int completedCount = subtasks.where((st) => st.isChecked).length;
+
+    if (subtasks.isEmpty) {
+      return 0;
+    }
+
+    return completedCount;
+  }
+
+  double completedSubtasksPercentage(int taskId) {
+    List<SubtitleItem> subtasks = _subTasks[taskId] ?? [];
+
+    int completedCount = subtasks.where((st) => st.isChecked).length;
+
+    if (subtasks.isEmpty) {
+      return 0;
+    }
+
+    double percentage = (completedCount / subtasks.length) * 100;
+    return percentage;
+  }
+
   Future<void> loadTasks(BuildContext context) async {
     String taskDate = Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
 
