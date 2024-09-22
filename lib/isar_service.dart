@@ -242,8 +242,18 @@ class IsarService {
 
   Future<void> updateTask(task_model.Task task) async {
     final isar = await db;
+
     await isar.writeTxn(() async {
       await isar.tasks.put(task);
+
+      // if (task.isChecked) {
+      //   await task.subtasks.load();
+
+      //   for (var subTask in task.subtasks) {
+      //     subTask.isChecked = true;
+      //     await isar.subTasks.put(subTask);
+      //   }
+      // }
     });
   }
 

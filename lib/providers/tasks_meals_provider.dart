@@ -187,7 +187,7 @@ class TasksMealsProvider with ChangeNotifier {
 
     List<SubtitleItem> subtitles = [];
     for (final subTask in task.subtasks) {
-      subtitles.add(SubtitleItem(id: subTask.id, text: subTask.name, isChecked: false));
+      subtitles.add(SubtitleItem(id: subTask.id, text: subTask.name, isChecked: subTask.isChecked));
     }
 
     _subTasks[task.id] = subtitles;
@@ -216,6 +216,16 @@ class TasksMealsProvider with ChangeNotifier {
     subTask.isChecked = isChecked;
 
     await isarService.updateSubtaskCheckedStatus(task, subTask);
+
+    bool allChecked = task.subtasks.every((st) => st.isChecked);
+    if (allChecked) {
+      task.isChecked = true;
+      await isarService.updateTask(task);
+    }
+    if (!allChecked) {
+      task.isChecked = false;
+      await isarService.updateTask(task);
+    }
     notifyListeners();
   }
 }

@@ -97,7 +97,7 @@ class TaskCardTileState extends State<TaskCardTile> {
                       alignment: Alignment.center,
                       children: [
                         Text(
-                          '%${completedPercantage.toStringAsFixed(0)}',
+                          widget.tasks.isChecked ? '%100' : '%${completedPercantage.toStringAsFixed(0)}',
                           style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontSize: 14),
                         ),
                         SizedBox(
@@ -106,7 +106,7 @@ class TaskCardTileState extends State<TaskCardTile> {
                           child: CircularProgressIndicator(
                             backgroundColor: Theme.of(context).colorScheme.tertiary.withOpacity(0.3),
                             strokeCap: StrokeCap.round,
-                            value: completedPercantage / 100,
+                            value: (widget.tasks.isChecked ? 100 : completedPercantage) / 100,
                             color: Theme.of(context).colorScheme.tertiary,
                             strokeAlign: 3,
                           ),
@@ -135,7 +135,7 @@ class TaskCardTileState extends State<TaskCardTile> {
                       onTaskChecked: (bool isChecked) {
                         toggleTaskChecked();
                         isarService.updateTask(widget.tasks);
-                      }, //_isTaskChecked
+                      },
                     ),
                     if (_cardHeight > _collapsedHeight) const SizedBox(height: 20),
                     if (_cardHeight > _collapsedHeight)
