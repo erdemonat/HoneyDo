@@ -73,22 +73,20 @@ class _CalenderCardState extends State<CalenderCard> {
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      content: SizedBox(
-                        height: 250,
-                        width: 400,
-                        child: LargeCalendartCard(
-                          onSelectionChanged: (args) {
-                            setState(() {
-                              focusDateModel.updateFocusDate(args.value as DateTime);
-                              _controller.animateToDate(
-                                focusDateModel.focusDate,
-                                duration: const Duration(milliseconds: 500),
-                                curve: Curves.easeInOut,
-                              );
-                            });
-                            Navigator.of(context).pop();
-                          },
-                        ),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                      content: LargeCalendartCard(
+                        onSelectionChanged: (args) {
+                          setState(() {
+                            focusDateModel.updateFocusDate(args.value as DateTime);
+                            _controller.animateToDate(
+                              focusDateModel.focusDate,
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.easeInOut,
+                            );
+                          });
+                          Navigator.of(context).pop();
+                        },
                       ),
                     ),
                   );

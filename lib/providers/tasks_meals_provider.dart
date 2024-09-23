@@ -228,4 +228,13 @@ class TasksMealsProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  Future<void> updateTaskCheckedStatus(Task tasks) async {
+    //isChecked = tasks.isChecked;
+    tasks.isChecked = !tasks.isChecked;
+    await isarService.updateTask(tasks);
+    await isarService.updateTaskSub(tasks);
+    await loadSubTasks(tasks);
+    notifyListeners();
+  }
 }

@@ -147,6 +147,13 @@ class SettingsCardState extends State<SettingsCard> {
                 },
               ),
             ),
+            TitledContainer(
+                titleText: 'Hava Durumu',
+                child: SizedBox(
+                  width: double.maxFinite,
+                  child: Text('Şehir: '),
+                ),
+                borderCutWidth: 100)
           ],
         ),
       ),

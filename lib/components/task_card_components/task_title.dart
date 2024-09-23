@@ -71,66 +71,36 @@ class TaskTitleState extends State<TaskTitle> {
 
   void _showColorMenu(Offset position) async {
     final selectedColor = await showMenu<Color>(
+      menuPadding: EdgeInsets.all(0),
+      constraints: BoxConstraints(minHeight: 0, minWidth: 0),
       color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.25),
       context: context,
       position: RelativeRect.fromLTRB(position.dx, position.dy, position.dx, position.dy),
       items: [
+        _buildColorBox(context, Colors.red),
+        _buildColorBox(context, Colors.purple),
+        _buildColorBox(context, Colors.green),
+        _buildColorBox(context, Colors.yellow),
+        _buildColorBox(context, Colors.orange),
         PopupMenuItem(
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  _buildColorBox(context, Colors.red),
-                  _buildColorBox(context, Colors.purple),
-                  _buildColorBox(context, Colors.green),
-                ],
+          child: Container(
+            height: 30,
+            width: 30,
+            decoration: BoxDecoration(
+              border: Border.all(width: 2.0, color: Theme.of(context).colorScheme.tertiary),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: IconButton(
+              onPressed: () async {
+                await Provider.of<TasksMealsProvider>(context, listen: false).updateTaskMarkStatus(widget.task, "", false);
+                Navigator.of(context).pop();
+              },
+              icon: Icon(
+                Icons.block,
+                size: 10,
+                color: Theme.of(context).colorScheme.tertiary,
               ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  _buildColorBox(context, Colors.yellow),
-                  _buildColorBox(context, Colors.orange),
-                  Container(
-                    margin: const EdgeInsets.all(4.0),
-                    height: 30,
-                    width: 30,
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 2.0, color: Theme.of(context).colorScheme.tertiary),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: IconButton(
-                        onPressed: () async {
-                          await Provider.of<TasksMealsProvider>(context, listen: false).updateTaskMarkStatus(widget.task, "", false);
-                          Navigator.of(context).pop();
-                        },
-                        icon: Icon(
-                          Icons.block,
-                          size: 10,
-                          color: Theme.of(context).colorScheme.tertiary,
-                        )),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  MoveToNextDayButton(
-                    taskId: widget.task.id,
-                    context: context,
-                    daysToDelay: 1,
-                  ),
-                  MoveToNextDayButton(
-                    taskId: widget.task.id,
-                    context: context,
-                    daysToDelay: 2,
-                  ),
-                  MoveToNextDayButton(
-                    taskId: widget.task.id,
-                    context: context,
-                    daysToDelay: 3,
-                  ),
-                ],
-              ),
-            ],
+            ),
           ),
         ),
       ],
@@ -146,11 +116,9 @@ class TaskTitleState extends State<TaskTitle> {
     }
   }
 
-  Widget _buildColorBox(BuildContext context, Color color) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.of(context).pop(color);
-      },
+  PopupMenuEntry<Color> _buildColorBox(BuildContext context, Color color) {
+    return PopupMenuItem<Color>(
+      value: color,
       child: Container(
         decoration: BoxDecoration(
           color: color,
@@ -158,7 +126,6 @@ class TaskTitleState extends State<TaskTitle> {
         ),
         width: 30,
         height: 30,
-        margin: const EdgeInsets.all(4.0),
       ),
     );
   }

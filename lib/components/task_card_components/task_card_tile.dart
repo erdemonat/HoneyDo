@@ -3,7 +3,6 @@ import 'package:honeydo/components/task_card_components/sub_item_text_field.dart
 import 'package:honeydo/components/task_card_components/task_subtitle_list_tile.dart';
 import 'package:honeydo/components/task_card_components/task_title.dart';
 import 'package:honeydo/components/task_card_components/progress_bar.dart';
-import 'package:honeydo/main.dart';
 import 'package:honeydo/model/task_model.dart';
 import 'package:honeydo/providers/tasks_meals_provider.dart';
 import 'package:provider/provider.dart';
@@ -68,13 +67,6 @@ class TaskCardTileState extends State<TaskCardTile> {
     final subTasks = tasksMealsProvider.getSubTask(widget.tasks.id);
     final completedPercantage = tasksMealsProvider.completedSubtasksPercentage(widget.tasks.id);
 
-    void toggleTaskChecked() {
-      final newStatus = !widget.tasks.isChecked;
-      setState(() {
-        widget.tasks.isChecked = newStatus;
-      });
-    }
-
     _currentExpandedHeight = _expandedBaseHeight + subTasks.length * _subtitleHeightIncrement;
     if (_cardHeight > _collapsedHeight) {
       _cardHeight = _currentExpandedHeight;
@@ -133,8 +125,7 @@ class TaskCardTileState extends State<TaskCardTile> {
                       task: widget.tasks,
                       onPressed: _toggleCardHeight,
                       onTaskChecked: (bool isChecked) {
-                        toggleTaskChecked();
-                        isarService.updateTask(widget.tasks);
+                        tasksMealsProvider.updateTaskCheckedStatus(widget.tasks);
                       },
                     ),
                     if (_cardHeight > _collapsedHeight) const SizedBox(height: 20),
@@ -151,7 +142,6 @@ class TaskCardTileState extends State<TaskCardTile> {
                                 onSubtaskChanged: (index, isChecked) {
                                   int subTaskId = subTasks[index].id;
                                   tasksMealsProvider.updateSubtaskCheckedStatus(widget.tasks.id, subTaskId, isChecked);
-                                  print(subTasks[index].isChecked);
                                 },
                               ),
                               SubItemTextField(

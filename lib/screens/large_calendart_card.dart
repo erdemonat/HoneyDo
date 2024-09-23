@@ -8,17 +8,16 @@ class LargeCalendartCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(5),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(10),
-      ),
+    return SizedBox(
+      height: 250,
+      width: 400,
       child: SfDateRangePicker(
+        showNavigationArrow: true,
         onSelectionChanged: onSelectionChanged,
         selectionMode: DateRangePickerSelectionMode.single,
-        backgroundColor: Theme.of(context).colorScheme.surface,
+        todayHighlightColor: Theme.of(context).colorScheme.tertiary,
+        selectionColor: Theme.of(context).colorScheme.tertiary,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         selectionTextStyle: TextStyle(
           color: Theme.of(context).colorScheme.tertiary,
         ),
@@ -27,9 +26,11 @@ class LargeCalendartCard extends StatelessWidget {
         ),
         view: DateRangePickerView.month,
         monthViewSettings: const DateRangePickerMonthViewSettings(
-          dayFormat: 'E',
           firstDayOfWeek: 1,
-          weekendDays: <int>[DateTime.saturday, DateTime.sunday],
+          weekendDays: <int>[
+            DateTime.saturday,
+            DateTime.sunday
+          ],
         ),
       ),
     );
