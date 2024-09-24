@@ -19,7 +19,7 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   isarService = IsarService();
   await isarService.db;
-  appWindow.size = const Size(1200, 1000);
+  appWindow.size = const Size(1200, 780);
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(
@@ -46,7 +46,7 @@ Future main() async {
   appWindow.show();
   doWhenWindowReady(() {
     final win = appWindow;
-    const initialSize = Size(1200, 725);
+    const initialSize = Size(1200, 780);
     win.minSize = initialSize;
     win.size = initialSize;
     win.alignment = Alignment.center;

@@ -11,11 +11,10 @@ class PomodoroCard extends StatefulWidget {
   State<PomodoroCard> createState() => _PomodoroCardState();
 }
 
-class _PomodoroCardState extends State<PomodoroCard>
-    with SingleTickerProviderStateMixin {
+class _PomodoroCardState extends State<PomodoroCard> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late PomodoroProvider pomodoroProvider;
-  String pomodoroStatus = "Hazır";
+  String pomodoroStatus = "Pomodoro";
   bool _isPlay = false;
   int currentSet = 1;
   late Duration remainingPomodoroDuration;
@@ -26,35 +25,32 @@ class _PomodoroCardState extends State<PomodoroCard>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 0), // Default to 0
+      duration: const Duration(seconds: 0),
     )
       ..addListener(_updateRemainingDuration)
       ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) onTimerComplete();
+        if (status == AnimationStatus.completed) _onTimerComplete();
       });
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
-    // Initialize pomodoroProvider here after the widget is attached to the tree
     pomodoroProvider = Provider.of<PomodoroProvider>(context);
-
-    // Set initial durations and values based on pomodoroProvider
     remainingPomodoroDuration = pomodoroProvider.pomodoroDuration;
     _controller.duration = pomodoroProvider.pomodoroDuration;
   }
 
+  /// Update the remaining time display
   void _updateRemainingDuration() {
     setState(() {
       remainingPomodoroDuration = Duration(
-        seconds:
-            (getCurrentDuration().inSeconds * (1 - _controller.value)).round(),
+        seconds: (getCurrentDuration().inSeconds * (1 - _controller.value)).round(),
       );
     });
   }
 
+  /// Get the current phase duration based on phase
   Duration getCurrentDuration() {
     switch (currentPhase) {
       case "Short Break":
@@ -66,7 +62,8 @@ class _PomodoroCardState extends State<PomodoroCard>
     }
   }
 
-  void onTimerComplete() {
+  /// Handle timer completion logic for phase transitions
+  void _onTimerComplete() {
     if (currentPhase == "Pomodoro" && currentSet < pomodoroProvider.setCount) {
       _updatePhase("Short Break", "Kısa Mola");
     } else if (currentPhase == "Pomodoro") {
@@ -74,10 +71,23 @@ class _PomodoroCardState extends State<PomodoroCard>
     } else if (currentPhase == "Short Break") {
       _updatePhase("Pomodoro", "Pomodoro", incrementSet: true);
     } else {
-      resetTimer();
+      _resetTimer();
     }
   }
 
+  void _undoPhase() {
+    if (currentPhase == "Pomodoro" && currentSet > 1) {
+      _updatePhase("Short Break", "Kısa Mola", incrementSet: false);
+    } else if (currentPhase == "Short Break") {
+      _updatePhase("Pomodoro", "Pomodoro", incrementSet: false);
+    } else if (currentPhase == "Long Break") {
+      _updatePhase("Pomodoro", "Pomodoro");
+    }
+    _controller.stop();
+    setState(() => _isPlay = false);
+  }
+
+  /// Update the current phase and start the next cycle
   void _updatePhase(String phase, String status, {bool incrementSet = false}) {
     setState(() {
       currentPhase = phase;
@@ -89,48 +99,51 @@ class _PomodoroCardState extends State<PomodoroCard>
     _controller.forward();
   }
 
-  void skipPhase() {
-    onTimerComplete();
-    setState(() => _isPlay = true);
+  /// Skip the current phase and move to the next
+  void _skipPhase() {
+    _onTimerComplete();
+    _controller.stop();
+    setState(() => _isPlay = false);
   }
 
-  void startTimer() {
+  /// Start the timer
+  void _startTimer() {
     setState(() {
       _isPlay = true;
       _controller.duration = remainingPomodoroDuration;
       _controller.forward(
-        from: 1.0 -
-            (remainingPomodoroDuration.inSeconds /
-                getCurrentDuration().inSeconds),
+        from: 1.0 - (remainingPomodoroDuration.inSeconds / getCurrentDuration().inSeconds),
       );
     });
   }
 
-  void pauseTimer() {
+  /// Pause the timer
+  void _pauseTimer() {
     setState(() => _isPlay = false);
     _controller.stop();
   }
 
-  void resetTimer() {
+  /// Reset the timer and return to initial state
+  void _resetTimer() {
     _controller.reset();
     setState(() {
       _isPlay = false;
       currentSet = 1;
       currentPhase = "Pomodoro";
-      pomodoroStatus = "Hazır";
+      pomodoroStatus = "Pomodoro";
       remainingPomodoroDuration = pomodoroProvider.pomodoroDuration;
     });
   }
 
-  void playPauseTimer() {
-    _isPlay ? pauseTimer() : startTimer();
+  /// Toggle between play and pause
+  void _playPauseTimer() {
+    _isPlay ? _pauseTimer() : _startTimer();
   }
 
+  /// Get the formatted time as a string
   String get timerText {
-    final minutes =
-        remainingPomodoroDuration.inMinutes.toString().padLeft(2, '0');
-    final seconds =
-        (remainingPomodoroDuration.inSeconds % 60).toString().padLeft(2, '0');
+    final minutes = remainingPomodoroDuration.inMinutes.toString().padLeft(2, '0');
+    final seconds = (remainingPomodoroDuration.inSeconds % 60).toString().padLeft(2, '0');
     return '$minutes:$seconds';
   }
 
@@ -143,11 +156,16 @@ class _PomodoroCardState extends State<PomodoroCard>
   @override
   Widget build(BuildContext context) {
     final settingsProvider = Provider.of<SettingsProvider>(context);
-
-    return buildCardUI(settingsProvider);
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
+    return _buildCardUI(settingsProvider);
   }
 
-  Widget buildCardUI(SettingsProvider settingsProvider) {
+  /// Build the Pomodoro card UI
+  Widget _buildCardUI(SettingsProvider settingsProvider) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final double sizedBoxHeight = screenHeight * 0.009;
     return Container(
       margin: const EdgeInsets.all(5),
       padding: const EdgeInsets.all(10),
@@ -158,52 +176,62 @@ class _PomodoroCardState extends State<PomodoroCard>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          buildTimerUI(),
-          const SizedBox(height: 20),
-          buildSetCounter(),
-          const SizedBox(height: 20),
-          Text(pomodoroStatus, style: kPomodoroStatusTextStyle(context)),
-          const SizedBox(height: 20),
-          buildControlButtons(),
-          const SizedBox(height: 20),
-          buildSettingsAndResetButtons(settingsProvider),
+          _buildTimerUI(),
+          SizedBox(height: sizedBoxHeight),
+          _buildSetCounter(),
+          SizedBox(height: sizedBoxHeight),
+          Text(pomodoroStatus, style: kPomodoroStatusTextStyle(context).copyWith(fontSize: screenHeight * 0.025)),
+          SizedBox(height: sizedBoxHeight),
+          _buildControlButtons(),
+          SizedBox(height: sizedBoxHeight),
+          _buildSettingsAndResetButtons(settingsProvider),
         ],
       ),
     );
   }
 
-  Widget buildTimerUI() {
-    return SizedBox(
-      width: 180,
-      height: 180,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          Transform.flip(
-            flipX: true,
-            child: CircularProgressIndicator(
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              color: Theme.of(context).colorScheme.inversePrimary,
-              strokeWidth: 10,
-              strokeCap: StrokeCap.round,
-              value: 1.0 - _controller.value,
-            ),
-          ),
-          Center(
-            child: Text(
-              timerText,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.tertiary,
-                fontSize: 32,
+  /// Build the circular timer UI
+  Widget _buildTimerUI() {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
+
+    // Widget'ın en-boy oranını ayarlayalım
+    return Padding(
+      padding: const EdgeInsets.only(top: 30),
+      child: SizedBox(
+        width: screenHeight * 0.20, // Ekranın %30'u kadar genişlik
+        height: screenHeight * 0.20, // Yükseklik de genişlikle orantılı olarak ayarlanıyor
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Transform.flip(
+              flipX: true,
+              child: CircularProgressIndicator(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                color: Theme.of(context).colorScheme.inversePrimary,
+                strokeWidth: screenHeight * 0.009,
+                strokeCap: StrokeCap.round,
+                value: 1.0 - _controller.value,
               ),
             ),
-          ),
-        ],
+            Center(
+              child: Text(
+                timerText,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.tertiary,
+                  fontSize: screenHeight * 0.04,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget buildSetCounter() {
+  /// Build the set counter
+  Widget _buildSetCounter() {
+    final double screenHeight = MediaQuery.of(context).size.height;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(pomodoroProvider.setCount, (index) {
@@ -215,7 +243,7 @@ class _PomodoroCardState extends State<PomodoroCard>
           child: Text(
             setNumber.toString(),
             style: TextStyle(
-              fontSize: isCurrent ? 20 : 18,
+              fontSize: isCurrent ? screenHeight * 0.030 : screenHeight * 0.025,
               fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal,
               color: Theme.of(context).colorScheme.tertiary,
             ),
@@ -225,49 +253,55 @@ class _PomodoroCardState extends State<PomodoroCard>
     );
   }
 
-  Widget buildControlButtons() {
+  /// Build play/pause and skip buttons
+  Widget _buildControlButtons() {
+    final double screenHeight = MediaQuery.of(context).size.height;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.skip_previous_rounded),
-        ),
-        IconButton(
-          onPressed: playPauseTimer,
+          onPressed: _undoPhase,
           icon: Icon(
-            _isPlay ? Icons.pause : Icons.play_arrow_rounded,
-            size: 62,
+            Icons.skip_previous_rounded,
+            size: screenHeight * 0.040,
           ),
         ),
         IconButton(
-          onPressed: skipPhase,
-          icon: const Icon(Icons.skip_next_rounded),
+          onPressed: _playPauseTimer,
+          icon: Icon(
+            _isPlay ? Icons.pause : Icons.play_arrow_rounded,
+            size: screenHeight * 0.070,
+          ),
+        ),
+        IconButton(
+          onPressed: _skipPhase,
+          icon: Icon(
+            Icons.skip_next_rounded,
+            size: screenHeight * 0.040,
+          ),
         ),
       ],
     );
   }
 
-  Widget buildSettingsAndResetButtons(SettingsProvider settingsProvider) {
+  /// Build settings and reset buttons
+  Widget _buildSettingsAndResetButtons(SettingsProvider settingsProvider) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         IconButton(
-          onPressed: () {
-            _showResetConfirmationDialog();
-          },
+          onPressed: _showResetConfirmationDialog,
           icon: const Icon(Icons.refresh_rounded),
         ),
         IconButton(
-          onPressed: () {
-            settingsProvider.toggleSettingsCard();
-          },
+          onPressed: settingsProvider.toggleSettingsCard,
           icon: const Icon(Icons.settings),
         ),
       ],
     );
   }
 
+  /// Show confirmation dialog for resetting timer
   void _showResetConfirmationDialog() {
     showDialog(
       context: context,
@@ -276,7 +310,7 @@ class _PomodoroCardState extends State<PomodoroCard>
         actions: [
           TextButton(
             onPressed: () {
-              resetTimer();
+              _resetTimer();
               Navigator.of(context).pop();
             },
             child: const Text('Evet'),
