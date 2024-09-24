@@ -69,7 +69,6 @@ class _EditableTextFieldState extends State<EditableTextField> {
     return TextField(
       inputFormatters: [
         LengthLimitingTextInputFormatter(widget.maxLength),
-        LowerCaseNoSpaceFormatter(),
       ],
       controller: _subTitleEditingController,
       style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.tertiary.withOpacity(0.75)),
@@ -113,22 +112,9 @@ class _EditableTextFieldState extends State<EditableTextField> {
       _isEditingMode = false;
     });
 
-    Provider.of<WeatherProvider>(context, listen: false).changeCity(model.subTitle);
+    String formattedCity = model.subTitle.replaceAll(' ', '%20').toLowerCase();
+
+    Provider.of<WeatherProvider>(context, listen: false).changeCity(formattedCity);
     Provider.of<WeatherProvider>(context, listen: false).updateWeatherData();
-  }
-}
-
-class LowerCaseNoSpaceFormatter extends TextInputFormatter {
-  @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
-    String newText = newValue.text.replaceAll(' ', '%20').toLowerCase();
-
-    return TextEditingValue(
-      text: newText,
-      selection: newValue.selection.copyWith(
-        baseOffset: newText.length,
-        extentOffset: newText.length,
-      ),
-    );
   }
 }

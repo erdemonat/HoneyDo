@@ -136,6 +136,7 @@ class SettingsCardState extends State<SettingsCard> {
             ),
             TitledContainer(
               titleText: 'Hava Durumu',
+              borderCutWidth: 100,
               child: SizedBox(
                 width: double.maxFinite,
                 child: Wrap(
@@ -143,12 +144,11 @@ class SettingsCardState extends State<SettingsCard> {
                     EditableTextField(
                       hintText: '',
                       maxLength: 100,
-                      model: ListModel(title: 'Şehir', subTitle: weatherProvider.city),
+                      model: ListModel(title: 'Şehir', subTitle: weatherProvider.formattedCity),
                     )
                   ],
                 ),
               ),
-              borderCutWidth: 100,
             ),
             TitledContainer(
               titleText: 'Pomodoro',

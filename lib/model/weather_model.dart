@@ -7,6 +7,8 @@ class WeatherData {
   Id id = 2;
 
   late String city;
+  late String formattedCity;
   late String weatherStatus;
+  late String iconCode;
   late double temperature;
 }

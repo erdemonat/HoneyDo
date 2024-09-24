@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:honeydo/main.dart';
 import 'package:honeydo/providers/weather_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -74,7 +73,7 @@ class HoneydoBannerState extends State<HoneydoBanner> {
             ),
           ),
           Icon(
-            Icons.cloudy_snowing,
+            weatherProvider.getWeatherIcon(weatherProvider.iconCode),
             size: 18,
             color: Theme.of(context).colorScheme.onSurface,
           ),

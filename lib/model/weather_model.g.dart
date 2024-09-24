@@ -22,13 +22,23 @@ const WeatherDataSchema = CollectionSchema(
       name: r'city',
       type: IsarType.string,
     ),
-    r'temperature': PropertySchema(
+    r'formattedCity': PropertySchema(
       id: 1,
+      name: r'formattedCity',
+      type: IsarType.string,
+    ),
+    r'iconCode': PropertySchema(
+      id: 2,
+      name: r'iconCode',
+      type: IsarType.string,
+    ),
+    r'temperature': PropertySchema(
+      id: 3,
       name: r'temperature',
       type: IsarType.double,
     ),
     r'weatherStatus': PropertySchema(
-      id: 2,
+      id: 4,
       name: r'weatherStatus',
       type: IsarType.string,
     )
@@ -54,6 +64,8 @@ int _weatherDataEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.city.length * 3;
+  bytesCount += 3 + object.formattedCity.length * 3;
+  bytesCount += 3 + object.iconCode.length * 3;
   bytesCount += 3 + object.weatherStatus.length * 3;
   return bytesCount;
 }
@@ -65,8 +77,10 @@ void _weatherDataSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.city);
-  writer.writeDouble(offsets[1], object.temperature);
-  writer.writeString(offsets[2], object.weatherStatus);
+  writer.writeString(offsets[1], object.formattedCity);
+  writer.writeString(offsets[2], object.iconCode);
+  writer.writeDouble(offsets[3], object.temperature);
+  writer.writeString(offsets[4], object.weatherStatus);
 }
 
 WeatherData _weatherDataDeserialize(
@@ -77,9 +91,11 @@ WeatherData _weatherDataDeserialize(
 ) {
   final object = WeatherData();
   object.city = reader.readString(offsets[0]);
+  object.formattedCity = reader.readString(offsets[1]);
+  object.iconCode = reader.readString(offsets[2]);
   object.id = id;
-  object.temperature = reader.readDouble(offsets[1]);
-  object.weatherStatus = reader.readString(offsets[2]);
+  object.temperature = reader.readDouble(offsets[3]);
+  object.weatherStatus = reader.readString(offsets[4]);
   return object;
 }
 
@@ -93,8 +109,12 @@ P _weatherDataDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 2:
+      return (reader.readString(offset)) as P;
+    case 3:
+      return (reader.readDouble(offset)) as P;
+    case 4:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -320,6 +340,277 @@ extension WeatherDataQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'city',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
+      formattedCityEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'formattedCity',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
+      formattedCityGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'formattedCity',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
+      formattedCityLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'formattedCity',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
+      formattedCityBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'formattedCity',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
+      formattedCityStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'formattedCity',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
+      formattedCityEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'formattedCity',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
+      formattedCityContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'formattedCity',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
+      formattedCityMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'formattedCity',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
+      formattedCityIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'formattedCity',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
+      formattedCityIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'formattedCity',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition> iconCodeEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'iconCode',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
+      iconCodeGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'iconCode',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
+      iconCodeLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'iconCode',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition> iconCodeBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'iconCode',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
+      iconCodeStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'iconCode',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
+      iconCodeEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'iconCode',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
+      iconCodeContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'iconCode',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition> iconCodeMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'iconCode',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
+      iconCodeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'iconCode',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
+      iconCodeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'iconCode',
         value: '',
       ));
     });
@@ -601,6 +892,31 @@ extension WeatherDataQuerySortBy
     });
   }
 
+  QueryBuilder<WeatherData, WeatherData, QAfterSortBy> sortByFormattedCity() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'formattedCity', Sort.asc);
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterSortBy>
+      sortByFormattedCityDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'formattedCity', Sort.desc);
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterSortBy> sortByIconCode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconCode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterSortBy> sortByIconCodeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconCode', Sort.desc);
+    });
+  }
+
   QueryBuilder<WeatherData, WeatherData, QAfterSortBy> sortByTemperature() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'temperature', Sort.asc);
@@ -638,6 +954,31 @@ extension WeatherDataQuerySortThenBy
   QueryBuilder<WeatherData, WeatherData, QAfterSortBy> thenByCityDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'city', Sort.desc);
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterSortBy> thenByFormattedCity() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'formattedCity', Sort.asc);
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterSortBy>
+      thenByFormattedCityDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'formattedCity', Sort.desc);
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterSortBy> thenByIconCode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconCode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterSortBy> thenByIconCodeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'iconCode', Sort.desc);
     });
   }
 
@@ -688,6 +1029,21 @@ extension WeatherDataQueryWhereDistinct
     });
   }
 
+  QueryBuilder<WeatherData, WeatherData, QDistinct> distinctByFormattedCity(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'formattedCity',
+          caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QDistinct> distinctByIconCode(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'iconCode', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<WeatherData, WeatherData, QDistinct> distinctByTemperature() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'temperature');
@@ -714,6 +1070,18 @@ extension WeatherDataQueryProperty
   QueryBuilder<WeatherData, String, QQueryOperations> cityProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'city');
+    });
+  }
+
+  QueryBuilder<WeatherData, String, QQueryOperations> formattedCityProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'formattedCity');
+    });
+  }
+
+  QueryBuilder<WeatherData, String, QQueryOperations> iconCodeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'iconCode');
     });
   }
 

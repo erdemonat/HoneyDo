@@ -291,4 +291,10 @@ class IsarService {
     final weatherData = await isar.weatherDatas.where().findFirst();
     return weatherData!.city;
   }
+
+  Future<String> getSavedFormattedCity() async {
+    final isar = await db;
+    final weatherData = await isar.weatherDatas.where().findFirst();
+    return weatherData!.formattedCity;
+  }
 }
