@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:honeydo/constants/constants.dart';
 import 'package:honeydo/model/task_model.dart';
-import 'package:honeydo/providers/focus_date_provider.dart';
 import 'package:honeydo/providers/tasks_meals_provider.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class TaskTitle extends StatefulWidget {
@@ -45,7 +43,7 @@ class TaskTitleState extends State<TaskTitle> {
               onPressed: widget.onPressed,
               child: GestureDetector(
                 onSecondaryTapDown: (details) {
-                  _showColorMenu(details.globalPosition);
+                  _showColorOverlay(details.globalPosition);
                 },
                 child: Text(
                   textScaler: MediaQuery.textScalerOf(context),
@@ -57,7 +55,9 @@ class TaskTitleState extends State<TaskTitle> {
                           color: Colors.white,
                           decoration: TextDecoration.lineThrough,
                           decorationThickness: 24,
-                          decorationColor: Color(int.parse(widget.task.markColor)).withOpacity(0.25),
+                          decorationColor: Color(
+                            int.parse(widget.task.markColor),
+                          ).withOpacity(0.25),
                         )
                       : kCardTitleTextStyle(context),
                 ),
@@ -69,101 +69,189 @@ class TaskTitleState extends State<TaskTitle> {
     );
   }
 
-  void _showColorMenu(Offset position) async {
-    final selectedColor = await showMenu<Color>(
-      menuPadding: EdgeInsets.all(0),
-      constraints: BoxConstraints(minHeight: 0, minWidth: 0),
-      color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.25),
-      context: context,
-      position: RelativeRect.fromLTRB(position.dx, position.dy, position.dx, position.dy),
-      items: [
-        _buildColorBox(context, Colors.red),
-        _buildColorBox(context, Colors.purple),
-        _buildColorBox(context, Colors.green),
-        _buildColorBox(context, Colors.yellow),
-        _buildColorBox(context, Colors.orange),
-        PopupMenuItem(
-          child: Container(
-            height: 30,
-            width: 30,
-            decoration: BoxDecoration(
-              border: Border.all(width: 2.0, color: Theme.of(context).colorScheme.tertiary),
-              borderRadius: BorderRadius.circular(4),
+  void _showColorOverlay(Offset position) {
+    final overlay = Overlay.of(context);
+    late OverlayEntry overlayEntry;
+
+    overlayEntry = OverlayEntry(
+      builder: (context) => _AnimatedOverlay(
+        position: position,
+        onClose: () {
+          overlayEntry.remove();
+        },
+        onColorSelected: (color) {
+          setState(() {
+            widget.task.markColor = color.value.toString();
+            widget.task.isMarked = true;
+          });
+
+          Provider.of<TasksMealsProvider>(context, listen: false).updateTaskMarkStatus(widget.task, color.value.toString(), true);
+
+          overlayEntry.remove();
+        },
+        onClear: () async {
+          await Provider.of<TasksMealsProvider>(context, listen: false).updateTaskMarkStatus(widget.task, "", false);
+          overlayEntry.remove();
+        },
+      ),
+    );
+
+    overlay.insert(overlayEntry);
+  }
+}
+
+class _AnimatedOverlay extends StatefulWidget {
+  final Offset position;
+  final VoidCallback onClose;
+  final Function(Color) onColorSelected;
+  final VoidCallback onClear;
+
+  const _AnimatedOverlay({
+    required this.position,
+    required this.onClose,
+    required this.onColorSelected,
+    required this.onClear,
+  });
+
+  @override
+  __AnimatedOverlayState createState() => __AnimatedOverlayState();
+}
+
+class __AnimatedOverlayState extends State<_AnimatedOverlay> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+  Color? _hoveredColor;
+  double hoveredRadius = 16;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 100),
+    );
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
+
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: GestureDetector(
+            onTap: widget.onClose,
+            child: Container(
+              color: Colors.transparent,
             ),
-            child: IconButton(
-              onPressed: () async {
-                await Provider.of<TasksMealsProvider>(context, listen: false).updateTaskMarkStatus(widget.task, "", false);
-                Navigator.of(context).pop();
-              },
-              icon: Icon(
-                Icons.block,
-                size: 10,
-                color: Theme.of(context).colorScheme.tertiary,
+          ),
+        ),
+        Positioned(
+          left: widget.position.dx,
+          top: widget.position.dy,
+          child: FadeTransition(
+            opacity: _animation,
+            child: ScaleTransition(
+              scale: _animation,
+              alignment: Alignment.topLeft,
+              child: Material(
+                color: Colors.transparent,
+                child: _buildOverlayMenu(context),
               ),
             ),
           ),
         ),
       ],
     );
-
-    if (selectedColor != null) {
-      setState(() {
-        widget.task.markColor = selectedColor.value.toString();
-        widget.task.isMarked = true;
-      });
-
-      Provider.of<TasksMealsProvider>(context, listen: false).updateTaskMarkStatus(widget.task, selectedColor.value.toString(), true);
-    }
   }
 
-  PopupMenuEntry<Color> _buildColorBox(BuildContext context, Color color) {
-    return PopupMenuItem<Color>(
-      value: color,
+  Widget _buildOverlayMenu(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(6),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.25),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 10.0,
+            runSpacing: 10.0,
+            children: [
+              _buildColorBox(context, Colors.red),
+              _buildColorBox(context, Colors.purple),
+              _buildColorBox(context, Colors.green),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 10.0,
+            runSpacing: 10.0,
+            children: [
+              _buildColorBox(context, Colors.yellow),
+              _buildColorBox(context, Colors.orange),
+              _buildClearIcon(context, Colors.transparent),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildColorBox(BuildContext context, Color color) {
+    return InkWell(
+      onTap: () {
+        widget.onColorSelected(color);
+      },
+      onHover: (isHovering) {
+        setState(() {
+          _hoveredColor = isHovering ? color : null;
+        });
+      },
       child: Container(
         decoration: BoxDecoration(
+          border: Border.all(width: 2.0, color: Theme.of(context).colorScheme.tertiary),
           color: color,
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: BorderRadius.circular(_hoveredColor == color ? 6 : 16),
         ),
         width: 30,
         height: 30,
       ),
     );
   }
-}
 
-class MoveToNextDayButton extends StatelessWidget {
-  const MoveToNextDayButton({
-    super.key,
-    required this.context,
-    required this.daysToDelay,
-    required this.taskId,
-  });
-
-  final int daysToDelay;
-  final BuildContext context;
-  final int taskId;
-
-  @override
-  Widget build(BuildContext context) {
-    var delayedDate = DateFormat('ddMMyyyy').format(Provider.of<FocusDateProvider>(context).focusDate.add(Duration(days: daysToDelay)));
-
-    return GestureDetector(
-      onTap: () {
-        Provider.of<TasksMealsProvider>(context, listen: false).shiftTaskDate(taskId, daysToDelay);
+  Widget _buildClearIcon(BuildContext context, Color color) {
+    return InkWell(
+      onTap: widget.onClear,
+      onHover: (isHovering) {
+        setState(() {
+          _hoveredColor = isHovering ? color : null;
+        });
       },
       child: Container(
-        margin: const EdgeInsets.all(4.0),
-        height: 30,
-        width: 30,
         decoration: BoxDecoration(
           border: Border.all(width: 2.0, color: Theme.of(context).colorScheme.tertiary),
-          borderRadius: BorderRadius.circular(4),
+          color: color,
+          borderRadius: BorderRadius.circular(_hoveredColor == color ? 6 : 16),
         ),
-        child: Center(
-            child: Text(
-          '+$daysToDelay',
-          style: TextStyle(color: Theme.of(context).colorScheme.tertiary),
-        )),
+        width: 30,
+        height: 30,
+        child: Icon(
+          Icons.block,
+          color: Theme.of(context).colorScheme.tertiary,
+          size: 18,
+        ),
       ),
     );
   }

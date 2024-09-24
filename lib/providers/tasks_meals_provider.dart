@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:honeydo/isar_service.dart';
+import 'package:honeydo/service/isar_service.dart';
 import 'package:honeydo/main.dart';
 import 'package:honeydo/model/subtitle_model.dart';
 import 'package:honeydo/model/task_model.dart';

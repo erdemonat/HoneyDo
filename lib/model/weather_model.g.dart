@@ -22,30 +22,15 @@ const WeatherDataSchema = CollectionSchema(
       name: r'city',
       type: IsarType.string,
     ),
-    r'humidity': PropertySchema(
-      id: 1,
-      name: r'humidity',
-      type: IsarType.long,
-    ),
-    r'precipitation': PropertySchema(
-      id: 2,
-      name: r'precipitation',
-      type: IsarType.long,
-    ),
     r'temperature': PropertySchema(
-      id: 3,
+      id: 1,
       name: r'temperature',
-      type: IsarType.long,
+      type: IsarType.double,
     ),
     r'weatherStatus': PropertySchema(
-      id: 4,
+      id: 2,
       name: r'weatherStatus',
       type: IsarType.string,
-    ),
-    r'wind': PropertySchema(
-      id: 5,
-      name: r'wind',
-      type: IsarType.long,
     )
   },
   estimateSize: _weatherDataEstimateSize,
@@ -80,11 +65,8 @@ void _weatherDataSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.city);
-  writer.writeLong(offsets[1], object.humidity);
-  writer.writeLong(offsets[2], object.precipitation);
-  writer.writeLong(offsets[3], object.temperature);
-  writer.writeString(offsets[4], object.weatherStatus);
-  writer.writeLong(offsets[5], object.wind);
+  writer.writeDouble(offsets[1], object.temperature);
+  writer.writeString(offsets[2], object.weatherStatus);
 }
 
 WeatherData _weatherDataDeserialize(
@@ -95,12 +77,9 @@ WeatherData _weatherDataDeserialize(
 ) {
   final object = WeatherData();
   object.city = reader.readString(offsets[0]);
-  object.humidity = reader.readLong(offsets[1]);
   object.id = id;
-  object.precipitation = reader.readLong(offsets[2]);
-  object.temperature = reader.readLong(offsets[3]);
-  object.weatherStatus = reader.readString(offsets[4]);
-  object.wind = reader.readLong(offsets[5]);
+  object.temperature = reader.readDouble(offsets[1]);
+  object.weatherStatus = reader.readString(offsets[2]);
   return object;
 }
 
@@ -114,15 +93,9 @@ P _weatherDataDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readLong(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 2:
-      return (reader.readLong(offset)) as P;
-    case 3:
-      return (reader.readLong(offset)) as P;
-    case 4:
       return (reader.readString(offset)) as P;
-    case 5:
-      return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -352,61 +325,6 @@ extension WeatherDataQueryFilter
     });
   }
 
-  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition> humidityEqualTo(
-      int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'humidity',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
-      humidityGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'humidity',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
-      humidityLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'humidity',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition> humidityBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'humidity',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
   QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition> idEqualTo(
       Id value) {
     return QueryBuilder.apply(this, (query) {
@@ -461,105 +379,58 @@ extension WeatherDataQueryFilter
   }
 
   QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
-      precipitationEqualTo(int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'precipitation',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
-      precipitationGreaterThan(
-    int value, {
-    bool include = false,
+      temperatureEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
   }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'precipitation',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
-      precipitationLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'precipitation',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
-      precipitationBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'precipitation',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
-
-  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
-      temperatureEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'temperature',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
       temperatureGreaterThan(
-    int value, {
+    double value, {
     bool include = false,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'temperature',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
       temperatureLessThan(
-    int value, {
+    double value, {
     bool include = false,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'temperature',
         value: value,
+        epsilon: epsilon,
       ));
     });
   }
 
   QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
       temperatureBetween(
-    int lower,
-    int upper, {
+    double lower,
+    double upper, {
     bool includeLower = true,
     bool includeUpper = true,
+    double epsilon = Query.epsilon,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -568,6 +439,7 @@ extension WeatherDataQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+        epsilon: epsilon,
       ));
     });
   }
@@ -707,59 +579,6 @@ extension WeatherDataQueryFilter
       ));
     });
   }
-
-  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition> windEqualTo(
-      int value) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'wind',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition> windGreaterThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        include: include,
-        property: r'wind',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition> windLessThan(
-    int value, {
-    bool include = false,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.lessThan(
-        include: include,
-        property: r'wind',
-        value: value,
-      ));
-    });
-  }
-
-  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition> windBetween(
-    int lower,
-    int upper, {
-    bool includeLower = true,
-    bool includeUpper = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.between(
-        property: r'wind',
-        lower: lower,
-        includeLower: includeLower,
-        upper: upper,
-        includeUpper: includeUpper,
-      ));
-    });
-  }
 }
 
 extension WeatherDataQueryObject
@@ -779,31 +598,6 @@ extension WeatherDataQuerySortBy
   QueryBuilder<WeatherData, WeatherData, QAfterSortBy> sortByCityDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'city', Sort.desc);
-    });
-  }
-
-  QueryBuilder<WeatherData, WeatherData, QAfterSortBy> sortByHumidity() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'humidity', Sort.asc);
-    });
-  }
-
-  QueryBuilder<WeatherData, WeatherData, QAfterSortBy> sortByHumidityDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'humidity', Sort.desc);
-    });
-  }
-
-  QueryBuilder<WeatherData, WeatherData, QAfterSortBy> sortByPrecipitation() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'precipitation', Sort.asc);
-    });
-  }
-
-  QueryBuilder<WeatherData, WeatherData, QAfterSortBy>
-      sortByPrecipitationDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'precipitation', Sort.desc);
     });
   }
 
@@ -831,18 +625,6 @@ extension WeatherDataQuerySortBy
       return query.addSortBy(r'weatherStatus', Sort.desc);
     });
   }
-
-  QueryBuilder<WeatherData, WeatherData, QAfterSortBy> sortByWind() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'wind', Sort.asc);
-    });
-  }
-
-  QueryBuilder<WeatherData, WeatherData, QAfterSortBy> sortByWindDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'wind', Sort.desc);
-    });
-  }
 }
 
 extension WeatherDataQuerySortThenBy
@@ -859,18 +641,6 @@ extension WeatherDataQuerySortThenBy
     });
   }
 
-  QueryBuilder<WeatherData, WeatherData, QAfterSortBy> thenByHumidity() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'humidity', Sort.asc);
-    });
-  }
-
-  QueryBuilder<WeatherData, WeatherData, QAfterSortBy> thenByHumidityDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'humidity', Sort.desc);
-    });
-  }
-
   QueryBuilder<WeatherData, WeatherData, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -880,19 +650,6 @@ extension WeatherDataQuerySortThenBy
   QueryBuilder<WeatherData, WeatherData, QAfterSortBy> thenByIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.desc);
-    });
-  }
-
-  QueryBuilder<WeatherData, WeatherData, QAfterSortBy> thenByPrecipitation() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'precipitation', Sort.asc);
-    });
-  }
-
-  QueryBuilder<WeatherData, WeatherData, QAfterSortBy>
-      thenByPrecipitationDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'precipitation', Sort.desc);
     });
   }
 
@@ -920,18 +677,6 @@ extension WeatherDataQuerySortThenBy
       return query.addSortBy(r'weatherStatus', Sort.desc);
     });
   }
-
-  QueryBuilder<WeatherData, WeatherData, QAfterSortBy> thenByWind() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'wind', Sort.asc);
-    });
-  }
-
-  QueryBuilder<WeatherData, WeatherData, QAfterSortBy> thenByWindDesc() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'wind', Sort.desc);
-    });
-  }
 }
 
 extension WeatherDataQueryWhereDistinct
@@ -940,18 +685,6 @@ extension WeatherDataQueryWhereDistinct
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'city', caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<WeatherData, WeatherData, QDistinct> distinctByHumidity() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'humidity');
-    });
-  }
-
-  QueryBuilder<WeatherData, WeatherData, QDistinct> distinctByPrecipitation() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'precipitation');
     });
   }
 
@@ -966,12 +699,6 @@ extension WeatherDataQueryWhereDistinct
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'weatherStatus',
           caseSensitive: caseSensitive);
-    });
-  }
-
-  QueryBuilder<WeatherData, WeatherData, QDistinct> distinctByWind() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'wind');
     });
   }
 }
@@ -990,19 +717,7 @@ extension WeatherDataQueryProperty
     });
   }
 
-  QueryBuilder<WeatherData, int, QQueryOperations> humidityProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'humidity');
-    });
-  }
-
-  QueryBuilder<WeatherData, int, QQueryOperations> precipitationProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'precipitation');
-    });
-  }
-
-  QueryBuilder<WeatherData, int, QQueryOperations> temperatureProperty() {
+  QueryBuilder<WeatherData, double, QQueryOperations> temperatureProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'temperature');
     });
@@ -1011,12 +726,6 @@ extension WeatherDataQueryProperty
   QueryBuilder<WeatherData, String, QQueryOperations> weatherStatusProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'weatherStatus');
-    });
-  }
-
-  QueryBuilder<WeatherData, int, QQueryOperations> windProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'wind');
     });
   }
 }

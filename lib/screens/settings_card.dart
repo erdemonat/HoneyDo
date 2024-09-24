@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:honeydo/components/dark_mode_switch.dart';
+import 'package:honeydo/components/editable_textfield.dart';
 import 'package:honeydo/components/pomodoro_components/pomodoro_settings.dart';
 import 'package:honeydo/components/titled_container.dart';
+import 'package:honeydo/model/editable_textfield_model.dart';
 import 'package:honeydo/providers/pomodoro_provider.dart';
 import 'package:honeydo/providers/theme_provider.dart';
+import 'package:honeydo/providers/weather_provider.dart';
 import 'package:provider/provider.dart';
 
 class SettingsCard extends StatefulWidget {
@@ -18,6 +21,7 @@ class SettingsCardState extends State<SettingsCard> {
   Widget build(BuildContext context) {
     final pomodoroProvider = Provider.of<PomodoroProvider>(context, listen: false);
     final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
     return Container(
@@ -131,6 +135,22 @@ class SettingsCardState extends State<SettingsCard> {
               ),
             ),
             TitledContainer(
+              titleText: 'Hava Durumu',
+              child: SizedBox(
+                width: double.maxFinite,
+                child: Wrap(
+                  children: [
+                    EditableTextField(
+                      hintText: '',
+                      maxLength: 100,
+                      model: ListModel(title: 'Şehir', subTitle: weatherProvider.city),
+                    )
+                  ],
+                ),
+              ),
+              borderCutWidth: 100,
+            ),
+            TitledContainer(
               titleText: 'Pomodoro',
               borderCutWidth: 80,
               child: PomodoroSettings(
@@ -147,13 +167,6 @@ class SettingsCardState extends State<SettingsCard> {
                 },
               ),
             ),
-            TitledContainer(
-                titleText: 'Hava Durumu',
-                child: SizedBox(
-                  width: double.maxFinite,
-                  child: Text('Şehir: '),
-                ),
-                borderCutWidth: 100)
           ],
         ),
       ),

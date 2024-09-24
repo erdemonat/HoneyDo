@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:honeydo/main.dart';
+import 'package:honeydo/providers/weather_provider.dart';
+import 'package:provider/provider.dart';
 
 class HoneydoBanner extends StatefulWidget {
   const HoneydoBanner({super.key});
@@ -10,18 +13,18 @@ class HoneydoBanner extends StatefulWidget {
 
 class HoneydoBannerState extends State<HoneydoBanner> {
   late Timer _timer;
-  String _currentWeatherTitle = '31 °C';
+  String _currentWeatherTitle = '';
   int _weatherTitleIndex = 0;
-  final List<String> _weatherTitles = [
-    '31 °C',
-    'Hava Bulutlu',
-    'Rüzgar: 10 km/h',
-    'Nem: 60%',
-  ];
+  late final List<String> _weatherTitles = Provider.of<WeatherProvider>(context, listen: false).weatherTitle;
 
   @override
   void initState() {
     super.initState();
+    Future.microtask(() {
+      final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
+      weatherProvider.loadSavedCity();
+      weatherProvider.updateWeatherData();
+    });
     _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
       setState(() {
         _weatherTitleIndex = (_weatherTitleIndex + 1) % _weatherTitles.length;
@@ -38,6 +41,8 @@ class HoneydoBannerState extends State<HoneydoBanner> {
 
   @override
   Widget build(BuildContext context) {
+    final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
+
     return Center(
       child: Row(
         children: [
@@ -53,15 +58,11 @@ class HoneydoBannerState extends State<HoneydoBanner> {
           RichText(
             text: TextSpan(
               text: 'Honey',
-              style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  color: Theme.of(context).colorScheme.onSurface),
+              style: TextStyle(fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.onSurface),
               children: <TextSpan>[
                 TextSpan(
                   text: 'Do',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: Theme.of(context).colorScheme.onSurface),
+                  style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurface),
                 ),
               ],
             ),

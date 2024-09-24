@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:honeydo/isar_service.dart';
+import 'package:honeydo/service/isar_service.dart';
 import 'package:honeydo/model/pomodoro_model.dart';
 
 class PomodoroProvider with ChangeNotifier {
@@ -48,8 +48,7 @@ class PomodoroProvider with ChangeNotifier {
     await _isarService.savePomodoroSettings(settings);
   }
 
-  void setAllPomodoroSettings(Duration pomodoro, Duration shortBreak,
-      Duration longBreak, int setCount, bool autoBreak, bool autoPomodoro) {
+  void setAllPomodoroSettings(Duration pomodoro, Duration shortBreak, Duration longBreak, int setCount, bool autoBreak, bool autoPomodoro) {
     _pomodoroDuration = pomodoro;
     _shortBreakDuration = shortBreak;
     _longBreakDuration = longBreak;

@@ -278,4 +278,17 @@ class IsarService {
       await isar.tasks.put(task);
     });
   }
+
+  Future<void> saveWeatherData(WeatherData weatherData) async {
+    final isar = await db;
+    await isar.writeTxn(() async {
+      await isar.weatherDatas.put(weatherData);
+    });
+  }
+
+  Future<String> getSavedCity() async {
+    final isar = await db;
+    final weatherData = await isar.weatherDatas.where().findFirst();
+    return weatherData!.city;
+  }
 }

@@ -1,23 +1,23 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-import 'package:honeydo/isar_service.dart';
+import 'package:honeydo/service/isar_service.dart';
 import 'package:honeydo/providers/focus_date_provider.dart';
 import 'package:honeydo/providers/pomodoro_provider.dart';
 import 'package:honeydo/providers/settings_provider.model.dart';
 import 'package:honeydo/providers/tasks_meals_provider.dart';
 import 'package:honeydo/providers/theme_provider.dart';
+import 'package:honeydo/providers/weather_provider.dart';
 import 'package:honeydo/screens/homescreen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-// late Isar isar;
 late IsarService isarService;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   isarService = IsarService();
   await isarService.db;
-  appWindow.size = const Size(1200, 675);
+  appWindow.size = const Size(1200, 1000);
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(
@@ -34,6 +34,9 @@ void main() async {
       ),
       ChangeNotifierProvider(
         create: (_) => TasksMealsProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => WeatherProvider(),
       ),
     ],
     child: const MyApp(),
