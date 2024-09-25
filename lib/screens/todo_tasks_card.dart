@@ -3,7 +3,6 @@ import 'package:honeydo/components/task_card_components/meal_card_tile.dart';
 import 'package:honeydo/components/task_card_components/task_card_tile.dart';
 import 'package:honeydo/components/task_card_components/task_text_field.dart';
 import 'package:honeydo/service/isar_service.dart';
-import 'package:honeydo/main.dart';
 import 'package:honeydo/providers/focus_date_provider.dart';
 import 'package:honeydo/providers/tasks_meals_provider.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +18,7 @@ TextEditingController taskTextController = TextEditingController();
 
 class _TasksCardState extends State<TasksCard> {
   late TasksMealsProvider tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: true);
+  late FocusDateProvider focusDateProvider = Provider.of<FocusDateProvider>(context, listen: false);
   bool isDragging = false;
   bool taskMealToggle = false;
 
@@ -38,21 +38,11 @@ class _TasksCardState extends State<TasksCard> {
     super.dispose();
   }
 
-  Future<void> _deleteTask(int index) async {
-    await isarService.deleteTask(index, tasksMealsProvider.tasks);
-    await tasksMealsProvider.loadTasks(context);
-  }
-
-  Future<void> _deleteMeal(int index) async {
-    await isarService.deleteMeal(index, tasksMealsProvider.meals);
-    await tasksMealsProvider.loadMeals(context);
-  }
-
   void onTaskPressed() async {
     String taskName = taskTextController.text;
-    String taskDate = Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
+    String taskDate = focusDateProvider.getFocusDate();
     if (taskTextController.text.isNotEmpty) {
-      await IsarService().createOrUpdateTaskData(taskDate, taskName);
+      await IsarService().createOrUpdateTaskData(context, taskDate, taskName);
     }
     await tasksMealsProvider.loadTasks(context);
     taskTextController.clear();
@@ -60,7 +50,7 @@ class _TasksCardState extends State<TasksCard> {
 
   void onMealPressed() async {
     String mealName = taskTextController.text;
-    String mealDate = Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
+    String mealDate = focusDateProvider.getFocusDate();
     if (taskTextController.text.isNotEmpty) {
       await IsarService().createOrUpdateMealData(mealDate, mealName);
     }
@@ -197,7 +187,7 @@ class _TasksCardState extends State<TasksCard> {
                   visible: isDragging,
                   child: DragTarget<int>(
                     onAcceptWithDetails: (details) {
-                      taskMealToggle ? _deleteMeal(details.data) : _deleteTask(details.data);
+                      taskMealToggle ? tasksMealsProvider.removeMeal(context, details.data) : tasksMealsProvider.removeTask(context, details.data);
                     },
                     builder: (context, candidateData, rejectedData) {
                       return Padding(

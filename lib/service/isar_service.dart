@@ -58,7 +58,7 @@ class IsarService {
     return honeyDoData.dateLinks.filter().dateEqualTo(date).findFirst();
   }
 
-  Future<void> createOrUpdateTaskData(String date, String taskName) async {
+  Future<void> createOrUpdateTaskData(BuildContext context, String date, String taskName) async {
     final isar = await db;
     const String dataName = "HoneyDoData";
     await isar.writeTxn(() async {
@@ -81,12 +81,13 @@ class IsarService {
         ..name = taskName
         ..order = nextOrder
         ..isMarked = false
-        ..markColor = "4294198070"
+        ..markColor = ""
         ..isChecked = false;
       await isar.tasks.put(task);
       dateLink.tasks.add(task);
       await dateLink.tasks.save();
     });
+    Provider.of<TasksMealsProvider>(context, listen: false).loadUpcomingEvents();
   }
 
   Future<void> createOrUpdateMealData(String date, String mealName) async {

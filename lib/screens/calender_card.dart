@@ -4,6 +4,7 @@ import 'package:honeydo/constants/constants.dart';
 import 'package:honeydo/providers/focus_date_provider.dart';
 import 'package:honeydo/providers/tasks_meals_provider.dart';
 import 'package:honeydo/screens/large_calendart_card.dart';
+import 'package:honeydo/screens/upcoming_events_card.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +30,7 @@ class _CalenderCardState extends State<CalenderCard> {
     final double heightContainerSize = screenHeight * 0.085;
     final double paddingSize = screenWidth * 0.02;
 
-    final focusDateModel = Provider.of<FocusDateProvider>(context, listen: false);
+    final focusDateProvider = Provider.of<FocusDateProvider>(context, listen: false);
     final tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: true);
 
     return Row(
@@ -48,10 +49,11 @@ class _CalenderCardState extends State<CalenderCard> {
               IconButton(
                 onPressed: () {
                   VoidCallback;
+                  focusDateProvider.updateFocusDate(focusDateProvider.now);
+                  tasksMealsProvider.createEmptyTaskDate(context, focusDateProvider.getFocusDate());
                   setState(() {
-                    focusDateModel.updateFocusDate(now);
                     _controller.animateToDate(
-                      focusDateModel.focusDate,
+                      focusDateProvider.focusDate,
                       duration: const Duration(milliseconds: 500),
                       curve: Curves.easeInOut,
                     );
@@ -77,10 +79,11 @@ class _CalenderCardState extends State<CalenderCard> {
                       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                       content: LargeCalendartCard(
                         onSelectionChanged: (args) {
+                          focusDateProvider.updateFocusDate(args.value as DateTime);
+                          tasksMealsProvider.createEmptyTaskDate(context, focusDateProvider.getFocusDate());
                           setState(() {
-                            focusDateModel.updateFocusDate(args.value as DateTime);
                             _controller.animateToDate(
-                              focusDateModel.focusDate,
+                              focusDateProvider.focusDate,
                               duration: const Duration(milliseconds: 500),
                               curve: Curves.easeInOut,
                             );
@@ -129,7 +132,7 @@ class _CalenderCardState extends State<CalenderCard> {
                           ),
                           if (isSelected)
                             Text(
-                              DateFormat('MMMM yyyy', 'tr_TR').format(focusDateModel.focusDate),
+                              DateFormat('MMMM yyyy', 'tr_TR').format(focusDateProvider.focusDate),
                               style: kCalendarDayTextStyle(context),
                             ),
                         ],
@@ -142,11 +145,11 @@ class _CalenderCardState extends State<CalenderCard> {
                 locale: "tr_TR",
                 controller: _controller,
                 firstDate: firstDate,
-                focusDate: focusDateModel.focusDate,
+                focusDate: focusDateProvider.focusDate,
                 lastDate: lastDate,
                 onDateChange: (selectedDate) {
-                  focusDateModel.updateFocusDate(selectedDate);
-                  tasksMealsProvider.createEmptyTaskDate(context, focusDateModel.getFocusDate());
+                  focusDateProvider.updateFocusDate(selectedDate);
+                  tasksMealsProvider.createEmptyTaskDate(context, focusDateProvider.getFocusDate());
                 },
               ),
               Flexible(
@@ -155,12 +158,7 @@ class _CalenderCardState extends State<CalenderCard> {
                   width: double.infinity,
                   height: double.infinity,
                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Theme.of(context).colorScheme.surface),
-                  child: Center(
-                    child: Text(
-                      "Upcoming",
-                      style: kCalendarMonthYearTextStyle(context),
-                    ),
-                  ),
+                  child: UpcomingEventCard(),
                 ),
               ),
             ],

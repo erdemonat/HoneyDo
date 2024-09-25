@@ -4,17 +4,21 @@ import 'package:honeydo/main.dart';
 import 'package:honeydo/model/subtitle_model.dart';
 import 'package:honeydo/model/task_model.dart';
 import 'package:honeydo/providers/focus_date_provider.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class TasksMealsProvider with ChangeNotifier {
   List<Task> _tasks = [];
   List<Meal> _meals = [];
 
+  List<String> _upcomingEvents = [];
+
   Map<int, List<SubtitleItem>> _subMeals = {};
   Map<int, List<SubtitleItem>> _subTasks = {};
 
   List<Task> get tasks => _tasks;
   List<Meal> get meals => _meals;
+  List<String> get upcomingEvents => _upcomingEvents;
 
   Future<void> createEmptyTaskDate(BuildContext context, String date) async {
     await isarService.createEmptyTaskDate(date);
@@ -33,6 +37,24 @@ class TasksMealsProvider with ChangeNotifier {
     }
 
     return completedCount;
+  }
+
+  Future<void> loadUpcomingEvents() async {
+    DateTime tomorrow = DateTime.now().add(const Duration(days: 1));
+    String formattedTomorrowDate = DateFormat('ddMMyyyy').format(tomorrow);
+
+    HoneyDoData? honeyDoData = await isarService.getTaskDataByName();
+    if (honeyDoData != null) {
+      DateLinks? taskDateObj = await isarService.getTaskDateByDate(honeyDoData, formattedTomorrowDate);
+      if (taskDateObj != null) {
+        await taskDateObj.tasks.load();
+
+        _upcomingEvents = taskDateObj.tasks.where((task) => task.markColor == "4294198070").map((task) => task.name).toList();
+      }
+    }
+
+    notifyListeners();
+    print(upcomingEvents.toString());
   }
 
   double completedSubtasksPercentage(int taskId) {
@@ -80,6 +102,7 @@ class TasksMealsProvider with ChangeNotifier {
   void removeTask(BuildContext context, int index) async {
     await IsarService().deleteTask(index, _tasks);
     _tasks.removeAt(index);
+    loadUpcomingEvents();
     notifyListeners();
   }
 
@@ -198,10 +221,11 @@ class TasksMealsProvider with ChangeNotifier {
     task.markColor = color;
     task.isMarked = isMarked;
     await isarService.updateTask(task);
+    loadUpcomingEvents();
     notifyListeners();
   }
 
-  Future<void> shiftTaskDate(int taskId, int days) async {
+  Future<void> shiftTaskDate(int taskId, int days, BuildContext context) async {
     Task task = _tasks.firstWhere((t) => t.id == taskId);
 
     await isarService.updateTask(task);
