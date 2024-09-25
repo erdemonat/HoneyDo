@@ -13,8 +13,7 @@ class PomodoroSettings extends StatefulWidget {
   final bool autoBreak;
   final bool autoPomodoro;
 
-  final Function(int pomodoro, int shortBreak, int longBreak, int setCount,
-      bool autoBreak, bool autoPomodoro) onSettingsChanged;
+  final Function(int pomodoro, int shortBreak, int longBreak, int setCount, bool autoBreak, bool autoPomodoro) onSettingsChanged;
   const PomodoroSettings({
     super.key,
     required this.userPomodoroDuration,
@@ -84,8 +83,7 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
                 labelText: "Kısa Mola",
                 userInput: shortBreakDuration,
                 onChanged: (String value) {
-                  shortBreakDuration =
-                      int.tryParse(value) ?? shortBreakDuration;
+                  shortBreakDuration = int.tryParse(value) ?? shortBreakDuration;
                 },
                 maxValue: 300,
               ),
@@ -106,8 +104,7 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
             inactiveThumbColor: Theme.of(context).colorScheme.tertiary,
             inactiveTrackColor: Theme.of(context).colorScheme.surface,
             splashRadius: 0,
-            trackOutlineColor:
-                WidgetStatePropertyAll(Theme.of(context).colorScheme.tertiary),
+            trackOutlineColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.tertiary),
             title: Text(
               'Oto. Mola',
               style: kPomodoroSettingsTextStyle(context),
@@ -125,8 +122,7 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
             inactiveThumbColor: Theme.of(context).colorScheme.tertiary,
             inactiveTrackColor: Theme.of(context).colorScheme.surface,
             splashRadius: 0,
-            trackOutlineColor:
-                WidgetStatePropertyAll(Theme.of(context).colorScheme.tertiary),
+            trackOutlineColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.tertiary),
             title: Text(
               'Oto. Pomodoro',
               style: kPomodoroSettingsTextStyle(context),
@@ -135,7 +131,6 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
             onChanged: (bool value) {
               setState(() {
                 autoPomodoro = !autoPomodoro;
-                print(autoPomodoro.toString());
               });
             },
           ),

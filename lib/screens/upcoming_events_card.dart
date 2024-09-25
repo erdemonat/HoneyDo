@@ -17,7 +17,8 @@ class UpcomingEventCard extends StatefulWidget {
 }
 
 class _UpcomingEventCardState extends State<UpcomingEventCard> {
-  late final List<String> _upcomingEvents = Provider.of<TasksMealsProvider>(context, listen: false).upcomingEvents;
+  late final TasksMealsProvider tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
+  late final List<String> _upcomingEvents = tasksMealsProvider.upcomingEvents;
   bool _isDelayed = false;
 
   @override
@@ -41,16 +42,18 @@ class _UpcomingEventCardState extends State<UpcomingEventCard> {
       padding: const EdgeInsets.only(left: 25),
       child: _isDelayed
           ? Center(
-              child: AnimatedTextKit(
-                repeatForever: true,
-                animatedTexts: [
-                  for (int i = 0; i < Provider.of<TasksMealsProvider>(context, listen: false).upcomingEvents.length; i++)
-                    CustomRotateAnimatedText(
-                      _upcomingEvents[i],
-                      textStyle: kCalendarMonthYearTextStyle(context),
-                    ),
-                ],
-              ),
+              child: tasksMealsProvider.upcomingEvents.isNotEmpty
+                  ? AnimatedTextKit(
+                      repeatForever: true,
+                      animatedTexts: [
+                        for (int i = 0; i < tasksMealsProvider.upcomingEvents.length; i++)
+                          CustomRotateAnimatedText(
+                            '${tasksMealsProvider.upcomingEvents[i]}',
+                            textStyle: kCalendarMonthYearTextStyle(context),
+                          ),
+                      ],
+                    )
+                  : const Text(''),
             )
           : const SizedBox(),
     );

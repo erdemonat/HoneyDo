@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:honeydo/constants/constants.dart';
+import 'package:honeydo/providers/audio_player_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:honeydo/providers/pomodoro_provider.dart';
 import 'package:honeydo/providers/settings_provider.model.dart';
@@ -29,7 +30,7 @@ class _PomodoroCardState extends State<PomodoroCard> with SingleTickerProviderSt
     )
       ..addListener(_updateRemainingDuration)
       ..addStatusListener((status) {
-        if (status == AnimationStatus.completed) _onTimerComplete();
+        if (status == AnimationStatus.completed) _onTimerComplete(true);
       });
   }
 
@@ -41,7 +42,6 @@ class _PomodoroCardState extends State<PomodoroCard> with SingleTickerProviderSt
     _controller.duration = pomodoroProvider.pomodoroDuration;
   }
 
-  /// Update the remaining time display
   void _updateRemainingDuration() {
     setState(() {
       remainingPomodoroDuration = Duration(
@@ -50,7 +50,6 @@ class _PomodoroCardState extends State<PomodoroCard> with SingleTickerProviderSt
     });
   }
 
-  /// Get the current phase duration based on phase
   Duration getCurrentDuration() {
     switch (currentPhase) {
       case "Short Break":
@@ -62,14 +61,13 @@ class _PomodoroCardState extends State<PomodoroCard> with SingleTickerProviderSt
     }
   }
 
-  /// Handle timer completion logic for phase transitions
-  void _onTimerComplete() {
+  void _onTimerComplete(bool playSound) {
     if (currentPhase == "Pomodoro" && currentSet < pomodoroProvider.setCount) {
-      _updatePhase("Short Break", "Kısa Mola");
+      _updatePhase("Short Break", "Kısa Mola", autoContinue: pomodoroProvider.autoBreak, playSound: playSound);
     } else if (currentPhase == "Pomodoro") {
-      _updatePhase("Long Break", "Uzun Mola");
+      _updatePhase("Long Break", "Uzun Mola", autoContinue: pomodoroProvider.autoBreak, playSound: playSound);
     } else if (currentPhase == "Short Break") {
-      _updatePhase("Pomodoro", "Pomodoro", incrementSet: true);
+      _updatePhase("Pomodoro", "Pomodoro", incrementSet: true, autoContinue: pomodoroProvider.autoPomodoro, playSound: playSound);
     } else {
       _resetTimer();
     }
@@ -77,9 +75,9 @@ class _PomodoroCardState extends State<PomodoroCard> with SingleTickerProviderSt
 
   void _undoPhase() {
     if (currentPhase == "Pomodoro" && currentSet > 1) {
-      _updatePhase("Short Break", "Kısa Mola", incrementSet: false);
+      _updatePhase("Short Break", "Kısa Mola", decrementSet: true);
     } else if (currentPhase == "Short Break") {
-      _updatePhase("Pomodoro", "Pomodoro", incrementSet: false);
+      _updatePhase("Pomodoro", "Pomodoro");
     } else if (currentPhase == "Long Break") {
       _updatePhase("Pomodoro", "Pomodoro");
     }
@@ -87,26 +85,32 @@ class _PomodoroCardState extends State<PomodoroCard> with SingleTickerProviderSt
     setState(() => _isPlay = false);
   }
 
-  /// Update the current phase and start the next cycle
-  void _updatePhase(String phase, String status, {bool incrementSet = false}) {
+  void _updatePhase(String phase, String status, {bool decrementSet = false, bool incrementSet = false, bool autoContinue = true, bool playSound = false}) {
+    if (playSound) {
+      late final SoundEffectProvider soundEffectProvider = Provider.of<SoundEffectProvider>(context, listen: false);
+      soundEffectProvider.playSound('schoolBell');
+    }
     setState(() {
       currentPhase = phase;
       pomodoroStatus = status;
       if (incrementSet) currentSet++;
+      if (decrementSet) currentSet--;
     });
     _controller.duration = getCurrentDuration();
     _controller.reset();
-    _controller.forward();
+    if (autoContinue) {
+      _controller.forward();
+    } else {
+      _pauseTimer();
+    }
   }
 
-  /// Skip the current phase and move to the next
   void _skipPhase() {
-    _onTimerComplete();
+    _onTimerComplete(false);
     _controller.stop();
     setState(() => _isPlay = false);
   }
 
-  /// Start the timer
   void _startTimer() {
     setState(() {
       _isPlay = true;
@@ -117,13 +121,11 @@ class _PomodoroCardState extends State<PomodoroCard> with SingleTickerProviderSt
     });
   }
 
-  /// Pause the timer
   void _pauseTimer() {
     setState(() => _isPlay = false);
     _controller.stop();
   }
 
-  /// Reset the timer and return to initial state
   void _resetTimer() {
     _controller.reset();
     setState(() {
@@ -135,12 +137,10 @@ class _PomodoroCardState extends State<PomodoroCard> with SingleTickerProviderSt
     });
   }
 
-  /// Toggle between play and pause
   void _playPauseTimer() {
     _isPlay ? _pauseTimer() : _startTimer();
   }
 
-  /// Get the formatted time as a string
   String get timerText {
     final minutes = remainingPomodoroDuration.inMinutes.toString().padLeft(2, '0');
     final seconds = (remainingPomodoroDuration.inSeconds % 60).toString().padLeft(2, '0');
@@ -156,14 +156,10 @@ class _PomodoroCardState extends State<PomodoroCard> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     final settingsProvider = Provider.of<SettingsProvider>(context);
-    final double screenWidth = MediaQuery.of(context).size.width;
-    final double screenHeight = MediaQuery.of(context).size.height;
     return _buildCardUI(settingsProvider);
   }
 
-  /// Build the Pomodoro card UI
   Widget _buildCardUI(SettingsProvider settingsProvider) {
-    final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
     final double sizedBoxHeight = screenHeight * 0.009;
     return Container(
@@ -180,7 +176,7 @@ class _PomodoroCardState extends State<PomodoroCard> with SingleTickerProviderSt
           SizedBox(height: sizedBoxHeight),
           _buildSetCounter(),
           SizedBox(height: sizedBoxHeight),
-          Text(pomodoroStatus, style: kPomodoroStatusTextStyle(context).copyWith(fontSize: screenHeight * 0.025)),
+          Text(pomodoroStatus, style: TextStyle(fontSize: screenHeight * 0.025)),
           SizedBox(height: sizedBoxHeight),
           _buildControlButtons(),
           SizedBox(height: sizedBoxHeight),
@@ -190,17 +186,14 @@ class _PomodoroCardState extends State<PomodoroCard> with SingleTickerProviderSt
     );
   }
 
-  /// Build the circular timer UI
   Widget _buildTimerUI() {
-    final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
 
-    // Widget'ın en-boy oranını ayarlayalım
     return Padding(
       padding: const EdgeInsets.only(top: 30),
       child: SizedBox(
-        width: screenHeight * 0.20, // Ekranın %30'u kadar genişlik
-        height: screenHeight * 0.20, // Yükseklik de genişlikle orantılı olarak ayarlanıyor
+        width: screenHeight * 0.20,
+        height: screenHeight * 0.20,
         child: Stack(
           fit: StackFit.expand,
           children: [
@@ -229,7 +222,6 @@ class _PomodoroCardState extends State<PomodoroCard> with SingleTickerProviderSt
     );
   }
 
-  /// Build the set counter
   Widget _buildSetCounter() {
     final double screenHeight = MediaQuery.of(context).size.height;
     return Row(
@@ -253,7 +245,6 @@ class _PomodoroCardState extends State<PomodoroCard> with SingleTickerProviderSt
     );
   }
 
-  /// Build play/pause and skip buttons
   Widget _buildControlButtons() {
     final double screenHeight = MediaQuery.of(context).size.height;
     return Row(
@@ -284,7 +275,6 @@ class _PomodoroCardState extends State<PomodoroCard> with SingleTickerProviderSt
     );
   }
 
-  /// Build settings and reset buttons
   Widget _buildSettingsAndResetButtons(SettingsProvider settingsProvider) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
@@ -301,25 +291,32 @@ class _PomodoroCardState extends State<PomodoroCard> with SingleTickerProviderSt
     );
   }
 
-  /// Show confirmation dialog for resetting timer
   void _showResetConfirmationDialog() {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Emin misiniz?'),
+        title: Text('Pomodoro sayacını sıfırlayalım mı?', style: kCalendarMonthYearTextStyle(context)),
         actions: [
           TextButton(
+            style: ButtonStyle(side: WidgetStatePropertyAll(BorderSide(color: Theme.of(context).colorScheme.tertiary, width: 0.3))),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              'İptal',
+              style: kCalendarMonthYearTextStyle(context),
+            ),
+          ),
+          TextButton(
+            style: ButtonStyle(side: WidgetStatePropertyAll(BorderSide(color: Theme.of(context).colorScheme.tertiary, width: 0.3))),
             onPressed: () {
               _resetTimer();
               Navigator.of(context).pop();
             },
-            child: const Text('Evet'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('İptal'),
+            child: Text(
+              'Evet',
+              style: kCalendarMonthYearTextStyle(context),
+            ),
           ),
         ],
       ),

@@ -4,6 +4,7 @@ import 'package:honeydo/components/editable_textfield.dart';
 import 'package:honeydo/components/pomodoro_components/pomodoro_settings.dart';
 import 'package:honeydo/components/titled_container.dart';
 import 'package:honeydo/model/editable_textfield_model.dart';
+import 'package:honeydo/providers/audio_player_provider.dart';
 import 'package:honeydo/providers/pomodoro_provider.dart';
 import 'package:honeydo/providers/theme_provider.dart';
 import 'package:honeydo/providers/weather_provider.dart';
@@ -22,6 +23,7 @@ class SettingsCardState extends State<SettingsCard> {
     final pomodoroProvider = Provider.of<PomodoroProvider>(context, listen: false);
     final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
+    final playerProvider = Provider.of<SoundEffectProvider>(context, listen: false);
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
     return Container(
@@ -59,17 +61,20 @@ class SettingsCardState extends State<SettingsCard> {
                                 index: 0,
                                 onTap: () {
                                   themeProvider.switchThemeIndex(0);
+                                  playerProvider.playSound('copperBell1');
                                 }),
                             ColorThemeBox(
                               index: 1,
                               onTap: () {
                                 themeProvider.switchThemeIndex(1);
+                                playerProvider.playSound('copperBell3');
                               },
                             ),
                             ColorThemeBox(
                               index: 2,
                               onTap: () {
                                 themeProvider.switchThemeIndex(2);
+                                playerProvider.playSound('copperBell5');
                               },
                             ),
                           ],
@@ -85,18 +90,21 @@ class SettingsCardState extends State<SettingsCard> {
                               index: 3,
                               onTap: () {
                                 themeProvider.switchThemeIndex(3);
+                                playerProvider.playSound('copperBell6');
                               },
                             ),
                             ColorThemeBox(
                               index: 4,
                               onTap: () {
                                 themeProvider.switchThemeIndex(4);
+                                playerProvider.playSound('copperBell8');
                               },
                             ),
                             ColorThemeBox(
                               index: 5,
                               onTap: () {
                                 themeProvider.switchThemeIndex(5);
+                                playerProvider.playSound('copperBell10');
                               },
                             ),
                           ],
@@ -112,18 +120,21 @@ class SettingsCardState extends State<SettingsCard> {
                               index: 6,
                               onTap: () {
                                 themeProvider.switchThemeIndex(6);
+                                playerProvider.playSound('copperBell12');
                               },
                             ),
                             ColorThemeBox(
                               index: 7,
                               onTap: () {
                                 themeProvider.switchThemeIndex(7);
+                                playerProvider.playSound('copperBell13');
                               },
                             ),
                             ColorThemeBox(
                               index: 8,
                               onTap: () {
                                 themeProvider.switchThemeIndex(8);
+                                playerProvider.playSound('copperBell12');
                               },
                             ),
                           ],

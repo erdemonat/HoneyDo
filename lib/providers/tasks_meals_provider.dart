@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:honeydo/providers/audio_player_provider.dart';
 import 'package:honeydo/service/isar_service.dart';
 import 'package:honeydo/main.dart';
 import 'package:honeydo/model/subtitle_model.dart';
@@ -11,7 +12,9 @@ class TasksMealsProvider with ChangeNotifier {
   List<Task> _tasks = [];
   List<Meal> _meals = [];
 
-  List<String> _upcomingEvents = [];
+  List<String> _upcomingEvents = [
+    'Yarın'
+  ];
 
   Map<int, List<SubtitleItem>> _subMeals = {};
   Map<int, List<SubtitleItem>> _subTasks = {};
@@ -103,12 +106,14 @@ class TasksMealsProvider with ChangeNotifier {
     await IsarService().deleteTask(index, _tasks);
     _tasks.removeAt(index);
     loadUpcomingEvents();
+    Provider.of<SoundEffectProvider>(context, listen: false).playSound('doorClosing');
     notifyListeners();
   }
 
   void removeMeal(BuildContext context, int index) async {
     await IsarService().deleteMeal(index, _meals);
     _meals.removeAt(index);
+    Provider.of<SoundEffectProvider>(context, listen: false).playSound('doorClosing');
     notifyListeners();
   }
 

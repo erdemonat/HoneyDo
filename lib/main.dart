@@ -1,6 +1,7 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:honeydo/providers/audio_player_provider.dart';
 import 'package:honeydo/service/isar_service.dart';
 import 'package:honeydo/providers/focus_date_provider.dart';
 import 'package:honeydo/providers/pomodoro_provider.dart';
@@ -39,6 +40,9 @@ Future main() async {
       ),
       ChangeNotifierProvider(
         create: (_) => WeatherProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => SoundEffectProvider(),
       ),
     ],
     child: const MyApp(),
