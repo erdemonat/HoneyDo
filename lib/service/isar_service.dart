@@ -1,14 +1,16 @@
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:honeydo/model/pomodoro_model.dart' as pomodoro_model;
 import 'package:honeydo/model/task_model.dart' as task_model;
 import 'package:honeydo/model/weather_model.dart';
+import 'package:honeydo/model/window_model.dart';
 import 'package:honeydo/providers/tasks_meals_provider.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 class IsarService {
-  static Isar? _isar; // Singleton pattern için static bir örnek
+  static Isar? _isar;
   Future<Isar> get db async {
     if (_isar == null) {
       final dir = await getApplicationDocumentsDirectory();
@@ -22,6 +24,7 @@ class IsarService {
           task_model.MealSchema,
           task_model.SubMealSchema,
           WeatherDataSchema,
+          WindowSettingsSchema,
         ],
         directory: dir.path,
       );
@@ -29,8 +32,8 @@ class IsarService {
     return _isar!;
   }
 
-  // Pomodoro ayarlarını kaydetmek veya güncellemek için
-  Future<void> savePomodoroSettings(pomodoro_model.PomodoroSettings settings) async {
+  Future<void> savePomodoroSettings(
+      pomodoro_model.PomodoroSettings settings) async {
     final isar = await db;
     await isar.writeTxn(() async {
       await isar.pomodoroSettings.put(settings);
@@ -45,20 +48,27 @@ class IsarService {
 
   Future<List<task_model.HoneyDoData>> getAllHoneyDoData() async {
     final isar = await db;
-    return await isar.honeyDoDatas.where().findAll(); // HoneyDoDatas'a erişim sağlama
+    return await isar.honeyDoDatas
+        .where()
+        .findAll(); // HoneyDoDatas'a erişim sağlama
   }
 
   Future<task_model.HoneyDoData?> getTaskDataByName() async {
     final isar = await db;
-    return await isar.honeyDoDatas.filter().nameEqualTo("HoneyDoData").findFirst();
+    return await isar.honeyDoDatas
+        .filter()
+        .nameEqualTo("HoneyDoData")
+        .findFirst();
   }
 
-  Future<task_model.DateLinks?> getTaskDateByDate(task_model.HoneyDoData honeyDoData, String date) async {
+  Future<task_model.DateLinks?> getTaskDateByDate(
+      task_model.HoneyDoData honeyDoData, String date) async {
     await honeyDoData.dateLinks.load();
     return honeyDoData.dateLinks.filter().dateEqualTo(date).findFirst();
   }
 
-  Future<void> createOrUpdateTaskData(BuildContext context, String date, String taskName) async {
+  Future<void> createOrUpdateTaskData(
+      BuildContext context, String date, String taskName) async {
     final isar = await db;
     const String dataName = "HoneyDoData";
     await isar.writeTxn(() async {
@@ -67,7 +77,8 @@ class IsarService {
         honeyDoData = task_model.HoneyDoData()..name = dataName;
         await isar.honeyDoDatas.put(honeyDoData);
       }
-      task_model.DateLinks? dateLink = await getTaskDateByDate(honeyDoData, date);
+      task_model.DateLinks? dateLink =
+          await getTaskDateByDate(honeyDoData, date);
       if (dateLink == null) {
         dateLink = task_model.DateLinks()..date = date;
         await isar.dateLinks.put(dateLink);
@@ -87,7 +98,8 @@ class IsarService {
       dateLink.tasks.add(task);
       await dateLink.tasks.save();
     });
-    Provider.of<TasksMealsProvider>(context, listen: false).loadUpcomingEvents();
+    Provider.of<TasksMealsProvider>(context, listen: false)
+        .loadUpcomingEvents();
   }
 
   Future<void> createOrUpdateMealData(String date, String mealName) async {
@@ -100,7 +112,8 @@ class IsarService {
         honeyDoData = task_model.HoneyDoData()..name = dataName;
         await isar.honeyDoDatas.put(honeyDoData);
       }
-      task_model.DateLinks? dateLink = await getTaskDateByDate(honeyDoData, date);
+      task_model.DateLinks? dateLink =
+          await getTaskDateByDate(honeyDoData, date);
       if (dateLink == null) {
         dateLink = task_model.DateLinks()..date = date;
         await isar.dateLinks.put(dateLink);
@@ -127,7 +140,8 @@ class IsarService {
         honeyDoData = task_model.HoneyDoData()..name = "HoneyDoData";
         await isar.honeyDoDatas.put(honeyDoData);
       }
-      task_model.DateLinks? dateLink = await getTaskDateByDate(honeyDoData, date);
+      task_model.DateLinks? dateLink =
+          await getTaskDateByDate(honeyDoData, date);
       if (dateLink == null) {
         dateLink = task_model.DateLinks()..date = date;
         await isar.dateLinks.put(dateLink);
@@ -177,8 +191,10 @@ class IsarService {
     });
   }
 
-  Future<void> onReorderTask(BuildContext context, int oldIndex, int newIndex) async {
-    TasksMealsProvider tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
+  Future<void> onReorderTask(
+      BuildContext context, int oldIndex, int newIndex) async {
+    TasksMealsProvider tasksMealsProvider =
+        Provider.of<TasksMealsProvider>(context, listen: false);
     final isar = await db;
 
     await isar.writeTxn(() async {
@@ -189,7 +205,8 @@ class IsarService {
     });
   }
 
-  Future<void> addSubTask(task_model.Task tasks, task_model.SubTask subTask, String subtitleText) async {
+  Future<void> addSubTask(task_model.Task tasks, task_model.SubTask subTask,
+      String subtitleText) async {
     final isar = await db;
     await isar.writeTxn(() async {
       //subTask.task.value = tasks;
@@ -199,7 +216,8 @@ class IsarService {
     });
   }
 
-  Future<void> addSubMeal(task_model.Meal meals, task_model.SubMeal subMeal, String subtitleText) async {
+  Future<void> addSubMeal(task_model.Meal meals, task_model.SubMeal subMeal,
+      String subtitleText) async {
     final isar = await db;
     await isar.writeTxn(() async {
       //subMeal.meal.value = meals;
@@ -272,7 +290,8 @@ class IsarService {
     });
   }
 
-  Future<void> updateSubtaskCheckedStatus(task_model.Task task, task_model.SubTask subTask) async {
+  Future<void> updateSubtaskCheckedStatus(
+      task_model.Task task, task_model.SubTask subTask) async {
     final isar = await db;
     await isar.writeTxn(() async {
       await isar.subTasks.put(subTask);
@@ -297,5 +316,33 @@ class IsarService {
     final isar = await db;
     final weatherData = await isar.weatherDatas.where().findFirst();
     return weatherData!.formattedCity;
+  }
+
+  Future<void> saveWindowSizeAndPosition() async {
+    final isar = await db;
+
+    Size size = appWindow.size;
+    Offset position = appWindow.position;
+
+    final settings = WindowSettings(
+      x: position.dx,
+      y: position.dy,
+      width: size.width,
+      height: size.height,
+    );
+
+    await isar.writeTxn(() async {
+      await isar.windowSettings.put(settings);
+    });
+  }
+
+  Future<void> restoreWindowSizeAndPosition() async {
+    final isar = await db;
+    final settings = await isar.windowSettings.get(1);
+
+    if (settings != null) {
+      appWindow.size = Size(settings.width, settings.height);
+      appWindow.position = Offset(settings.x, settings.y);
+    }
   }
 }

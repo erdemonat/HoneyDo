@@ -18,8 +18,8 @@ class ProgressBar extends StatelessWidget {
     final Brightness brightness = Theme.of(context).brightness;
     Color activeColor = Theme.of(context).colorScheme.tertiary;
     final Color inactiveColor = brightness == Brightness.dark
-        ? Theme.of(context).colorScheme.inversePrimary.withOpacity(0.4)
-        : Theme.of(context).colorScheme.inversePrimary.withOpacity(0.4);
+        ? Theme.of(context).colorScheme.inversePrimary.withOpacity(0.5)
+        : Theme.of(context).colorScheme.inversePrimary.withOpacity(0.5);
 
     List<LinearMarkerPointer> markerPointers = [];
 

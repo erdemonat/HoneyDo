@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:honeydo/constants/constants.dart';
 import 'package:honeydo/components/pomodoro_components/digit_text_field.dart';
+import 'package:honeydo/providers/audio_player_provider.dart';
 import 'package:honeydo/providers/settings_provider.model.dart';
 import 'package:provider/provider.dart';
 
@@ -13,7 +13,8 @@ class PomodoroSettings extends StatefulWidget {
   final bool autoBreak;
   final bool autoPomodoro;
 
-  final Function(int pomodoro, int shortBreak, int longBreak, int setCount, bool autoBreak, bool autoPomodoro) onSettingsChanged;
+  final Function(int pomodoro, int shortBreak, int longBreak, int setCount,
+      bool autoBreak, bool autoPomodoro) onSettingsChanged;
   const PomodoroSettings({
     super.key,
     required this.userPomodoroDuration,
@@ -51,6 +52,8 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
   @override
   Widget build(BuildContext context) {
     final settingsProvider = Provider.of<SettingsProvider>(context);
+    final playerProvider =
+        Provider.of<SoundEffectProvider>(context, listen: false);
 
     return Container(
       padding: const EdgeInsets.all(16.0),
@@ -65,7 +68,7 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
                 onChanged: (String value) {
                   pomodoroDuration = int.tryParse(value) ?? pomodoroDuration;
                 },
-                maxValue: 300,
+                maxValue: 254,
               ),
               DigitTextField(
                 labelText: "Set",
@@ -73,7 +76,7 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
                 onChanged: (value) {
                   setCount = int.tryParse(value) ?? setCount;
                 },
-                maxValue: 12,
+                maxValue: 10,
               ),
             ],
           ),
@@ -83,9 +86,10 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
                 labelText: "Kısa Mola",
                 userInput: shortBreakDuration,
                 onChanged: (String value) {
-                  shortBreakDuration = int.tryParse(value) ?? shortBreakDuration;
+                  shortBreakDuration =
+                      int.tryParse(value) ?? shortBreakDuration;
                 },
-                maxValue: 300,
+                maxValue: 254,
               ),
               DigitTextField(
                 labelText: "Uzun Mola",
@@ -93,7 +97,7 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
                 onChanged: (String value) {
                   longBreakDuration = int.tryParse(value) ?? longBreakDuration;
                 },
-                maxValue: 300,
+                maxValue: 254,
               ),
             ],
           ),
@@ -104,7 +108,8 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
             inactiveThumbColor: Theme.of(context).colorScheme.tertiary,
             inactiveTrackColor: Theme.of(context).colorScheme.surface,
             splashRadius: 0,
-            trackOutlineColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.tertiary),
+            trackOutlineColor:
+                WidgetStatePropertyAll(Theme.of(context).colorScheme.tertiary),
             title: Text(
               'Oto. Mola',
               style: kPomodoroSettingsTextStyle(context),
@@ -114,6 +119,7 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
               setState(() {
                 autoBreak = !autoBreak;
               });
+              playerProvider.playSound(value ? 'happyPop2' : 'happyPop1');
             },
           ),
           SwitchListTile(
@@ -122,7 +128,8 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
             inactiveThumbColor: Theme.of(context).colorScheme.tertiary,
             inactiveTrackColor: Theme.of(context).colorScheme.surface,
             splashRadius: 0,
-            trackOutlineColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.tertiary),
+            trackOutlineColor:
+                WidgetStatePropertyAll(Theme.of(context).colorScheme.tertiary),
             title: Text(
               'Oto. Pomodoro',
               style: kPomodoroSettingsTextStyle(context),
@@ -132,6 +139,7 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
               setState(() {
                 autoPomodoro = !autoPomodoro;
               });
+              playerProvider.playSound(value ? 'happyPop2' : 'happyPop1');
             },
           ),
           const SizedBox(height: 16),
@@ -168,6 +176,7 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
                     autoPomodoro,
                   );
                   settingsProvider.toggleSettingsCard();
+                  playerProvider.playSound('minimalPop4');
                 },
                 icon: const Icon(Icons.check),
               ),

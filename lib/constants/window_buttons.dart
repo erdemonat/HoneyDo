@@ -1,5 +1,6 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:honeydo/main.dart';
 
 class WindowButtons extends StatelessWidget {
   const WindowButtons({super.key});
@@ -9,8 +10,7 @@ class WindowButtons extends StatelessWidget {
     var buttonColors = WindowButtonColors(
       normal: Colors.transparent,
       iconNormal: Theme.of(context).colorScheme.tertiary,
-      mouseOver:
-          Theme.of(context).colorScheme.primary,
+      mouseOver: Theme.of(context).colorScheme.primary,
       mouseDown: Theme.of(context).colorScheme.onPrimary,
       iconMouseOver: Theme.of(context).colorScheme.tertiary,
       iconMouseDown: Theme.of(context).colorScheme.onSurface,
@@ -24,6 +24,10 @@ class WindowButtons extends StatelessWidget {
           colors: buttonColors,
         ),
         CloseWindowButton(
+          onPressed: () async {
+            await isarService.saveWindowSizeAndPosition();
+            appWindow.close();
+          },
           colors: buttonColors,
         ),
       ],

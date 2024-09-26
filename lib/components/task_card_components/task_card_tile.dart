@@ -44,7 +44,8 @@ class TaskCardTileState extends State<TaskCardTile> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      final tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
+      final tasksMealsProvider =
+          Provider.of<TasksMealsProvider>(context, listen: false);
       tasksMealsProvider.loadSubTasks(widget.tasks);
     });
   }
@@ -56,18 +57,22 @@ class TaskCardTileState extends State<TaskCardTile> {
   }
 
   Future<void> _deleteSubTask(int taskId, String subtitleText) async {
-    final tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
+    final tasksMealsProvider =
+        Provider.of<TasksMealsProvider>(context, listen: false);
     await tasksMealsProvider.deleteSubTask(taskId, subtitleText);
     await tasksMealsProvider.loadSubTasks(widget.tasks);
   }
 
   @override
   Widget build(BuildContext context) {
-    final tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
+    final tasksMealsProvider =
+        Provider.of<TasksMealsProvider>(context, listen: false);
     final subTasks = tasksMealsProvider.getSubTask(widget.tasks.id);
-    final completedPercantage = tasksMealsProvider.completedSubtasksPercentage(widget.tasks.id);
+    final completedPercantage =
+        tasksMealsProvider.completedSubtasksPercentage(widget.tasks.id);
 
-    _currentExpandedHeight = _expandedBaseHeight + subTasks.length * _subtitleHeightIncrement;
+    _currentExpandedHeight =
+        _expandedBaseHeight + subTasks.length * _subtitleHeightIncrement;
     if (_cardHeight > _collapsedHeight) {
       _cardHeight = _currentExpandedHeight;
     }
@@ -89,16 +94,26 @@ class TaskCardTileState extends State<TaskCardTile> {
                       alignment: Alignment.center,
                       children: [
                         Text(
-                          widget.tasks.isChecked ? '%100' : '%${completedPercantage.toStringAsFixed(0)}',
-                          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary, fontSize: 14),
+                          widget.tasks.isChecked
+                              ? '%100'
+                              : '%${completedPercantage.toStringAsFixed(0)}',
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.tertiary,
+                              fontSize: 13),
                         ),
                         SizedBox(
                           width: 30,
                           height: 30,
                           child: CircularProgressIndicator(
-                            backgroundColor: Theme.of(context).colorScheme.tertiary.withOpacity(0.3),
+                            backgroundColor: Theme.of(context)
+                                .colorScheme
+                                .tertiary
+                                .withOpacity(0.4),
                             strokeCap: StrokeCap.round,
-                            value: (widget.tasks.isChecked ? 100 : completedPercantage) / 100,
+                            value: (widget.tasks.isChecked
+                                    ? 100
+                                    : completedPercantage) /
+                                100,
                             color: Theme.of(context).colorScheme.tertiary,
                             strokeAlign: 3,
                           ),
@@ -112,7 +127,8 @@ class TaskCardTileState extends State<TaskCardTile> {
                   padding: const EdgeInsets.only(right: 10),
                   child: ProgressBar(
                     subTaskLength: subTasks.length,
-                    completedTasks: tasksMealsProvider.completedSubTaskCount(widget.tasks.id),
+                    completedTasks: tasksMealsProvider
+                        .completedSubTaskCount(widget.tasks.id),
                     isTaskChecked: widget.tasks.isChecked,
                   ),
                 ),
@@ -125,10 +141,12 @@ class TaskCardTileState extends State<TaskCardTile> {
                       task: widget.tasks,
                       onPressed: _toggleCardHeight,
                       onTaskChecked: (bool isChecked) {
-                        tasksMealsProvider.updateTaskCheckedStatus(widget.tasks);
+                        tasksMealsProvider
+                            .updateTaskCheckedStatus(widget.tasks);
                       },
                     ),
-                    if (_cardHeight > _collapsedHeight) const SizedBox(height: 20),
+                    if (_cardHeight > _collapsedHeight)
+                      const SizedBox(height: 20),
                     if (_cardHeight > _collapsedHeight)
                       Expanded(
                         child: SingleChildScrollView(
@@ -141,13 +159,18 @@ class TaskCardTileState extends State<TaskCardTile> {
                                 },
                                 onSubtaskChanged: (index, isChecked) {
                                   int subTaskId = subTasks[index].id;
-                                  tasksMealsProvider.updateSubtaskCheckedStatus(widget.tasks.id, subTaskId, isChecked);
+                                  tasksMealsProvider.updateSubtaskCheckedStatus(
+                                      widget.tasks.id,
+                                      subTaskId,
+                                      isChecked,
+                                      context);
                                 },
                               ),
                               SubItemTextField(
                                 controller: _subtitleController,
                                 onSubmitted: (p0) {
-                                  tasksMealsProvider.addSubTask(widget.tasks, _subtitleController.text);
+                                  tasksMealsProvider.addSubTask(
+                                      widget.tasks, _subtitleController.text);
                                   tasksMealsProvider.loadSubTasks(widget.tasks);
                                   _subtitleController.clear();
                                 },

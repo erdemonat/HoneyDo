@@ -35,7 +35,7 @@ const WeatherDataSchema = CollectionSchema(
     r'temperature': PropertySchema(
       id: 3,
       name: r'temperature',
-      type: IsarType.double,
+      type: IsarType.string,
     ),
     r'weatherStatus': PropertySchema(
       id: 4,
@@ -66,6 +66,7 @@ int _weatherDataEstimateSize(
   bytesCount += 3 + object.city.length * 3;
   bytesCount += 3 + object.formattedCity.length * 3;
   bytesCount += 3 + object.iconCode.length * 3;
+  bytesCount += 3 + object.temperature.length * 3;
   bytesCount += 3 + object.weatherStatus.length * 3;
   return bytesCount;
 }
@@ -79,7 +80,7 @@ void _weatherDataSerialize(
   writer.writeString(offsets[0], object.city);
   writer.writeString(offsets[1], object.formattedCity);
   writer.writeString(offsets[2], object.iconCode);
-  writer.writeDouble(offsets[3], object.temperature);
+  writer.writeString(offsets[3], object.temperature);
   writer.writeString(offsets[4], object.weatherStatus);
 }
 
@@ -94,7 +95,7 @@ WeatherData _weatherDataDeserialize(
   object.formattedCity = reader.readString(offsets[1]);
   object.iconCode = reader.readString(offsets[2]);
   object.id = id;
-  object.temperature = reader.readDouble(offsets[3]);
+  object.temperature = reader.readString(offsets[3]);
   object.weatherStatus = reader.readString(offsets[4]);
   return object;
 }
@@ -113,7 +114,7 @@ P _weatherDataDeserializeProp<P>(
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 4:
       return (reader.readString(offset)) as P;
     default:
@@ -671,57 +672,57 @@ extension WeatherDataQueryFilter
 
   QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
       temperatureEqualTo(
-    double value, {
-    double epsilon = Query.epsilon,
+    String value, {
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'temperature',
         value: value,
-        epsilon: epsilon,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
       temperatureGreaterThan(
-    double value, {
+    String value, {
     bool include = false,
-    double epsilon = Query.epsilon,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'temperature',
         value: value,
-        epsilon: epsilon,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
       temperatureLessThan(
-    double value, {
+    String value, {
     bool include = false,
-    double epsilon = Query.epsilon,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'temperature',
         value: value,
-        epsilon: epsilon,
+        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
       temperatureBetween(
-    double lower,
-    double upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    double epsilon = Query.epsilon,
+    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -730,7 +731,77 @@ extension WeatherDataQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        epsilon: epsilon,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
+      temperatureStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'temperature',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
+      temperatureEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'temperature',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
+      temperatureContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'temperature',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
+      temperatureMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'temperature',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
+      temperatureIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'temperature',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<WeatherData, WeatherData, QAfterFilterCondition>
+      temperatureIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'temperature',
+        value: '',
       ));
     });
   }
@@ -1044,9 +1115,10 @@ extension WeatherDataQueryWhereDistinct
     });
   }
 
-  QueryBuilder<WeatherData, WeatherData, QDistinct> distinctByTemperature() {
+  QueryBuilder<WeatherData, WeatherData, QDistinct> distinctByTemperature(
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'temperature');
+      return query.addDistinctBy(r'temperature', caseSensitive: caseSensitive);
     });
   }
 
@@ -1085,7 +1157,7 @@ extension WeatherDataQueryProperty
     });
   }
 
-  QueryBuilder<WeatherData, double, QQueryOperations> temperatureProperty() {
+  QueryBuilder<WeatherData, String, QQueryOperations> temperatureProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'temperature');
     });

@@ -29,7 +29,7 @@ class SubItemTextField extends StatelessWidget {
             decoration: InputDecoration(
               hintText: hintext,
               hintStyle: TextStyle(
-                color: Theme.of(context).colorScheme.tertiary.withOpacity(0.3),
+                color: Theme.of(context).colorScheme.tertiary.withOpacity(0.6),
               ),
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(
@@ -44,12 +44,13 @@ class SubItemTextField extends StatelessWidget {
             bottom: 0,
             child: Dash(
               dashBorderRadius: 5,
-              dashThickness: 5,
-              dashLength: 5,
-              dashGap: 5,
+              dashThickness: 3,
+              dashLength: 3,
+              dashGap: 4,
               direction: Axis.horizontal,
               length: 175,
-              dashColor: Theme.of(context).colorScheme.tertiary.withOpacity(0.3),
+              dashColor:
+                  Theme.of(context).colorScheme.tertiary.withOpacity(0.6),
             ),
           ),
         ],

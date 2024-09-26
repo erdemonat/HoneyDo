@@ -13,10 +13,9 @@ class MotivationCard extends StatelessWidget {
     String formattedTimeWithoutYear = DateFormat('d MMMM', 'tr_TR').format(now);
     return LayoutBuilder(
       builder: (context, constraints) {
-        double fontSize = (constraints.maxWidth / 10).clamp(10, 35);
+        double fontSize = (constraints.maxHeight / 5).clamp(10, 35);
 
         return Container(
-          margin: const EdgeInsets.all(5),
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),

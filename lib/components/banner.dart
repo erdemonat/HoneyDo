@@ -14,15 +14,17 @@ class HoneydoBannerState extends State<HoneydoBanner> {
   late Timer _timer;
   String _currentWeatherTitle = '';
   int _weatherTitleIndex = 0;
-  late final List<String> _weatherTitles = Provider.of<WeatherProvider>(context, listen: false).weatherTitle;
+  late final List<String> _weatherTitles =
+      Provider.of<WeatherProvider>(context, listen: false).weatherTitle;
 
   @override
   void initState() {
     super.initState();
     Future.microtask(() {
-      final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
+      final weatherProvider =
+          Provider.of<WeatherProvider>(context, listen: false);
       weatherProvider.loadSavedCity();
-      weatherProvider.updateWeatherData();
+      weatherProvider.updateWeatherData(repeat: true);
     });
     _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
       setState(() {
@@ -40,7 +42,8 @@ class HoneydoBannerState extends State<HoneydoBanner> {
 
   @override
   Widget build(BuildContext context) {
-    final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
+    final weatherProvider =
+        Provider.of<WeatherProvider>(context, listen: false);
 
     return Center(
       child: Row(
@@ -57,11 +60,15 @@ class HoneydoBannerState extends State<HoneydoBanner> {
           RichText(
             text: TextSpan(
               text: 'Honey',
-              style: TextStyle(fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.onSurface),
+              style: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  color: Theme.of(context).colorScheme.onSurface),
               children: <TextSpan>[
                 TextSpan(
                   text: 'Do',
-                  style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurface),
+                  style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: Theme.of(context).colorScheme.onSurface),
                 ),
               ],
             ),
@@ -81,7 +88,8 @@ class HoneydoBannerState extends State<HoneydoBanner> {
             padding: const EdgeInsets.only(left: 5),
             child: Text(
               _currentWeatherTitle,
-              style: const TextStyle(fontSize: 14),
+              style: TextStyle(
+                  fontSize: 14, color: Theme.of(context).colorScheme.onSurface),
             ),
           )
         ],

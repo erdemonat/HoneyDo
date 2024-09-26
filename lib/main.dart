@@ -20,7 +20,7 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   isarService = IsarService();
   await isarService.db;
-  appWindow.size = const Size(1200, 780);
+  await isarService.restoreWindowSizeAndPosition();
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(
@@ -50,10 +50,7 @@ Future main() async {
   appWindow.show();
   doWhenWindowReady(() {
     final win = appWindow;
-    const initialSize = Size(1200, 780);
-    win.minSize = initialSize;
-    win.size = initialSize;
-    win.alignment = Alignment.center;
+    win.minSize = const Size(1200, 780);
     win.title = "HoneyDo";
     win.show();
   });
@@ -71,9 +68,7 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       locale: const Locale('tr', 'TR'),
-      supportedLocales: const [
-        Locale('tr', 'TR')
-      ],
+      supportedLocales: const [Locale('tr', 'TR')],
       theme: Provider.of<ThemeProvider>(context).getThemeData,
       debugShowCheckedModeBanner: false,
       home: const HomeScreen(),

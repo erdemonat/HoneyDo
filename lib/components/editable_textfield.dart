@@ -20,10 +20,10 @@ class EditableTextField extends StatefulWidget {
   });
 
   @override
-  _EditableTextFieldState createState() => _EditableTextFieldState();
+  EditableTextFieldState createState() => EditableTextFieldState();
 }
 
-class _EditableTextFieldState extends State<EditableTextField> {
+class EditableTextFieldState extends State<EditableTextField> {
   late ListModel model;
   bool _isEditingMode = false;
   late TextEditingController _titleEditingController;
@@ -49,15 +49,23 @@ class _EditableTextFieldState extends State<EditableTextField> {
     return ListTile(
       title: Text(
         model.title,
-        style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.secondary),
+        style: TextStyle(
+            fontSize: 13,
+            color: Theme.of(context).colorScheme.tertiary.withOpacity(0.4)),
       ),
       subtitle: _isEditingMode
           ? _subTitleTextField
-          : Text(
-              model.subTitle,
-              style: TextStyle(
-                fontSize: 16,
-                color: Theme.of(context).colorScheme.tertiary,
+          : SizedBox(
+              height: 48,
+              child: Align(
+                alignment: AlignmentDirectional.centerStart,
+                child: Text(
+                  model.subTitle,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).colorScheme.tertiary,
+                  ),
+                ),
               ),
             ),
       trailing: _isEditingMode ? _saveButton : _editButton,
@@ -66,15 +74,22 @@ class _EditableTextFieldState extends State<EditableTextField> {
   }
 
   Widget get _subTitleTextField {
-    return TextField(
-      inputFormatters: [
-        LengthLimitingTextInputFormatter(widget.maxLength),
-      ],
-      controller: _subTitleEditingController,
-      style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.tertiary.withOpacity(0.75)),
-      decoration: InputDecoration(
-        hintStyle: TextStyle(color: Theme.of(context).colorScheme.tertiary.withOpacity(0.4)),
-        hintText: widget.hintText,
+    return SizedBox(
+      height: 48,
+      child: TextField(
+        autofocus: true,
+        inputFormatters: [
+          LengthLimitingTextInputFormatter(widget.maxLength),
+        ],
+        controller: _subTitleEditingController,
+        style: TextStyle(
+            fontSize: 16, color: Theme.of(context).colorScheme.tertiary),
+        decoration: InputDecoration(
+          border: InputBorder.none,
+          hintStyle: TextStyle(
+              color: Theme.of(context).colorScheme.tertiary.withOpacity(0.4)),
+          hintText: widget.hintText,
+        ),
       ),
     );
   }
@@ -83,7 +98,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
     return IconButton(
       icon: Icon(
         Icons.edit,
-        color: Theme.of(context).colorScheme.secondary,
+        color: Theme.of(context).colorScheme.tertiary,
       ),
       onPressed: _toggleEditMode,
     );
@@ -93,7 +108,7 @@ class _EditableTextFieldState extends State<EditableTextField> {
     return IconButton(
       icon: Icon(
         Icons.check,
-        color: Theme.of(context).colorScheme.secondary,
+        color: Theme.of(context).colorScheme.tertiary,
       ),
       onPressed: _saveChanges,
     );
@@ -114,7 +129,9 @@ class _EditableTextFieldState extends State<EditableTextField> {
 
     String formattedCity = model.subTitle.replaceAll(' ', '%20').toLowerCase();
 
-    Provider.of<WeatherProvider>(context, listen: false).changeCity(formattedCity);
-    Provider.of<WeatherProvider>(context, listen: false).updateWeatherData();
+    Provider.of<WeatherProvider>(context, listen: false)
+        .changeCity(formattedCity);
+    Provider.of<WeatherProvider>(context, listen: false)
+        .updateWeatherData(repeat: false);
   }
 }

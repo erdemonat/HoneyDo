@@ -10,5 +10,5 @@ class WeatherData {
   late String formattedCity;
   late String weatherStatus;
   late String iconCode;
-  late double temperature;
+  late String temperature;
 }

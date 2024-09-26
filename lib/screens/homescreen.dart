@@ -54,31 +54,23 @@ class HomeScreenState extends State<HomeScreen> {
                   Expanded(
                     flex: 3,
                     child: Stack(
-                      //fit: StackFit.expand,
                       children: [
                         Column(
                           children: [
                             Flexible(
-                              child: Container(
+                              child: SizedBox(
                                 width: double.infinity,
                                 height: double.infinity,
                                 child: Column(
                                   children: [
-                                    Expanded(
-                                      flex: 3,
-                                      child: Container(
-                                        //margin: const EdgeInsets.all(5),
-                                        height: 200,
-                                        width: double.infinity,
-                                        child: const MotivationCard(),
-                                      ),
+                                    Container(
+                                      margin: const EdgeInsets.all(5),
+                                      height: 160,
+                                      width: double.infinity,
+                                      child: const MotivationCard(),
                                     ),
-                                    Expanded(
-                                      flex: 10,
-                                      child: Container(
-                                        //margin: const EdgeInsets.all(5),
-                                        child: const PomodoroCard(),
-                                      ),
+                                    const Expanded(
+                                      child: PomodoroCard(),
                                     ),
                                   ],
                                 ),
@@ -96,28 +88,20 @@ class HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       children: [
                         Flexible(
-                          child: Container(
+                          child: SizedBox(
                             width: double.infinity,
                             height: double.infinity,
                             child: Column(
                               children: [
-                                Expanded(
-                                  flex: 3,
-                                  child: Container(
-                                    margin: const EdgeInsets.all(5),
-                                    //color: Colors.blue,
-                                    //height: 200,
-                                    width: double.infinity,
-                                    child: const CalenderCard(),
-                                  ),
+                                Container(
+                                  margin: const EdgeInsets.all(5),
+                                  height: 160,
+                                  width: double.infinity,
+                                  child: const CalenderCard(),
                                 ),
-                                Expanded(
+                                const Expanded(
                                   flex: 10,
-                                  child: Container(
-                                    //margin: const EdgeInsets.all(5),
-
-                                    child: const TasksCard(),
-                                  ),
+                                  child: TasksCard(),
                                 ),
                               ],
                             ),

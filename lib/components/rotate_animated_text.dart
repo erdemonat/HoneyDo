@@ -10,7 +10,8 @@ class CustomRotateAnimatedText extends AnimatedText {
     String text, {
     TextAlign textAlign = TextAlign.start,
     TextStyle? textStyle,
-    Duration duration = const Duration(milliseconds: 10000), // Toplam animasyon süresi
+    Duration duration =
+        const Duration(milliseconds: 10000), // Toplam animasyon süresi
     this.transitionHeight,
     this.alignment = Alignment.center,
     this.textDirection = TextDirection.ltr,
@@ -29,7 +30,8 @@ class CustomRotateAnimatedText extends AnimatedText {
     _fadeIn = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: controller,
-        curve: Interval(0.0, 0.1, curve: Curves.easeOut), // İlk 1 saniyede fade in
+        curve:
+            Interval(0.0, 0.1, curve: Curves.easeOut), // İlk 1 saniyede fade in
       ),
     );
 
@@ -39,14 +41,16 @@ class CustomRotateAnimatedText extends AnimatedText {
     ).animate(
       CurvedAnimation(
         parent: controller,
-        curve: Interval(0.0, 0.1, curve: Curves.easeOut), // İlk 1 saniyede yukarıdan ortaya
+        curve: Interval(0.0, 0.1,
+            curve: Curves.easeOut), // İlk 1 saniyede yukarıdan ortaya
       ),
     );
 
     _fadeOut = Tween<double>(begin: 1.0, end: 0.0).animate(
       CurvedAnimation(
         parent: controller,
-        curve: Interval(0.8, 0.9, curve: Curves.easeIn), // Son 1 saniyede fade out
+        curve:
+            Interval(0.8, 0.9, curve: Curves.easeIn), // Son 1 saniyede fade out
       ),
     );
 
@@ -56,13 +60,18 @@ class CustomRotateAnimatedText extends AnimatedText {
     ).animate(
       CurvedAnimation(
         parent: controller,
-        curve: Interval(0.8, 0.9, curve: Curves.easeIn), // Son 1 saniyede aşağıya kayma
+        curve: Interval(0.8, 0.9,
+            curve: Curves.easeIn), // Son 1 saniyede aşağıya kayma
       ),
     );
   }
 
   @override
   Widget animatedBuilder(BuildContext context, Widget? child) {
+    if (_fadeOut.value == 0.0 && _slideOut.value == Alignment.bottomCenter) {
+      return const SizedBox();
+    }
+
     return Opacity(
       opacity: _fadeIn.value != 1.0 ? _fadeIn.value : _fadeOut.value,
       child: AlignTransition(

@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class ListModel {
   String title;
   String subTitle;

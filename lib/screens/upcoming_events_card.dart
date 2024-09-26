@@ -17,15 +17,16 @@ class UpcomingEventCard extends StatefulWidget {
 }
 
 class _UpcomingEventCardState extends State<UpcomingEventCard> {
-  late final TasksMealsProvider tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
-  late final List<String> _upcomingEvents = tasksMealsProvider.upcomingEvents;
+  late final TasksMealsProvider tasksMealsProvider =
+      Provider.of<TasksMealsProvider>(context, listen: false);
   bool _isDelayed = false;
 
   @override
   void initState() {
     super.initState();
     Future.microtask(() {
-      Provider.of<TasksMealsProvider>(context, listen: false).loadUpcomingEvents();
+      Provider.of<TasksMealsProvider>(context, listen: false)
+          .loadUpcomingEvents();
     });
 
     // Gecikmeyi burada ayarlıyoruz
@@ -44,14 +45,22 @@ class _UpcomingEventCardState extends State<UpcomingEventCard> {
           ? Center(
               child: tasksMealsProvider.upcomingEvents.isNotEmpty
                   ? AnimatedTextKit(
-                      repeatForever: true,
                       animatedTexts: [
-                        for (int i = 0; i < tasksMealsProvider.upcomingEvents.length; i++)
+                        for (int i = 0;
+                            i < tasksMealsProvider.upcomingEvents.length;
+                            i++)
                           CustomRotateAnimatedText(
-                            '${tasksMealsProvider.upcomingEvents[i]}',
+                            tasksMealsProvider.upcomingEvents[i],
                             textStyle: kCalendarMonthYearTextStyle(context),
                           ),
                       ],
+                      onFinished: () {
+                        setState(() {
+                          // Animasyon bittiğinde başka bir işlem yapmak istersen buraya ekleyebilirsin
+                        });
+                      },
+                      repeatForever:
+                          false, // Animasyonun tekrar etmesini istemiyorsak false yapıyoruz
                     )
                   : const Text(''),
             )

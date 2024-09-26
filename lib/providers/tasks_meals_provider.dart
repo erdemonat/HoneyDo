@@ -12,9 +12,7 @@ class TasksMealsProvider with ChangeNotifier {
   List<Task> _tasks = [];
   List<Meal> _meals = [];
 
-  List<String> _upcomingEvents = [
-    'Yarın'
-  ];
+  List<String> _upcomingEvents = ['Yarın'];
 
   Map<int, List<SubtitleItem>> _subMeals = {};
   Map<int, List<SubtitleItem>> _subTasks = {};
@@ -43,21 +41,57 @@ class TasksMealsProvider with ChangeNotifier {
   }
 
   Future<void> loadUpcomingEvents() async {
-    DateTime tomorrow = DateTime.now().add(const Duration(days: 1));
+    DateTime today = DateTime.now();
+    DateTime tomorrow = today.add(const Duration(days: 1));
+    DateTime dayAfterTomorrow = today.add(const Duration(days: 2));
+    DateTime twoDaysAfterTomorrow = today.add(const Duration(days: 3));
+    String tomorrowDay = DateFormat('EEEE', 'tr_TR').format(tomorrow);
+    String dayAfterTomorrowDay =
+        DateFormat('EEEE', 'tr_TR').format(dayAfterTomorrow);
+    String twoDaysAfterTomorrowDay =
+        DateFormat('EEEE', 'tr_TR').format(twoDaysAfterTomorrow);
+
     String formattedTomorrowDate = DateFormat('ddMMyyyy').format(tomorrow);
+    String formattedDayAfterTomorrowDate =
+        DateFormat('ddMMyyyy').format(dayAfterTomorrow);
+    String formattedTwoDaysAfterTomorrowDate =
+        DateFormat('ddMMyyyy').format(twoDaysAfterTomorrow);
 
     HoneyDoData? honeyDoData = await isarService.getTaskDataByName();
     if (honeyDoData != null) {
-      DateLinks? taskDateObj = await isarService.getTaskDateByDate(honeyDoData, formattedTomorrowDate);
-      if (taskDateObj != null) {
-        await taskDateObj.tasks.load();
-
-        _upcomingEvents = taskDateObj.tasks.where((task) => task.markColor == "4294198070").map((task) => task.name).toList();
+      DateLinks? taskDateObjTomorrow = await isarService.getTaskDateByDate(
+          honeyDoData, formattedTomorrowDate);
+      if (taskDateObjTomorrow != null) {
+        await taskDateObjTomorrow.tasks.load();
       }
-    }
 
-    notifyListeners();
-    print(upcomingEvents.toString());
+      DateLinks? taskDateObjDayAfterTomorrow = await isarService
+          .getTaskDateByDate(honeyDoData, formattedDayAfterTomorrowDate);
+      if (taskDateObjDayAfterTomorrow != null) {
+        await taskDateObjDayAfterTomorrow.tasks.load();
+      }
+
+      DateLinks? taskDateObjTwoDaysAfterTomorrow = await isarService
+          .getTaskDateByDate(honeyDoData, formattedTwoDaysAfterTomorrowDate);
+      if (taskDateObjTwoDaysAfterTomorrow != null) {
+        await taskDateObjTwoDaysAfterTomorrow.tasks.load();
+      }
+
+      _upcomingEvents = [
+        ...?taskDateObjTomorrow?.tasks
+            .where((task) => task.markColor == "4294198070")
+            .map((task) => '$tomorrowDay: ${task.name}')
+            .toList(),
+        ...?taskDateObjDayAfterTomorrow?.tasks
+            .where((task) => task.markColor == "4294198070")
+            .map((task) => '$dayAfterTomorrowDay: ${task.name}')
+            .toList(),
+        ...?taskDateObjTwoDaysAfterTomorrow?.tasks
+            .where((task) => task.markColor == "4294198070")
+            .map((task) => '$twoDaysAfterTomorrowDay: ${task.name}')
+            .toList(),
+      ];
+    }
   }
 
   double completedSubtasksPercentage(int taskId) {
@@ -74,28 +108,34 @@ class TasksMealsProvider with ChangeNotifier {
   }
 
   Future<void> loadTasks(BuildContext context) async {
-    String taskDate = Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
+    String taskDate =
+        Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
 
     HoneyDoData? honeyDoData = await isarService.getTaskDataByName();
     if (honeyDoData != null) {
-      DateLinks? taskDateObj = await isarService.getTaskDateByDate(honeyDoData, taskDate);
+      DateLinks? taskDateObj =
+          await isarService.getTaskDateByDate(honeyDoData, taskDate);
       if (taskDateObj != null) {
         await taskDateObj.tasks.load();
-        _tasks = taskDateObj.tasks.toList()..sort((a, b) => a.order.compareTo(b.order));
+        _tasks = taskDateObj.tasks.toList()
+          ..sort((a, b) => a.order.compareTo(b.order));
       }
     }
     notifyListeners();
   }
 
   Future<void> loadMeals(BuildContext context) async {
-    String mealDate = Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
+    String mealDate =
+        Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
 
     HoneyDoData? honeyDoData = await isarService.getTaskDataByName();
     if (honeyDoData != null) {
-      DateLinks? mealDateObj = await isarService.getTaskDateByDate(honeyDoData, mealDate);
+      DateLinks? mealDateObj =
+          await isarService.getTaskDateByDate(honeyDoData, mealDate);
       if (mealDateObj != null) {
         await mealDateObj.meals.load();
-        _meals = mealDateObj.meals.toList()..sort((a, b) => a.order.compareTo(b.order));
+        _meals = mealDateObj.meals.toList()
+          ..sort((a, b) => a.order.compareTo(b.order));
       }
     }
 
@@ -106,18 +146,21 @@ class TasksMealsProvider with ChangeNotifier {
     await IsarService().deleteTask(index, _tasks);
     _tasks.removeAt(index);
     loadUpcomingEvents();
-    Provider.of<SoundEffectProvider>(context, listen: false).playSound('doorClosing');
+    Provider.of<SoundEffectProvider>(context, listen: false)
+        .playSound('arcade4');
     notifyListeners();
   }
 
   void removeMeal(BuildContext context, int index) async {
     await IsarService().deleteMeal(index, _meals);
     _meals.removeAt(index);
-    Provider.of<SoundEffectProvider>(context, listen: false).playSound('doorClosing');
+    Provider.of<SoundEffectProvider>(context, listen: false)
+        .playSound('arcade4');
     notifyListeners();
   }
 
-  Future<void> onReorderMeal(BuildContext context, int oldIndex, int newIndex) async {
+  Future<void> onReorderMeal(
+      BuildContext context, int oldIndex, int newIndex) async {
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }
@@ -131,7 +174,8 @@ class TasksMealsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> onReorderTask(BuildContext context, int oldIndex, int newIndex) async {
+  Future<void> onReorderTask(
+      BuildContext context, int oldIndex, int newIndex) async {
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }
@@ -215,14 +259,16 @@ class TasksMealsProvider with ChangeNotifier {
 
     List<SubtitleItem> subtitles = [];
     for (final subTask in task.subtasks) {
-      subtitles.add(SubtitleItem(id: subTask.id, text: subTask.name, isChecked: subTask.isChecked));
+      subtitles.add(SubtitleItem(
+          id: subTask.id, text: subTask.name, isChecked: subTask.isChecked));
     }
 
     _subTasks[task.id] = subtitles;
     notifyListeners();
   }
 
-  Future<void> updateTaskMarkStatus(Task task, String color, bool isMarked) async {
+  Future<void> updateTaskMarkStatus(
+      Task task, String color, bool isMarked) async {
     task.markColor = color;
     task.isMarked = isMarked;
     await isarService.updateTask(task);
@@ -237,7 +283,8 @@ class TasksMealsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateSubtaskCheckedStatus(int taskId, int subTaskId, bool isChecked) async {
+  Future<void> updateSubtaskCheckedStatus(
+      int taskId, int subTaskId, bool isChecked, BuildContext context) async {
     Task task = _tasks.firstWhere((t) => t.id == taskId);
 
     SubTask subTask = task.subtasks.firstWhere((st) => st.id == subTaskId);
@@ -248,7 +295,11 @@ class TasksMealsProvider with ChangeNotifier {
 
     bool allChecked = task.subtasks.every((st) => st.isChecked);
     if (allChecked) {
+      Provider.of<SoundEffectProvider>(context, listen: false)
+          .playSound('arcade1');
+
       task.isChecked = true;
+
       await isarService.updateTask(task);
     }
     if (!allChecked) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:honeydo/constants/constants.dart';
 import 'package:honeydo/model/task_model.dart';
+import 'package:honeydo/providers/audio_player_provider.dart';
 import 'package:honeydo/providers/tasks_meals_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -30,6 +31,10 @@ class TaskTitleState extends State<TaskTitle> {
           onChanged: (value) {
             if (value != null) {
               widget.onTaskChecked(value);
+              if (value) {
+                Provider.of<SoundEffectProvider>(context, listen: false)
+                    .playSound('arcade1');
+              }
             }
           },
           activeColor: Theme.of(context).colorScheme.surface,
@@ -85,12 +90,14 @@ class TaskTitleState extends State<TaskTitle> {
             widget.task.isMarked = true;
           });
 
-          Provider.of<TasksMealsProvider>(context, listen: false).updateTaskMarkStatus(widget.task, color.value.toString(), true);
+          Provider.of<TasksMealsProvider>(context, listen: false)
+              .updateTaskMarkStatus(widget.task, color.value.toString(), true);
 
           overlayEntry.remove();
         },
         onClear: () async {
-          await Provider.of<TasksMealsProvider>(context, listen: false).updateTaskMarkStatus(widget.task, "", false);
+          await Provider.of<TasksMealsProvider>(context, listen: false)
+              .updateTaskMarkStatus(widget.task, "", false);
           overlayEntry.remove();
         },
       ),
@@ -117,7 +124,8 @@ class _AnimatedOverlay extends StatefulWidget {
   __AnimatedOverlayState createState() => __AnimatedOverlayState();
 }
 
-class __AnimatedOverlayState extends State<_AnimatedOverlay> with SingleTickerProviderStateMixin {
+class __AnimatedOverlayState extends State<_AnimatedOverlay>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
   Color? _hoveredColor;
@@ -221,7 +229,8 @@ class __AnimatedOverlayState extends State<_AnimatedOverlay> with SingleTickerPr
       },
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(width: 2.0, color: Theme.of(context).colorScheme.tertiary),
+          border: Border.all(
+              width: 2.0, color: Theme.of(context).colorScheme.tertiary),
           color: color,
           borderRadius: BorderRadius.circular(_hoveredColor == color ? 6 : 16),
         ),
@@ -241,7 +250,8 @@ class __AnimatedOverlayState extends State<_AnimatedOverlay> with SingleTickerPr
       },
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(width: 2.0, color: Theme.of(context).colorScheme.tertiary),
+          border: Border.all(
+              width: 2.0, color: Theme.of(context).colorScheme.tertiary),
           color: color,
           borderRadius: BorderRadius.circular(_hoveredColor == color ? 6 : 16),
         ),
