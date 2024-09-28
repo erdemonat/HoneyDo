@@ -57,12 +57,12 @@ class TaskTitleState extends State<TaskTitle> {
                       ? TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w500,
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.tertiary,
                           decoration: TextDecoration.lineThrough,
                           decorationThickness: 24,
                           decorationColor: Color(
                             int.parse(widget.task.markColor),
-                          ).withOpacity(0.25),
+                          ).withOpacity(0.3),
                         )
                       : kCardTitleTextStyle(context),
                 ),

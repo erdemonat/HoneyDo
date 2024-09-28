@@ -5,18 +5,20 @@ class SubItemTextField extends StatelessWidget {
   final TextEditingController controller;
   final Function(String) onSubmitted;
   final String hintext;
+  final double paddingHorizontal;
+  final double dotLenght;
 
   const SubItemTextField({
     super.key,
     required this.controller,
     required this.onSubmitted,
-    required this.hintext,
+    required this.hintext, required this.paddingHorizontal, required this.dotLenght,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding:  EdgeInsets.symmetric(vertical: 6, horizontal: paddingHorizontal),
       child: Stack(
         children: [
           TextField(
@@ -27,6 +29,10 @@ class SubItemTextField extends StatelessWidget {
               }
             },
             decoration: InputDecoration(
+              prefixIcon: const Icon(
+                Icons.add,
+                size: 18,
+              ),
               hintText: hintext,
               hintStyle: TextStyle(
                 color: Theme.of(context).colorScheme.tertiary.withOpacity(0.6),
@@ -48,7 +54,7 @@ class SubItemTextField extends StatelessWidget {
               dashLength: 3,
               dashGap: 4,
               direction: Axis.horizontal,
-              length: 175,
+              length: dotLenght,
               dashColor:
                   Theme.of(context).colorScheme.tertiary.withOpacity(0.6),
             ),

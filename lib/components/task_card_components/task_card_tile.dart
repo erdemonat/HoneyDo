@@ -174,7 +174,9 @@ class TaskCardTileState extends State<TaskCardTile> {
                                   tasksMealsProvider.loadSubTasks(widget.tasks);
                                   _subtitleController.clear();
                                 },
-                                hintext: 'Yaptıklarını yazacaksın',
+                                hintext: 'Nota detay ekle',
+                                paddingHorizontal: 10,
+                                dotLenght: 150,
                               ),
                             ],
                           ),

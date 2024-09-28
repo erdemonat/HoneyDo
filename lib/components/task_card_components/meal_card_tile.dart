@@ -43,7 +43,8 @@ class MealCardTileState extends State<MealCardTile> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      final tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
+      final tasksMealsProvider =
+          Provider.of<TasksMealsProvider>(context, listen: false);
       tasksMealsProvider.loadSubMeals(widget.meals);
     });
   }
@@ -55,7 +56,8 @@ class MealCardTileState extends State<MealCardTile> {
   }
 
   Future<void> _deleteSubMeal(int mealId, String subtitleText) async {
-    final tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
+    final tasksMealsProvider =
+        Provider.of<TasksMealsProvider>(context, listen: false);
     try {
       await tasksMealsProvider.deleteSubMeal(mealId, subtitleText);
     } catch (e) {
@@ -66,11 +68,13 @@ class MealCardTileState extends State<MealCardTile> {
 
   @override
   Widget build(BuildContext context) {
-    final taskMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
+    final taskMealsProvider =
+        Provider.of<TasksMealsProvider>(context, listen: false);
 
     final subMeals = taskMealsProvider.getSubMeals(widget.meals.id);
 
-    _currentExpandedHeight = _expandedBaseHeight + subMeals.length * _subtitleHeightIncrement;
+    _currentExpandedHeight =
+        _expandedBaseHeight + subMeals.length * _subtitleHeightIncrement;
     if (_cardHeight > _collapsedHeight) {
       _cardHeight = _currentExpandedHeight;
     }
@@ -119,11 +123,14 @@ class MealCardTileState extends State<MealCardTile> {
                               SubItemTextField(
                                 controller: _subtitleController,
                                 onSubmitted: (p0) {
-                                  taskMealsProvider.addSubMeal(widget.meals, _subtitleController.text);
+                                  taskMealsProvider.addSubMeal(
+                                      widget.meals, _subtitleController.text);
                                   taskMealsProvider.loadSubMeals(widget.meals);
                                   _subtitleController.clear();
                                 },
-                                hintext: 'Yediklerini yaz',
+                                hintext: 'Öğün içeriği ekle',
+                                paddingHorizontal: 1,
+                                dotLenght: 160,
                               ),
                             ],
                           ),

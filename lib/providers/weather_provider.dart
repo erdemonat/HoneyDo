@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:honeydo/main.dart';
 import 'package:honeydo/model/weather_model.dart';
 import 'package:honeydo/service/networking.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class WeatherProvider with ChangeNotifier {
   static const openWeatherMapURL =
@@ -96,37 +97,90 @@ class WeatherProvider with ChangeNotifier {
     }
   }
 
-  IconData getWeatherIcon(String iconCode) {
+  Widget getWeatherIcon(BuildContext context, String iconCode) {
+    // Clear sky
     switch (iconCode) {
       case '01d':
       case '01n':
-        return Icons.wb_sunny; // Clear sky
+        return Icon(
+          Icons.wb_sunny,
+          size: 18,
+          color: Theme.of(context).colorScheme.onSurface,
+        );
+      // Few clouds
       case '02d':
       case '02n':
-        return Icons.cloud; // Few clouds
+        return Icon(
+          Icons.cloud,
+          size: 18,
+          color: Theme.of(context).colorScheme.onSurface,
+        );
+      // Scattered clouds
       case '03d':
       case '03n':
-        return Icons.cloud; // Scattered clouds
+        return Icon(
+          Icons.cloud,
+          size: 18,
+          color: Theme.of(context).colorScheme.onSurface,
+        );
+      // Broken clouds
       case '04d':
       case '04n':
-        return Icons.cloud; // Broken clouds
+        return Icon(
+          Icons.cloud,
+          size: 18,
+          color: Theme.of(context).colorScheme.onSurface,
+        );
+      // Shower rain
       case '09d':
       case '09n':
-        return Icons.grain; // Shower rain
+        return Icon(
+          Icons.grain,
+          size: 18,
+          color: Theme.of(context).colorScheme.onSurface,
+        );
+      // Rain
       case '10d':
       case '10n':
-        return Icons.beach_access; // Rain
+        return Icon(
+          Icons.beach_access,
+          size: 18,
+          color: Theme.of(context).colorScheme.onSurface,
+        );
+      // Thunderstorm
       case '11d':
       case '11n':
-        return Icons.flash_on; // Thunderstorm
+        return Icon(
+          Icons.flash_on,
+          size: 18,
+          color: Theme.of(context).colorScheme.onSurface,
+        );
+      // Snow
       case '13d':
       case '13n':
-        return Icons.ac_unit; // Snow
+        return Icon(
+          Icons.ac_unit,
+          size: 18,
+          color: Theme.of(context).colorScheme.onSurface,
+        );
+      // Mist
       case '50d':
       case '50n':
-        return Icons.filter_drama; // Mist
+        return Icon(
+          Icons.filter_drama,
+          size: 18,
+          color: Theme.of(context).colorScheme.onSurface,
+        );
+      // Unknown weather condition
       default:
-        return Icons.settings_backup_restore; // Unknown weather condition
+        return SizedBox(
+          width: 15,
+          height: 15,
+          child: LoadingAnimationWidget.waveDots(
+            color: Theme.of(context).colorScheme.onSurface,
+            size: 20,
+          ),
+        );
     }
   }
 }

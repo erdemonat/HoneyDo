@@ -4,6 +4,9 @@ import 'package:audioplayers/audioplayers.dart';
 class SoundEffectProvider with ChangeNotifier {
   final AudioPlayer _audioPlayer = AudioPlayer();
 
+  double _currentVolume = 0.5;
+  double get currentVolume => _currentVolume;
+
   final Map<String, String> _soundEffects = {
     'arcade1': 'sfx/arcade-ui-1.mp3',
     'arcade4': 'sfx/arcade-ui-4.mp3',
@@ -25,12 +28,22 @@ class SoundEffectProvider with ChangeNotifier {
     try {
       await _audioPlayer.stop();
       await _audioPlayer.play(AssetSource(_soundEffects[audioId]!),
-          volume: 0.3);
+          volume: _currentVolume);
     } catch (e) {
-      // Hata işleme
       print("Sound effect failed to play: $e");
     }
   }
+
+  Future<void> updateVolume(double volume) async {
+    _currentVolume = volume;
+    try {
+      await _audioPlayer.setVolume(volume);
+    } catch (e) {
+      print("Failed to update volume: $e");
+    }
+    notifyListeners();
+  }
+  
 
   @override
   void dispose() {

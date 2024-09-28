@@ -117,7 +117,7 @@ class _CalenderCardState extends State<CalenderCard> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               EasyInfiniteDateTimeLine(
-                dayProps: EasyDayProps(width: 125, height: 105),
+                dayProps: const EasyDayProps(width: 125, height: 105),
                 itemBuilder: (context, date, isSelected, onTap) {
                   final dayName = DateFormat('EE', 'tr_TR').format(date);
                   return InkWell(
@@ -177,7 +177,7 @@ class _CalenderCardState extends State<CalenderCard> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
                       color: Theme.of(context).colorScheme.surface),
-                  child: UpcomingEventCard(),
+                  child: const UpcomingEventCard(),
                 ),
               ),
             ],

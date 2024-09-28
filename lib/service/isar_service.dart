@@ -2,6 +2,7 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:honeydo/model/pomodoro_model.dart' as pomodoro_model;
 import 'package:honeydo/model/task_model.dart' as task_model;
+import 'package:honeydo/model/volume_model.dart';
 import 'package:honeydo/model/weather_model.dart';
 import 'package:honeydo/model/window_model.dart';
 import 'package:honeydo/providers/tasks_meals_provider.dart';
@@ -25,6 +26,7 @@ class IsarService {
           task_model.SubMealSchema,
           WeatherDataSchema,
           WindowSettingsSchema,
+          VolumeDataSchema,
         ],
         directory: dir.path,
       );
@@ -344,5 +346,22 @@ class IsarService {
       appWindow.size = Size(settings.width, settings.height);
       appWindow.position = Offset(settings.x, settings.y);
     }
+  }
+
+  Future<void> saveVolumeData(
+      double currentProviderSoundValue, double currentSliderValue) async {
+    final isar = await db;
+    final volumeData = VolumeData()
+      ..currentProviderSoundValue = currentProviderSoundValue
+      ..currentSliderValue = currentSliderValue;
+
+    await isar.writeTxn(() async {
+      await isar.volumeDatas.put(volumeData);
+    });
+  }
+
+  Future<VolumeData?> getVolumeData() async {
+    final isar = await db;
+    return await isar.volumeDatas.get(1);
   }
 }

@@ -80,7 +80,15 @@ class _TasksCardState extends State<TasksCard> {
           taskMealToggle
               ? Expanded(
                   child: tasksMealsProvider.meals.isEmpty
-                      ? const Text('Yediklerin yazılmamış..')
+                      ? Center(
+                          child: Text(
+                            'Günlük öğünlerini ve içeriğini \nburaya ekleyebilirsin.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 24,
+                                color: Theme.of(context).colorScheme.primary),
+                          ),
+                        )
                       : ListView.builder(
                           itemCount: tasksMealsProvider.meals.length,
                           itemBuilder: (context, index) {
@@ -128,7 +136,15 @@ class _TasksCardState extends State<TasksCard> {
                 )
               : Expanded(
                   child: tasksMealsProvider.tasks.isEmpty
-                      ? const Text('Yapılacaklar yazılmamış ....')
+                      ? Center(
+                          child: Text(
+                            'Burada hiç not yok :( \n İlk notunu eklemeye ne dersin ?',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 24,
+                                color: Theme.of(context).colorScheme.primary),
+                          ),
+                        )
                       : ListView.builder(
                           itemCount: tasksMealsProvider.tasks.length,
                           itemBuilder: (context, index) {

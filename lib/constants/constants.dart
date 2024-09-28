@@ -4,15 +4,15 @@ TextStyle kCardTitleTextStyle(BuildContext context) {
   return TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.w500,
-    color: Colors.white,
+    color: Theme.of(context).colorScheme.tertiary,
   );
 }
 
 TextStyle kCardSubTitleTextStyle(BuildContext context) {
-  return const TextStyle(
+  return TextStyle(
     fontSize: 16,
-    fontWeight: FontWeight.w300,
-    color: Colors.white,
+    fontWeight: FontWeight.w400,
+    color: Theme.of(context).colorScheme.tertiary,
   );
 }
 
@@ -60,7 +60,10 @@ TextStyle kCalendarMonthYearTextStyle(BuildContext context) {
 TextStyle kPomodoroStatusTextStyle(BuildContext context) {
   // Metin boyutunu ekrana göre ayarlama
 
-  return TextStyle(color: Theme.of(context).colorScheme.tertiary, fontSize: 18, fontWeight: FontWeight.bold
+  return TextStyle(
+      color: Theme.of(context).colorScheme.tertiary,
+      fontSize: 18,
+      fontWeight: FontWeight.bold
       // fontFeatures: const [FontFeature.enable('smcp')],
       );
 }

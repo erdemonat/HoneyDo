@@ -23,7 +23,7 @@ class MealSubtitleListTile extends StatelessWidget {
             onDelete(index, subMealTitles[index].text);
           },
           child: ListTile(
-            leading: Text(
+            leading: const Text(
               '•',
               style: TextStyle(fontSize: 24),
             ),
