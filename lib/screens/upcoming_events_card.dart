@@ -29,7 +29,7 @@ class _UpcomingEventCardState extends State<UpcomingEventCard>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 7), // Total animation duration
+      duration: const Duration(seconds: 7),
     );
 
     _initAnimations();
@@ -37,8 +37,6 @@ class _UpcomingEventCardState extends State<UpcomingEventCard>
     Future.microtask(() {
       tasksMealsProvider.loadUpcomingEvents();
     });
-
-    // Delay for 3 seconds before showing content
     Future.delayed(const Duration(seconds: 3), () {
       setState(() {
         _isDelayed = true;
@@ -48,7 +46,6 @@ class _UpcomingEventCardState extends State<UpcomingEventCard>
   }
 
   void _initAnimations() {
-    // Fade-in animation (first 1 second)
     _fadeIn = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _controller,
@@ -56,7 +53,6 @@ class _UpcomingEventCardState extends State<UpcomingEventCard>
       ),
     );
 
-    // Slide-in animation (first 1 second)
     _slideIn = AlignmentTween(
       begin: Alignment.topCenter,
       end: Alignment.center,
@@ -67,7 +63,6 @@ class _UpcomingEventCardState extends State<UpcomingEventCard>
       ),
     );
 
-    // Fade-out animation (last 1 second)
     _fadeOut = Tween<double>(begin: 1.0, end: 0.0).animate(
       CurvedAnimation(
         parent: _controller,
@@ -75,7 +70,6 @@ class _UpcomingEventCardState extends State<UpcomingEventCard>
       ),
     );
 
-    // Slide-out animation (last 1 second)
     _slideOut = AlignmentTween(
       begin: Alignment.center,
       end: Alignment.bottomCenter,
@@ -89,18 +83,13 @@ class _UpcomingEventCardState extends State<UpcomingEventCard>
 
   void _startEventRotation() {
     if (tasksMealsProvider.upcomingEvents.isEmpty) return;
-
-    // Start the initial animation
     _controller.forward();
-
-    // After every 7 seconds, move to the next event
     _timer = Timer.periodic(const Duration(seconds: 7), (timer) {
       setState(() {
-        // Move to the next event
         _currentEventIndex =
             (_currentEventIndex + 1) % tasksMealsProvider.upcomingEvents.length;
       });
-      _controller.forward(from: 0); // Restart the animation for the next event
+      _controller.forward(from: 0);
     });
   }
 
@@ -121,6 +110,16 @@ class _UpcomingEventCardState extends State<UpcomingEventCard>
                   ? AnimatedBuilder(
                       animation: _controller,
                       builder: (context, child) {
+                        if (_currentEventIndex >=
+                            tasksMealsProvider.upcomingEvents.length) {
+                          return const Text(' ');
+                        }
+                        final currentEvent = tasksMealsProvider
+                            .upcomingEvents[_currentEventIndex]
+                            .split(' ');
+                        final firstWord =
+                            currentEvent.isNotEmpty ? currentEvent.first : '';
+                        final restOfWords = currentEvent.skip(1).join(' ');
                         return Opacity(
                           opacity: _fadeIn.value != 1.0
                               ? _fadeIn.value
@@ -134,10 +133,7 @@ class _UpcomingEventCardState extends State<UpcomingEventCard>
                                 text: TextSpan(
                                   children: [
                                     TextSpan(
-                                      text: tasksMealsProvider
-                                          .upcomingEvents[_currentEventIndex]
-                                          .split(' ')
-                                          .first,
+                                      text: firstWord,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
@@ -147,8 +143,7 @@ class _UpcomingEventCardState extends State<UpcomingEventCard>
                                       ),
                                     ),
                                     TextSpan(
-                                      text:
-                                          ' ${tasksMealsProvider.upcomingEvents[_currentEventIndex].split(' ').skip(1).join(' ')}',
+                                      text: ' $restOfWords',
                                       style: TextStyle(
                                         fontWeight: FontWeight.normal,
                                         fontSize: 18,
@@ -163,9 +158,9 @@ class _UpcomingEventCardState extends State<UpcomingEventCard>
                         );
                       },
                     )
-                  : const Text(''),
+                  : const Text(' '),
             )
-          : const SizedBox(),
+          : const Text(' '),
     );
   }
 }

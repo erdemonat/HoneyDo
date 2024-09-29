@@ -23,7 +23,6 @@ class HoneydoBannerState extends State<HoneydoBanner>
   @override
   void initState() {
     super.initState();
-    super.initState();
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 7),

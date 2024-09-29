@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:honeydo/components/task_card_components/meal_card_tile.dart';
 import 'package:honeydo/components/task_card_components/task_card_tile.dart';
 import 'package:honeydo/components/task_card_components/task_text_field.dart';
+import 'package:honeydo/data/random_task_sentence.dart';
 import 'package:honeydo/providers/audio_player_provider.dart';
 import 'package:honeydo/service/isar_service.dart';
 import 'package:honeydo/providers/focus_date_provider.dart';
@@ -82,7 +83,7 @@ class _TasksCardState extends State<TasksCard> {
                   child: tasksMealsProvider.meals.isEmpty
                       ? Center(
                           child: Text(
-                            'Günlük öğünlerini ve içeriğini \nburaya ekleyebilirsin.',
+                            'Günlük öğünlerini ve içeriğini buraya ekleyebilirsin.',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontSize: 24,
@@ -138,7 +139,7 @@ class _TasksCardState extends State<TasksCard> {
                   child: tasksMealsProvider.tasks.isEmpty
                       ? Center(
                           child: Text(
-                            'Burada hiç not yok :( \n İlk notunu eklemeye ne dersin ?',
+                            randomTaskSentences(),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontSize: 24,

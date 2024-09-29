@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:honeydo/constants/theme.dart';
+import 'package:honeydo/main.dart';
 
 class ThemeProvider extends ChangeNotifier {
   int get currentThemeIndex => _currentThemeIndex;
@@ -30,7 +31,7 @@ class ThemeProvider extends ChangeNotifier {
   ];
 
   bool _isDarkMode = true;
-  int _currentThemeIndex = 0;
+  int _currentThemeIndex = 1;
 
   ThemeData get getThemeData => _isDarkMode
       ? _darkThemes[_currentThemeIndex]
@@ -54,11 +55,6 @@ class ThemeProvider extends ChangeNotifier {
     return Colors.transparent;
   }
 
-  void switchTheme() {
-    _isDarkMode = !_isDarkMode;
-    notifyListeners();
-  }
-
   void switchThemeIndex(int index) {
     if (index >= 0 &&
         index < (_isDarkMode ? _darkThemes.length : _lightThemes.length)) {
@@ -69,6 +65,13 @@ class ThemeProvider extends ChangeNotifier {
 
   void toggleDarkMode() {
     _isDarkMode = !_isDarkMode;
+    notifyListeners();
+  }
+
+  Future<void> loadTheme() async {
+    final themeData = await isarService.getThemeData();
+    _isDarkMode = themeData!.isDarkMode;
+    _currentThemeIndex = themeData.currentThemeIndex;
     notifyListeners();
   }
 }

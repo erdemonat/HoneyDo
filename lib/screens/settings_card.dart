@@ -4,6 +4,7 @@ import 'package:honeydo/components/editable_textfield.dart';
 import 'package:honeydo/components/pomodoro_components/pomodoro_settings.dart';
 import 'package:honeydo/components/sound_slider.dart';
 import 'package:honeydo/components/titled_container.dart';
+import 'package:honeydo/main.dart';
 import 'package:honeydo/model/editable_textfield_model.dart';
 import 'package:honeydo/providers/pomodoro_provider.dart';
 import 'package:honeydo/providers/theme_provider.dart';
@@ -22,7 +23,6 @@ class SettingsCardState extends State<SettingsCard> {
   Widget build(BuildContext context) {
     final pomodoroProvider =
         Provider.of<PomodoroProvider>(context, listen: false);
-    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
     final weatherProvider =
         Provider.of<WeatherProvider>(context, listen: false);
     return Container(
@@ -48,41 +48,27 @@ class SettingsCardState extends State<SettingsCard> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              TitledContainer(
+              const TitledContainer(
                 titleText: 'Tema',
                 borderCutWidth: 50,
                 child: Padding(
-                  padding: const EdgeInsets.all(5),
+                  padding: EdgeInsets.all(5),
                   child: Column(
                     children: [
-                      const SizedBox(
+                      SizedBox(
                         width: 140,
                         height: 40,
                         child: DarkModeSwitch(),
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Row(
                             children: [
-                              ColorThemeBox(
-                                  index: 0,
-                                  onTap: () {
-                                    themeProvider.switchThemeIndex(0);
-                                  }),
-                              ColorThemeBox(
-                                index: 1,
-                                onTap: () {
-                                  themeProvider.switchThemeIndex(1);
-                                },
-                              ),
-                              ColorThemeBox(
-                                index: 2,
-                                onTap: () {
-                                  themeProvider.switchThemeIndex(2);
-                                },
-                              ),
+                              ColorThemeBox(index: 0),
+                              ColorThemeBox(index: 1),
+                              ColorThemeBox(index: 2),
                             ],
                           ),
                         ],
@@ -92,24 +78,9 @@ class SettingsCardState extends State<SettingsCard> {
                         children: [
                           Row(
                             children: [
-                              ColorThemeBox(
-                                index: 3,
-                                onTap: () {
-                                  themeProvider.switchThemeIndex(3);
-                                },
-                              ),
-                              ColorThemeBox(
-                                index: 4,
-                                onTap: () {
-                                  themeProvider.switchThemeIndex(4);
-                                },
-                              ),
-                              ColorThemeBox(
-                                index: 5,
-                                onTap: () {
-                                  themeProvider.switchThemeIndex(5);
-                                },
-                              ),
+                              ColorThemeBox(index: 3),
+                              ColorThemeBox(index: 4),
+                              ColorThemeBox(index: 5),
                             ],
                           ),
                         ],
@@ -119,24 +90,9 @@ class SettingsCardState extends State<SettingsCard> {
                         children: [
                           Row(
                             children: [
-                              ColorThemeBox(
-                                index: 6,
-                                onTap: () {
-                                  themeProvider.switchThemeIndex(6);
-                                },
-                              ),
-                              ColorThemeBox(
-                                index: 7,
-                                onTap: () {
-                                  themeProvider.switchThemeIndex(7);
-                                },
-                              ),
-                              ColorThemeBox(
-                                index: 8,
-                                onTap: () {
-                                  themeProvider.switchThemeIndex(8);
-                                },
-                              ),
+                              ColorThemeBox(index: 6),
+                              ColorThemeBox(index: 7),
+                              ColorThemeBox(index: 8),
                             ],
                           ),
                         ],
@@ -208,10 +164,8 @@ class SettingsCardState extends State<SettingsCard> {
 
 class ColorThemeBox extends StatelessWidget {
   final int index;
-  final void Function() onTap;
   const ColorThemeBox({
     super.key,
-    required this.onTap,
     required this.index,
   });
 
@@ -221,7 +175,10 @@ class ColorThemeBox extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: InkWell(
-        onTap: onTap,
+        onTap: () {
+          themeProvider.switchThemeIndex(index);
+          isarService.saveThemeData(index, themeProvider.isDarkMode);
+        },
         child: Container(
           decoration: BoxDecoration(
             border: Border.all(

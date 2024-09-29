@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:honeydo/main.dart';
 import 'package:honeydo/providers/audio_player_provider.dart';
-import 'package:honeydo/service/isar_service.dart';
 import 'package:provider/provider.dart';
 
 class SoundSlider extends StatefulWidget {
@@ -11,29 +11,6 @@ class SoundSlider extends StatefulWidget {
 }
 
 class _SoundSliderState extends State<SoundSlider> {
-  double _currentSliderValue = 100;
-  IsarService isarService = IsarService();
-
-  @override
-  void initState() {
-    super.initState();
-    _loadVolumeData();
-  }
-
-  Future<void> _loadVolumeData() async {
-    final volumeData = await isarService.getVolumeData();
-
-    if (volumeData != null) {
-      setState(() {
-        _currentSliderValue = volumeData.currentSliderValue;
-      });
-      final soundProvider =
-          Provider.of<SoundEffectProvider>(context, listen: false);
-      soundProvider
-          .updateVolume(_sliderToVolume(volumeData.currentSliderValue));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final soundProvider =
@@ -64,15 +41,13 @@ class _SoundSliderState extends State<SoundSlider> {
                 ),
               ),
               child: Slider(
-                value: _currentSliderValue,
+                value: soundProvider.currentVolume,
                 min: 0,
-                max: 100,
+                max: 0.5,
                 onChanged: (value) {
-                  setState(() {
-                    _currentSliderValue = value;
-                  });
-                  soundProvider.updateVolume(_sliderToVolume(value));
-                  isarService.saveVolumeData(_sliderToVolume(value), value);
+                  setState(() {});
+                  soundProvider.updateSliderValue(value);
+                  isarService.saveVolumeData(context, value);
                 },
               ),
             ),
@@ -82,7 +57,7 @@ class _SoundSliderState extends State<SoundSlider> {
           width: 40,
           child: Center(
             child: Text(
-              _currentSliderValue.toInt().toString(),
+              (soundProvider.currentVolume * 200).toStringAsFixed(0),
             ),
           ),
         ),
@@ -91,9 +66,12 @@ class _SoundSliderState extends State<SoundSlider> {
   }
 
   IconData _getVolumeIcon() {
-    if (_currentSliderValue == 0) {
+    final soundProvider =
+        Provider.of<SoundEffectProvider>(context, listen: false);
+    if (soundProvider.currentVolume == 0) {
       return Icons.volume_off;
-    } else if (_currentSliderValue > 0 && _currentSliderValue <= 50) {
+    } else if (soundProvider.currentVolume > 0 &&
+        soundProvider.currentVolume <= 0.25) {
       return Icons.volume_down;
     } else {
       return Icons.volume_up;
@@ -101,21 +79,15 @@ class _SoundSliderState extends State<SoundSlider> {
   }
 
   void _handleIconTap() {
+    final soundProvider =
+        Provider.of<SoundEffectProvider>(context, listen: false);
     setState(() {
-      if (_currentSliderValue > 0) {
-        _currentSliderValue = 0;
+      if (soundProvider.currentVolume > 0) {
+        soundProvider.updateSliderValue(0);
       } else {
-        _currentSliderValue = 100;
+        soundProvider.updateSliderValue(0.5);
       }
     });
-    Provider.of<SoundEffectProvider>(context, listen: false)
-        .updateVolume(_sliderToVolume(_currentSliderValue));
-    isarService.saveVolumeData(
-        _sliderToVolume(_currentSliderValue), _currentSliderValue);
-  }
-
-  double _sliderToVolume(double sliderValue) {
-    final volume = sliderValue / 200;
-    return volume;
+    isarService.saveVolumeData(context, soundProvider.currentVolume);
   }
 }

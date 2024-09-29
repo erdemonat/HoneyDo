@@ -2,9 +2,10 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:honeydo/model/pomodoro_model.dart' as pomodoro_model;
 import 'package:honeydo/model/task_model.dart' as task_model;
-import 'package:honeydo/model/volume_model.dart';
+import 'package:honeydo/model/user_preferences_model.dart' as preference_model;
 import 'package:honeydo/model/weather_model.dart';
 import 'package:honeydo/model/window_model.dart';
+import 'package:honeydo/providers/audio_player_provider.dart';
 import 'package:honeydo/providers/tasks_meals_provider.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
@@ -26,7 +27,8 @@ class IsarService {
           task_model.SubMealSchema,
           WeatherDataSchema,
           WindowSettingsSchema,
-          VolumeDataSchema,
+          preference_model.VolumeDataSchema,
+          preference_model.ThemeDataSchema
         ],
         directory: dir.path,
       );
@@ -349,19 +351,36 @@ class IsarService {
   }
 
   Future<void> saveVolumeData(
-      double currentProviderSoundValue, double currentSliderValue) async {
+      BuildContext context, double currentVolume) async {
+    final soundProvider =
+        Provider.of<SoundEffectProvider>(context, listen: false);
     final isar = await db;
-    final volumeData = VolumeData()
-      ..currentProviderSoundValue = currentProviderSoundValue
-      ..currentSliderValue = currentSliderValue;
+    final volumeData = preference_model.VolumeData()
+      ..currentVolume = soundProvider.currentVolume;
 
     await isar.writeTxn(() async {
       await isar.volumeDatas.put(volumeData);
     });
   }
 
-  Future<VolumeData?> getVolumeData() async {
+  Future<preference_model.VolumeData?> getVolumeData() async {
     final isar = await db;
     return await isar.volumeDatas.get(1);
+  }
+
+  Future<void> saveThemeData(int currentThemeIndex, bool isDarkMode) async {
+    final isar = await db;
+    final themeData = preference_model.ThemeData()
+      ..currentThemeIndex = currentThemeIndex
+      ..isDarkMode = isDarkMode;
+
+    await isar.writeTxn(() async {
+      await isar.themeDatas.put(themeData);
+    });
+  }
+
+  Future<preference_model.ThemeData?> getThemeData() async {
+    final isar = await db;
+    return await isar.themeDatas.get(2);
   }
 }

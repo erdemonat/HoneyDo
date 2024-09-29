@@ -21,6 +21,10 @@ Future main() async {
   isarService = IsarService();
   await isarService.db;
   await isarService.restoreWindowSizeAndPosition();
+  ThemeProvider themeProvider = ThemeProvider();
+  await themeProvider.loadTheme();
+  SoundEffectProvider soundEffectProvider = SoundEffectProvider();
+  await soundEffectProvider.loadVolumeData();
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(
@@ -30,7 +34,7 @@ Future main() async {
         create: (_) => SettingsProvider(),
       ),
       ChangeNotifierProvider(
-        create: (_) => ThemeProvider(),
+        create: (_) => themeProvider,
       ),
       ChangeNotifierProvider(
         create: (_) => PomodoroProvider(),
@@ -42,7 +46,7 @@ Future main() async {
         create: (_) => WeatherProvider(),
       ),
       ChangeNotifierProvider(
-        create: (_) => SoundEffectProvider(),
+        create: (_) => soundEffectProvider,
       ),
     ],
     child: const MyApp(),
@@ -51,6 +55,7 @@ Future main() async {
   doWhenWindowReady(() {
     final win = appWindow;
     win.minSize = const Size(1200, 780);
+    win.maxSize = const Size(2560, 1440);
     win.title = "HoneyDo";
     win.show();
   });

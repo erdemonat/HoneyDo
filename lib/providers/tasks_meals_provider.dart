@@ -12,7 +12,7 @@ class TasksMealsProvider with ChangeNotifier {
   List<Task> _tasks = [];
   List<Meal> _meals = [];
 
-  List<String> _upcomingEvents = ['Yarın'];
+  List<String> _upcomingEvents = [];
 
   Map<int, List<SubtitleItem>> _subMeals = {};
   Map<int, List<SubtitleItem>> _subTasks = {};
@@ -92,6 +92,7 @@ class TasksMealsProvider with ChangeNotifier {
             .toList(),
       ];
     }
+    notifyListeners();
   }
 
   double completedSubtasksPercentage(int taskId) {

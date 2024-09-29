@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:honeydo/main.dart';
 
 class SoundEffectProvider with ChangeNotifier {
   final AudioPlayer _audioPlayer = AudioPlayer();
@@ -43,7 +44,18 @@ class SoundEffectProvider with ChangeNotifier {
     }
     notifyListeners();
   }
-  
+
+  Future<void> updateSliderValue(double sliderValue) async {
+    _currentVolume = sliderValue;
+    notifyListeners();
+  }
+
+  Future<void> loadVolumeData() async {
+    final volumeData = await isarService.getVolumeData();
+    _currentVolume = volumeData!.currentVolume;
+    updateVolume(volumeData.currentVolume);
+    notifyListeners();
+  }
 
   @override
   void dispose() {

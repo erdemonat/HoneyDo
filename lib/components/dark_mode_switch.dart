@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:honeydo/main.dart';
 import 'package:honeydo/providers/audio_player_provider.dart';
 import 'package:honeydo/providers/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -36,6 +37,8 @@ class DarkModeSwitchState extends State<DarkModeSwitch> {
   Widget build(BuildContext context) {
     final playerProvider =
         Provider.of<SoundEffectProvider>(context, listen: false);
+    final ThemeProvider themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -46,6 +49,8 @@ class DarkModeSwitchState extends State<DarkModeSwitch> {
 
           Provider.of<ThemeProvider>(context, listen: false).toggleDarkMode();
         });
+        isarService.saveThemeData(
+            themeProvider.currentThemeIndex, switchStatus);
         playerProvider.playSound(switchStatus ? 'bloop1' : 'bloop4');
       },
       child: AnimatedContainer(
