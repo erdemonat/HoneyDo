@@ -365,7 +365,20 @@ class IsarService {
 
   Future<preference_model.VolumeData?> getVolumeData() async {
     final isar = await db;
-    return await isar.volumeDatas.get(1);
+    var volumeData = await isar.volumeDatas.get(1);
+
+    if (volumeData == null) {
+      final defaultVolumeData = preference_model.VolumeData()
+        ..currentVolume = 0.5;
+
+      await isar.writeTxn(() async {
+        await isar.volumeDatas.put(defaultVolumeData);
+      });
+
+      return defaultVolumeData;
+    }
+
+    return volumeData;
   }
 
   Future<void> saveThemeData(int currentThemeIndex, bool isDarkMode) async {
@@ -381,6 +394,21 @@ class IsarService {
 
   Future<preference_model.ThemeData?> getThemeData() async {
     final isar = await db;
-    return await isar.themeDatas.get(2);
+
+    var themeData = await isar.themeDatas.get(2);
+
+    if (themeData == null) {
+      final defaultThemeData = preference_model.ThemeData()
+        ..currentThemeIndex = 1
+        ..isDarkMode = true;
+
+      await isar.writeTxn(() async {
+        await isar.themeDatas.put(defaultThemeData);
+      });
+
+      return defaultThemeData;
+    }
+
+    return themeData;
   }
 }

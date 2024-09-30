@@ -96,8 +96,11 @@ class TaskTitleState extends State<TaskTitle> {
           overlayEntry.remove();
         },
         onClear: () async {
-          await Provider.of<TasksMealsProvider>(context, listen: false)
-              .updateTaskMarkStatus(widget.task, "", false);
+          TasksMealsProvider tasksMealsProvider =
+              Provider.of<TasksMealsProvider>(context, listen: false);
+          await tasksMealsProvider.updateTaskMarkStatus(widget.task, "", false);
+          await tasksMealsProvider.loadUpcomingEvents();
+
           overlayEntry.remove();
         },
       ),
