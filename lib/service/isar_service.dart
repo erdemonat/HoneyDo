@@ -313,7 +313,20 @@ class IsarService {
   Future<String> getSavedCity() async {
     final isar = await db;
     final weatherData = await isar.weatherDatas.where().findFirst();
-    return weatherData!.city;
+    if (weatherData == null) {
+      final defaultWeatherData = WeatherData()
+        ..city = 'ankara'
+        ..formattedCity = 'ankara'
+        ..iconCode = '03n'
+        ..temperature = '10'
+        ..weatherStatus = 'Parçalı Az Bulutlu';
+      await isar.writeTxn(() async {
+        isar.weatherDatas.put(defaultWeatherData);
+      });
+
+      return defaultWeatherData.city;
+    }
+    return weatherData.city;
   }
 
   Future<String> getSavedFormattedCity() async {
