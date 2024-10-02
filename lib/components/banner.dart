@@ -32,7 +32,7 @@ class HoneydoBannerState extends State<HoneydoBanner>
     Future.microtask(() {
       final weatherProvider =
           Provider.of<WeatherProvider>(context, listen: false);
-      weatherProvider.loadSavedCity();
+      weatherProvider.loadSavedCity(context);
       weatherProvider.updateWeatherData(repeat: true);
     });
 

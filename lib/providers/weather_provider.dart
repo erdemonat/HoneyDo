@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:honeydo/components/weather_icon.dart';
 import 'package:honeydo/main.dart';
 import 'package:honeydo/model/weather_model.dart';
 import 'package:honeydo/service/networking.dart';
@@ -17,7 +18,7 @@ class WeatherProvider with ChangeNotifier {
   String _city = "ankara";
   String _formattedCity = "Ankara";
   String _weatherStatus = "";
-  String _temperature = "30";
+  String _temperature = "35";
   String _iconCode = "";
   final List<String> weatherTitle = [];
 
@@ -41,8 +42,8 @@ class WeatherProvider with ChangeNotifier {
     }).join(' ');
   }
 
-  Future<void> loadSavedCity() async {
-    _city = await isarService.getSavedCity();
+  Future<void> loadSavedCity(BuildContext context) async {
+    _city = await isarService.getSavedCity(context);
     _formattedCity = await isarService.getSavedFormattedCity();
     notifyListeners();
   }
@@ -101,76 +102,43 @@ class WeatherProvider with ChangeNotifier {
     // Clear sky
     switch (iconCode) {
       case '01d':
+        return const WeatherIcon(iconCode: '01d');
       case '01n':
-        return Icon(
-          Icons.wb_sunny,
-          size: 18,
-          color: Theme.of(context).colorScheme.onSurface,
-        );
+        return const WeatherIcon(iconCode: '01n');
       // Few clouds
       case '02d':
+        return const WeatherIcon(iconCode: '02d');
       case '02n':
-        return Icon(
-          Icons.cloud,
-          size: 18,
-          color: Theme.of(context).colorScheme.onSurface,
-        );
+        return const WeatherIcon(iconCode: '02n');
       // Scattered clouds
       case '03d':
+        return const WeatherIcon(iconCode: '03d');
       case '03n':
-        return Icon(
-          Icons.cloud,
-          size: 18,
-          color: Theme.of(context).colorScheme.onSurface,
-        );
+        return const WeatherIcon(iconCode: '03n');
       // Broken clouds
       case '04d':
       case '04n':
-        return Icon(
-          Icons.cloud,
-          size: 18,
-          color: Theme.of(context).colorScheme.onSurface,
-        );
+        return const WeatherIcon(iconCode: '04d');
       // Shower rain
       case '09d':
       case '09n':
-        return Icon(
-          Icons.grain,
-          size: 18,
-          color: Theme.of(context).colorScheme.onSurface,
-        );
+        return const WeatherIcon(iconCode: '09d');
       // Rain
       case '10d':
       case '10n':
-        return Icon(
-          Icons.beach_access,
-          size: 18,
-          color: Theme.of(context).colorScheme.onSurface,
-        );
+        return const WeatherIcon(iconCode: '10d');
       // Thunderstorm
       case '11d':
       case '11n':
-        return Icon(
-          Icons.flash_on,
-          size: 18,
-          color: Theme.of(context).colorScheme.onSurface,
-        );
+        return const WeatherIcon(iconCode: '11d');
       // Snow
       case '13d':
       case '13n':
-        return Icon(
-          Icons.ac_unit,
-          size: 18,
-          color: Theme.of(context).colorScheme.onSurface,
-        );
+        return const WeatherIcon(iconCode: '13d');
       // Mist
       case '50d':
       case '50n':
-        return Icon(
-          Icons.filter_drama,
-          size: 18,
-          color: Theme.of(context).colorScheme.onSurface,
-        );
+        return const WeatherIcon(iconCode: '50d');
       // Unknown weather condition
       default:
         return SizedBox(

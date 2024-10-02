@@ -7,6 +7,7 @@ import 'package:honeydo/model/weather_model.dart';
 import 'package:honeydo/model/window_model.dart';
 import 'package:honeydo/providers/audio_player_provider.dart';
 import 'package:honeydo/providers/tasks_meals_provider.dart';
+import 'package:honeydo/providers/weather_provider.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -310,16 +311,17 @@ class IsarService {
     });
   }
 
-  Future<String> getSavedCity() async {
+  Future<String> getSavedCity(BuildContext context) async {
+    final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
     final isar = await db;
     final weatherData = await isar.weatherDatas.where().findFirst();
     if (weatherData == null) {
       final defaultWeatherData = WeatherData()
-        ..city = 'ankara'
-        ..formattedCity = 'ankara'
-        ..iconCode = '03n'
-        ..temperature = '10'
-        ..weatherStatus = 'Parçalı Az Bulutlu';
+        ..city = weatherProvider.city
+        ..formattedCity = weatherProvider.formattedCity
+        ..iconCode = weatherProvider.iconCode
+        ..temperature = weatherProvider.temperature
+        ..weatherStatus = weatherProvider.weatherStatus;
       await isar.writeTxn(() async {
         isar.weatherDatas.put(defaultWeatherData);
       });
