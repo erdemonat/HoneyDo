@@ -37,12 +37,21 @@ class _UpcomingEventCardState extends State<UpcomingEventCard>
     Future.microtask(() {
       tasksMealsProvider.loadUpcomingEvents();
     });
+    tasksMealsProvider.addListener(_onEventsUpdated);
     Future.delayed(const Duration(seconds: 3), () {
       setState(() {
         _isDelayed = true;
       });
       _startEventRotation();
     });
+  }
+
+  void _onEventsUpdated() {
+    if (tasksMealsProvider.upcomingEvents.isNotEmpty) {
+      _startEventRotation();
+    } else {
+      _timer?.cancel();
+    }
   }
 
   void _initAnimations() {
@@ -82,6 +91,7 @@ class _UpcomingEventCardState extends State<UpcomingEventCard>
   }
 
   void _startEventRotation() {
+    _timer?.cancel();
     if (tasksMealsProvider.upcomingEvents.isEmpty) return;
     _controller.forward();
     _timer = Timer.periodic(const Duration(seconds: 7), (timer) {
@@ -95,6 +105,7 @@ class _UpcomingEventCardState extends State<UpcomingEventCard>
 
   @override
   void dispose() {
+    tasksMealsProvider.removeListener(_onEventsUpdated);
     _timer?.cancel();
     _controller.dispose();
     super.dispose();

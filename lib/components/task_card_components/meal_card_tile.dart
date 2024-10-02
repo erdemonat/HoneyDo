@@ -43,9 +43,11 @@ class MealCardTileState extends State<MealCardTile> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      final tasksMealsProvider =
-          Provider.of<TasksMealsProvider>(context, listen: false);
-      tasksMealsProvider.loadSubMeals(widget.meals);
+      if (mounted) {
+        final tasksMealsProvider =
+            Provider.of<TasksMealsProvider>(context, listen: false);
+        tasksMealsProvider.loadSubMeals(widget.meals);
+      }
     });
   }
 

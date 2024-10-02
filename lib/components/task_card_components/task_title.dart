@@ -84,23 +84,22 @@ class TaskTitleState extends State<TaskTitle> {
         onClose: () {
           overlayEntry.remove();
         },
-        onColorSelected: (color) {
+        onColorSelected: (color) async {
+          final tasksMealsProvider =
+              Provider.of<TasksMealsProvider>(context, listen: false);
           setState(() {
             widget.task.markColor = color.value.toString();
             widget.task.isMarked = true;
           });
 
-          Provider.of<TasksMealsProvider>(context, listen: false)
-              .updateTaskMarkStatus(widget.task, color.value.toString(), true);
-
+          await tasksMealsProvider.updateTaskMarkStatus(
+              widget.task, color.value.toString(), true);
           overlayEntry.remove();
         },
         onClear: () async {
-          TasksMealsProvider tasksMealsProvider =
+          final tasksMealsProvider =
               Provider.of<TasksMealsProvider>(context, listen: false);
           await tasksMealsProvider.updateTaskMarkStatus(widget.task, "", false);
-          await tasksMealsProvider.loadUpcomingEvents();
-
           overlayEntry.remove();
         },
       ),

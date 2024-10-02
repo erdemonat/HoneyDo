@@ -28,8 +28,9 @@ class SoundEffectProvider with ChangeNotifier {
   Future<void> playSound(String audioId) async {
     try {
       await _audioPlayer.stop();
+
       await _audioPlayer.play(AssetSource(_soundEffects[audioId]!),
-          volume: _currentVolume);
+          mode: PlayerMode.lowLatency, volume: _currentVolume);
     } catch (e) {
       print("Sound effect failed to play: $e");
     }
