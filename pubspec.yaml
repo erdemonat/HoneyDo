@@ -49,6 +49,7 @@ dependencies:
   flutter_dotenv: ^5.1.0
   audioplayers: ^6.1.0
   loading_animation_widget: ^1.2.1
+  flutter_svg: ^2.0.10+1
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +79,7 @@ flutter:
   assets:
     - .env
     - assets/sfx/
+    - assets/weather_icons/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
