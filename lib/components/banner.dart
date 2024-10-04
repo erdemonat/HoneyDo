@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:honeydo/providers/weather_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -79,10 +80,14 @@ class HoneydoBannerState extends State<HoneydoBanner>
         children: [
           Padding(
             padding: const EdgeInsets.only(left: 15),
-            child: Icon(
-              Icons.donut_small_sharp,
-              size: 18,
-              color: Theme.of(context).colorScheme.onSurface,
+            child: SvgPicture.asset(
+              'assets/app_icon/honeydoicon.svg',
+              width: 18,
+              height: 18,
+              colorFilter: ColorFilter.mode(
+                Theme.of(context).colorScheme.onSurface,
+                BlendMode.srcIn,
+              ),
             ),
           ),
           const SizedBox(width: 6),

@@ -1,5 +1,6 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:honeydo/screens/sync_card.dart';
 import 'package:honeydo/main.dart';
 
 class WindowButtons extends StatelessWidget {
@@ -17,6 +18,7 @@ class WindowButtons extends StatelessWidget {
     );
     return Row(
       children: [
+        SyncButton(),
         MinimizeWindowButton(
           colors: buttonColors,
         ),

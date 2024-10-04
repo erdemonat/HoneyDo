@@ -1,4 +1,8 @@
+import 'dart:io';
+import 'package:path/path.dart' as p;
+
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:honeydo/model/pomodoro_model.dart' as pomodoro_model;
 import 'package:honeydo/model/task_model.dart' as task_model;
@@ -312,7 +316,8 @@ class IsarService {
   }
 
   Future<String> getSavedCity(BuildContext context) async {
-    final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
+    final weatherProvider =
+        Provider.of<WeatherProvider>(context, listen: false);
     final isar = await db;
     final weatherData = await isar.weatherDatas.where().findFirst();
     if (weatherData == null) {
@@ -425,5 +430,67 @@ class IsarService {
     }
 
     return themeData;
+  }
+
+  Future<void> createBackUp() async {
+    final isar = await db;
+
+    String? outputFile = await FilePicker.platform.saveFile(
+      dialogTitle: 'HoneyDo Verilerini Dışa Aktar',
+      fileName: 'honeydo_backup.isar',
+    );
+
+    if (outputFile != null) {
+      final File backupFile = File(outputFile);
+      if (await backupFile.exists()) {
+        await backupFile.delete();
+      }
+      await isar.copyToFile(outputFile);
+    }
+  }
+
+  Future<void> restoreDB() async {
+    final isar = await db;
+
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      dialogTitle: 'HoneyDo Verilerini İçe Aktar',
+      type: FileType.custom,
+      allowedExtensions: ['isar'],
+    );
+
+    if (result != null) {
+      String filePath = result.files.single.path!;
+      final backupFile = File(filePath);
+
+      if (await backupFile.exists()) {
+        final dbDirectory = await getApplicationDocumentsDirectory();
+        final dbPath = p.join(dbDirectory.path, 'default.isar');
+
+        if (!isar.isOpen) {
+          print('Veritabanı zaten kapalı');
+          return;
+        }
+        await isar.close();
+
+        await backupFile.copy(dbPath);
+
+        _isar = await Isar.open(
+          [
+            pomodoro_model.PomodoroSettingsSchema,
+            task_model.HoneyDoDataSchema,
+            task_model.DateLinksSchema,
+            task_model.TaskSchema,
+            task_model.SubTaskSchema,
+            task_model.MealSchema,
+            task_model.SubMealSchema,
+            WeatherDataSchema,
+            WindowSettingsSchema,
+            preference_model.VolumeDataSchema,
+            preference_model.ThemeDataSchema
+          ],
+          directory: dbDirectory.path,
+        );
+      }
+    }
   }
 }
