@@ -2,6 +2,7 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:honeydo/providers/audio_player_provider.dart';
+import 'package:honeydo/providers/language_provider.dart';
 import 'package:honeydo/service/isar_service.dart';
 import 'package:honeydo/providers/focus_date_provider.dart';
 import 'package:honeydo/providers/pomodoro_provider.dart';
@@ -12,6 +13,7 @@ import 'package:honeydo/providers/weather_provider.dart';
 import 'package:honeydo/screens/homescreen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 late IsarService isarService;
 
@@ -25,6 +27,8 @@ Future main() async {
   await themeProvider.loadTheme();
   SoundEffectProvider soundEffectProvider = SoundEffectProvider();
   await soundEffectProvider.loadVolumeData();
+  LanguageProvider languageProvider = LanguageProvider();
+  await languageProvider.loadLanguage();
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(
@@ -48,6 +52,9 @@ Future main() async {
       ChangeNotifierProvider(
         create: (_) => soundEffectProvider,
       ),
+      ChangeNotifierProvider(
+        create: (_) => languageProvider,
+      ),
     ],
     child: const MyApp(),
   ));
@@ -68,12 +75,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       localizationsDelegates: const [
+        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      locale: const Locale('tr', 'TR'),
-      supportedLocales: const [Locale('tr', 'TR')],
+      locale: AppLocalizations.supportedLocales[Provider.of<LanguageProvider>(context).languageIndex],
+      supportedLocales: AppLocalizations.supportedLocales,
       theme: Provider.of<ThemeProvider>(context).getThemeData,
       debugShowCheckedModeBanner: false,
       home: const HomeScreen(),

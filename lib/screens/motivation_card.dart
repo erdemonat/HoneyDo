@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:honeydo/data/random_sentence.dart';
+import 'package:honeydo/providers/language_provider.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class MotivationCard extends StatelessWidget {
   const MotivationCard({super.key});
 
-  static String motivationSentence = selectRandomSentence();
-
   @override
   Widget build(BuildContext context) {
+    String motivationSentence = selectRandomSentence(context);
     DateTime now = DateTime.now();
-    String formattedTimeWithoutYear = DateFormat('d MMMM', 'tr_TR').format(now);
+    String formattedTimeWithoutYear = DateFormat('d MMMM', Provider.of<LanguageProvider>(context, listen: false).getLanguageCode()).format(now);
     return LayoutBuilder(
       builder: (context, constraints) {
         double fontSize = (constraints.maxHeight / 5).clamp(10, 35);
@@ -26,7 +28,7 @@ class MotivationCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Bugün',
+                AppLocalizations.of(context)!.today,
                 style: TextStyle(fontSize: fontSize * 0.6),
               ),
               Text(

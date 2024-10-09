@@ -1,17 +1,19 @@
 import 'dart:math';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-String randomTaskSentences() {
+String randomTaskSentences(BuildContext context) {
   final List<String> taskSentences = [
-    'Notlarınızı buraya ekleyin!',
-    'Gününüzü planlamak için tıklayın.',
-    'Hedeflerinizi yazın ve takip edin.',
-    'Unutmayın, küçük notlar büyük farklar yaratır.',
-    'Yapılacaklarınızı buraya ekleyebilirsiniz.',
-    'Düşüncelerinizi not alın, zihninizi özgürleştirin.',
-    'Önemli anları kaydetmek için tıklayın.',
-    'Planlayın, başarın!',
-    'Hatırlatmalar ekleyerek hiçbir şeyi kaçırmayın.',
-    'Hayallerinizi gerçeğe dönüştürmek için yazmaya başlayın.',
+    AppLocalizations.of(context)!.taskCardSentence1,
+    AppLocalizations.of(context)!.taskCardSentence2,
+    AppLocalizations.of(context)!.taskCardSentence3,
+    AppLocalizations.of(context)!.taskCardSentence4,
+    AppLocalizations.of(context)!.taskCardSentence5,
+    AppLocalizations.of(context)!.taskCardSentence6,
+    AppLocalizations.of(context)!.taskCardSentence7,
+    AppLocalizations.of(context)!.taskCardSentence8,
+    AppLocalizations.of(context)!.taskCardSentence9,
+    AppLocalizations.of(context)!.taskCardSentence10,
   ];
   final random = Random();
   return taskSentences[random.nextInt(taskSentences.length)];

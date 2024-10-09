@@ -4,6 +4,7 @@ import 'package:honeydo/components/pomodoro_components/digit_text_field.dart';
 import 'package:honeydo/providers/audio_player_provider.dart';
 import 'package:honeydo/providers/settings_provider.model.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PomodoroSettings extends StatefulWidget {
   final int userPomodoroDuration;
@@ -13,8 +14,7 @@ class PomodoroSettings extends StatefulWidget {
   final bool autoBreak;
   final bool autoPomodoro;
 
-  final Function(int pomodoro, int shortBreak, int longBreak, int setCount,
-      bool autoBreak, bool autoPomodoro) onSettingsChanged;
+  final Function(int pomodoro, int shortBreak, int longBreak, int setCount, bool autoBreak, bool autoPomodoro) onSettingsChanged;
   const PomodoroSettings({
     super.key,
     required this.userPomodoroDuration,
@@ -52,8 +52,8 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
   @override
   Widget build(BuildContext context) {
     final settingsProvider = Provider.of<SettingsProvider>(context);
-    final playerProvider =
-        Provider.of<SoundEffectProvider>(context, listen: false);
+    final playerProvider = Provider.of<SoundEffectProvider>(context, listen: false);
+    final AppLocalizations appLocalizations = AppLocalizations.of(context)!;
 
     return Container(
       padding: const EdgeInsets.all(16.0),
@@ -63,7 +63,7 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
           Row(
             children: [
               DigitTextField(
-                labelText: "Pomodoro",
+                labelText: appLocalizations.pomodoro,
                 userInput: pomodoroDuration,
                 onChanged: (String value) {
                   pomodoroDuration = int.tryParse(value) ?? pomodoroDuration;
@@ -71,7 +71,7 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
                 maxValue: 254,
               ),
               DigitTextField(
-                labelText: "Set",
+                labelText: appLocalizations.set,
                 userInput: setCount,
                 onChanged: (value) {
                   setCount = int.tryParse(value) ?? setCount;
@@ -83,16 +83,15 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
           Row(
             children: [
               DigitTextField(
-                labelText: "Kısa Mola",
+                labelText: appLocalizations.shortBreak,
                 userInput: shortBreakDuration,
                 onChanged: (String value) {
-                  shortBreakDuration =
-                      int.tryParse(value) ?? shortBreakDuration;
+                  shortBreakDuration = int.tryParse(value) ?? shortBreakDuration;
                 },
                 maxValue: 254,
               ),
               DigitTextField(
-                labelText: "Uzun Mola",
+                labelText: appLocalizations.longBreak,
                 userInput: longBreakDuration,
                 onChanged: (String value) {
                   longBreakDuration = int.tryParse(value) ?? longBreakDuration;
@@ -108,10 +107,9 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
             inactiveThumbColor: Theme.of(context).colorScheme.tertiary,
             inactiveTrackColor: Theme.of(context).colorScheme.surface,
             splashRadius: 0,
-            trackOutlineColor:
-                WidgetStatePropertyAll(Theme.of(context).colorScheme.tertiary),
+            trackOutlineColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.tertiary),
             title: Text(
-              'Oto. Mola',
+              appLocalizations.autoBreak,
               style: kPomodoroSettingsTextStyle(context),
             ),
             value: autoBreak,
@@ -128,10 +126,9 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
             inactiveThumbColor: Theme.of(context).colorScheme.tertiary,
             inactiveTrackColor: Theme.of(context).colorScheme.surface,
             splashRadius: 0,
-            trackOutlineColor:
-                WidgetStatePropertyAll(Theme.of(context).colorScheme.tertiary),
+            trackOutlineColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.tertiary),
             title: Text(
-              'Oto. Pomodoro',
+              appLocalizations.autoPomodoro,
               style: kPomodoroSettingsTextStyle(context),
             ),
             value: autoPomodoro,

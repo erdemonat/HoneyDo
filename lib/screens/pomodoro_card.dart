@@ -4,6 +4,7 @@ import 'package:honeydo/providers/audio_player_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:honeydo/providers/pomodoro_provider.dart';
 import 'package:honeydo/providers/settings_provider.model.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PomodoroCard extends StatefulWidget {
   const PomodoroCard({super.key});
@@ -12,8 +13,7 @@ class PomodoroCard extends StatefulWidget {
   State<PomodoroCard> createState() => _PomodoroCardState();
 }
 
-class _PomodoroCardState extends State<PomodoroCard>
-    with SingleTickerProviderStateMixin {
+class _PomodoroCardState extends State<PomodoroCard> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late PomodoroProvider pomodoroProvider;
   String pomodoroStatus = "Pomodoro";
@@ -21,8 +21,8 @@ class _PomodoroCardState extends State<PomodoroCard>
   int currentSet = 1;
   late Duration remainingPomodoroDuration;
   String currentPhase = "Pomodoro";
-  late final SoundEffectProvider soundEffectProvider =
-      Provider.of<SoundEffectProvider>(context, listen: false);
+  late final SoundEffectProvider soundEffectProvider = Provider.of<SoundEffectProvider>(context, listen: false);
+  late AppLocalizations appLocalizations = AppLocalizations.of(context)!;
 
   @override
   void initState() {
@@ -43,13 +43,14 @@ class _PomodoroCardState extends State<PomodoroCard>
     pomodoroProvider = Provider.of<PomodoroProvider>(context);
     remainingPomodoroDuration = pomodoroProvider.pomodoroDuration;
     _controller.duration = pomodoroProvider.pomodoroDuration;
+    appLocalizations = AppLocalizations.of(context)!;
+    pomodoroStatus = appLocalizations.pomodoro;
   }
 
   void _updateRemainingDuration() {
     setState(() {
       remainingPomodoroDuration = Duration(
-        seconds:
-            (getCurrentDuration().inSeconds * (1 - _controller.value)).round(),
+        seconds: (getCurrentDuration().inSeconds * (1 - _controller.value)).round(),
       );
     });
   }
@@ -67,16 +68,11 @@ class _PomodoroCardState extends State<PomodoroCard>
 
   void _onTimerComplete(bool playSound) {
     if (currentPhase == "Pomodoro" && currentSet < pomodoroProvider.setCount) {
-      _updatePhase("Short Break", "Kısa Mola",
-          autoContinue: pomodoroProvider.autoBreak, playSound: playSound);
+      _updatePhase("Short Break", appLocalizations.shortBreak, autoContinue: pomodoroProvider.autoBreak, playSound: playSound);
     } else if (currentPhase == "Pomodoro") {
-      _updatePhase("Long Break", "Uzun Mola",
-          autoContinue: pomodoroProvider.autoBreak, playSound: playSound);
+      _updatePhase("Long Break", appLocalizations.longBreak, autoContinue: pomodoroProvider.autoBreak, playSound: playSound);
     } else if (currentPhase == "Short Break") {
-      _updatePhase("Pomodoro", "Pomodoro",
-          incrementSet: true,
-          autoContinue: pomodoroProvider.autoPomodoro,
-          playSound: playSound);
+      _updatePhase("Pomodoro", appLocalizations.pomodoro, incrementSet: true, autoContinue: pomodoroProvider.autoPomodoro, playSound: playSound);
     } else {
       _resetTimer(false);
     }
@@ -84,24 +80,19 @@ class _PomodoroCardState extends State<PomodoroCard>
 
   void _undoPhase() {
     if (currentPhase == "Pomodoro" && currentSet > 1) {
-      _updatePhase("Short Break", "Kısa Mola", decrementSet: true);
+      _updatePhase("Short Break", appLocalizations.shortBreak, decrementSet: true);
     } else if (currentPhase == "Short Break") {
-      _updatePhase("Pomodoro", "Pomodoro");
+      _updatePhase("Pomodoro", appLocalizations.pomodoro);
     } else if (currentPhase == "Long Break") {
-      _updatePhase("Pomodoro", "Pomodoro");
+      _updatePhase("Pomodoro", appLocalizations.pomodoro);
     }
     _controller.stop();
     setState(() => _isPlay = false);
   }
 
-  void _updatePhase(String phase, String status,
-      {bool decrementSet = false,
-      bool incrementSet = false,
-      bool autoContinue = true,
-      bool playSound = false}) {
+  void _updatePhase(String phase, String status, {bool decrementSet = false, bool incrementSet = false, bool autoContinue = true, bool playSound = false}) {
     if (playSound) {
-      soundEffectProvider.playSound(
-          pomodoroStatus == 'Pomodoro' ? 'pianoIntro' : 'pianoOutro');
+      soundEffectProvider.playSound(pomodoroStatus == 'Pomodoro' ? 'pianoIntro' : 'pianoOutro');
     }
     setState(() {
       currentPhase = phase;
@@ -129,9 +120,7 @@ class _PomodoroCardState extends State<PomodoroCard>
       _isPlay = true;
       _controller.duration = remainingPomodoroDuration;
       _controller.forward(
-        from: 1.0 -
-            (remainingPomodoroDuration.inSeconds /
-                getCurrentDuration().inSeconds),
+        from: 1.0 - (remainingPomodoroDuration.inSeconds / getCurrentDuration().inSeconds),
       );
     });
   }
@@ -159,10 +148,8 @@ class _PomodoroCardState extends State<PomodoroCard>
   }
 
   String get timerText {
-    final minutes =
-        remainingPomodoroDuration.inMinutes.toString().padLeft(2, '0');
-    final seconds =
-        (remainingPomodoroDuration.inSeconds % 60).toString().padLeft(2, '0');
+    final minutes = remainingPomodoroDuration.inMinutes.toString().padLeft(2, '0');
+    final seconds = (remainingPomodoroDuration.inSeconds % 60).toString().padLeft(2, '0');
     return '$minutes:$seconds';
   }
 
@@ -191,10 +178,7 @@ class _PomodoroCardState extends State<PomodoroCard>
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
-            padding: EdgeInsets.only(
-                top: screenHeight * 0.08,
-                left: screenHeight * 0.001,
-                right: screenHeight * 0.001),
+            padding: EdgeInsets.only(top: screenHeight * 0.08, left: screenHeight * 0.001, right: screenHeight * 0.001),
             child: Column(
               children: [
                 _buildTimerUI(),
@@ -204,8 +188,7 @@ class _PomodoroCardState extends State<PomodoroCard>
                   children: [
                     _buildSetCounter(),
                     SizedBox(height: screenHeight * 0.01),
-                    Text(pomodoroStatus,
-                        style: TextStyle(fontSize: screenHeight * 0.025)),
+                    Text(pomodoroStatus, style: TextStyle(fontSize: screenHeight * 0.025)),
                   ],
                 ),
               ],
@@ -332,8 +315,7 @@ class _PomodoroCardState extends State<PomodoroCard>
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        title: Text('Pomodoro sayacını sıfırlayalım mı?',
-            style: kCalendarMonthYearTextStyle(context)),
+        title: Text(appLocalizations.pomodoroResetAlert, style: kCalendarMonthYearTextStyle(context)),
         actions: [
           IconButton(
               onPressed: () {

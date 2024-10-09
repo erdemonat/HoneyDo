@@ -11,15 +11,13 @@ class HoneydoBanner extends StatefulWidget {
   HoneydoBannerState createState() => HoneydoBannerState();
 }
 
-class HoneydoBannerState extends State<HoneydoBanner>
-    with SingleTickerProviderStateMixin {
+class HoneydoBannerState extends State<HoneydoBanner> with SingleTickerProviderStateMixin {
   late Timer _timer;
   String _currentWeatherTitle = '';
   int _weatherTitleIndex = 0;
   late Animation<double> _fadeIn, _fadeOut;
   late AnimationController _controller;
-  late final List<String> _weatherTitles =
-      Provider.of<WeatherProvider>(context, listen: false).weatherTitle;
+  late final List<String> _weatherTitles = Provider.of<WeatherProvider>(context, listen: false).weatherTitle;
 
   @override
   void initState() {
@@ -31,10 +29,9 @@ class HoneydoBannerState extends State<HoneydoBanner>
 
     _initAnimations();
     Future.microtask(() {
-      final weatherProvider =
-          Provider.of<WeatherProvider>(context, listen: false);
+      final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
       weatherProvider.loadSavedCity(context);
-      weatherProvider.updateWeatherData(repeat: true);
+      weatherProvider.updateWeatherData(context, repeat: true);
     });
 
     _controller.forward();
@@ -72,8 +69,7 @@ class HoneydoBannerState extends State<HoneydoBanner>
 
   @override
   Widget build(BuildContext context) {
-    final weatherProvider =
-        Provider.of<WeatherProvider>(context, listen: false);
+    final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
 
     return Center(
       child: Row(
@@ -94,15 +90,11 @@ class HoneydoBannerState extends State<HoneydoBanner>
           RichText(
             text: TextSpan(
               text: 'Honey',
-              style: TextStyle(
-                  fontWeight: FontWeight.w400,
-                  color: Theme.of(context).colorScheme.onSurface),
+              style: TextStyle(fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.onSurface),
               children: <TextSpan>[
                 TextSpan(
                   text: 'Do',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: Theme.of(context).colorScheme.onSurface),
+                  style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.onSurface),
                 ),
               ],
             ),
@@ -121,13 +113,10 @@ class HoneydoBannerState extends State<HoneydoBanner>
               animation: _controller,
               builder: (context, child) {
                 return Opacity(
-                  opacity:
-                      _fadeIn.value != 1.0 ? _fadeIn.value : _fadeOut.value,
+                  opacity: _fadeIn.value != 1.0 ? _fadeIn.value : _fadeOut.value,
                   child: Text(
                     _currentWeatherTitle,
-                    style: TextStyle(
-                        fontSize: 14,
-                        color: Theme.of(context).colorScheme.onSurface),
+                    style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurface),
                   ),
                 );
               },

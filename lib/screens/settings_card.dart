@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:honeydo/components/dark_mode_switch.dart';
 import 'package:honeydo/components/editable_textfield.dart';
+import 'package:honeydo/components/flag_box.dart';
 import 'package:honeydo/components/pomodoro_components/pomodoro_settings.dart';
 import 'package:honeydo/components/sound_slider.dart';
 import 'package:honeydo/components/titled_container.dart';
@@ -10,6 +11,7 @@ import 'package:honeydo/providers/pomodoro_provider.dart';
 import 'package:honeydo/providers/theme_provider.dart';
 import 'package:honeydo/providers/weather_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SettingsCard extends StatefulWidget {
   const SettingsCard({super.key});
@@ -21,10 +23,9 @@ class SettingsCard extends StatefulWidget {
 class SettingsCardState extends State<SettingsCard> {
   @override
   Widget build(BuildContext context) {
-    final pomodoroProvider =
-        Provider.of<PomodoroProvider>(context, listen: false);
-    final weatherProvider =
-        Provider.of<WeatherProvider>(context, listen: false);
+    final pomodoroProvider = Provider.of<PomodoroProvider>(context, listen: false);
+    final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
+    final AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       height: double.maxFinite,
@@ -48,10 +49,10 @@ class SettingsCardState extends State<SettingsCard> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const TitledContainer(
-                titleText: 'Tema',
+              TitledContainer(
+                titleText: appLocalizations.theme,
                 borderCutWidth: 50,
-                child: Padding(
+                child: const Padding(
                   padding: EdgeInsets.all(5),
                   child: Column(
                     children: [
@@ -101,17 +102,17 @@ class SettingsCardState extends State<SettingsCard> {
                   ),
                 ),
               ),
-              const TitledContainer(
-                titleText: 'Ses Düzeyi',
-                borderCutWidth: 85,
-                child: SizedBox(
+              TitledContainer(
+                titleText: appLocalizations.voiceVolume,
+                borderCutWidth: appLocalizations.voiceVolume.length * 9,
+                child: const SizedBox(
                   height: 90,
                   child: SoundSlider(),
                 ),
               ),
               TitledContainer(
-                titleText: 'Hava Durumu',
-                borderCutWidth: 100,
+                titleText: appLocalizations.weather,
+                borderCutWidth: appLocalizations.weather.length * 9,
                 child: SizedBox(
                   width: double.maxFinite,
                   child: Wrap(
@@ -120,36 +121,71 @@ class SettingsCardState extends State<SettingsCard> {
                         hintText: '',
                         maxLength: 100,
                         model: ListModel(
-                            title: 'Şehir',
-                            subTitle: weatherProvider.formattedCity),
+                          title: appLocalizations.city,
+                          subTitle: weatherProvider.formattedCity,
+                        ),
                       )
                     ],
                   ),
                 ),
               ),
               TitledContainer(
-                titleText: 'Pomodoro',
-                borderCutWidth: 80,
+                titleText: appLocalizations.language,
+                borderCutWidth: appLocalizations.language.length * 9,
+                child: Wrap(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          children: [
+                            FlagBox(index: 0),
+                            FlagBox(index: 1),
+                            FlagBox(index: 2),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          children: [
+                            FlagBox(index: 3),
+                            FlagBox(index: 4),
+                            FlagBox(index: 5),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          children: [
+                            FlagBox(index: 6),
+                            FlagBox(index: 7),
+                            FlagBox(index: 8),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              TitledContainer(
+                titleText: appLocalizations.pomodoro,
+                borderCutWidth: appLocalizations.pomodoro.length * 9,
                 child: PomodoroSettings(
-                  userPomodoroDuration:
-                      pomodoroProvider.pomodoroDuration.inMinutes,
-                  userShortBreakDuration:
-                      pomodoroProvider.shortBreakDuration.inMinutes,
-                  userLongBreakDuration:
-                      pomodoroProvider.longBreakDuration.inMinutes,
+                  userPomodoroDuration: pomodoroProvider.pomodoroDuration.inMinutes,
+                  userShortBreakDuration: pomodoroProvider.shortBreakDuration.inMinutes,
+                  userLongBreakDuration: pomodoroProvider.longBreakDuration.inMinutes,
                   userSetCount: pomodoroProvider.setCount,
                   autoBreak: pomodoroProvider.autoBreak,
                   autoPomodoro: pomodoroProvider.autoPomodoro,
-                  onSettingsChanged: (pomodoro, shortBreak, longBreak, setCount,
-                      autoBreak, autoPomodoro) {
+                  onSettingsChanged: (pomodoro, shortBreak, longBreak, setCount, autoBreak, autoPomodoro) {
                     setState(() {
-                      pomodoroProvider.setAllPomodoroSettings(
-                          Duration(minutes: pomodoro),
-                          Duration(minutes: shortBreak),
-                          Duration(minutes: longBreak),
-                          setCount,
-                          autoBreak,
-                          autoPomodoro);
+                      pomodoroProvider.setAllPomodoroSettings(Duration(minutes: pomodoro), Duration(minutes: shortBreak), Duration(minutes: longBreak), setCount, autoBreak, autoPomodoro);
                     });
                   },
                 ),
@@ -185,9 +221,7 @@ class ColorThemeBox extends StatelessWidget {
               color: Theme.of(context).colorScheme.onSurface,
               width: 2,
             ),
-            borderRadius: themeProvider.currentThemeIndex == index
-                ? BorderRadius.circular(8)
-                : BorderRadius.circular(32),
+            borderRadius: themeProvider.currentThemeIndex == index ? BorderRadius.circular(8) : BorderRadius.circular(32),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.2),
@@ -202,7 +236,10 @@ class ColorThemeBox extends StatelessWidget {
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              stops: const [0.5, 0.5],
+              stops: const [
+                0.5,
+                0.5
+              ],
             ),
           ),
           height: 40,

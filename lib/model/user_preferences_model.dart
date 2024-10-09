@@ -16,3 +16,10 @@ class ThemeData {
   late bool isDarkMode;
   late int currentThemeIndex;
 }
+
+@Collection()
+class Language {
+  Id id = 3;
+
+  late int languageIndex;
+}

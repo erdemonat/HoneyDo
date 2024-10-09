@@ -49,9 +49,7 @@ class EditableTextFieldState extends State<EditableTextField> {
     return ListTile(
       title: Text(
         model.title,
-        style: TextStyle(
-            fontSize: 13,
-            color: Theme.of(context).colorScheme.tertiary.withOpacity(0.4)),
+        style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.tertiary.withOpacity(0.4)),
       ),
       subtitle: _isEditingMode
           ? _subTitleTextField
@@ -82,12 +80,10 @@ class EditableTextFieldState extends State<EditableTextField> {
           LengthLimitingTextInputFormatter(widget.maxLength),
         ],
         controller: _subTitleEditingController,
-        style: TextStyle(
-            fontSize: 16, color: Theme.of(context).colorScheme.tertiary),
+        style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.tertiary),
         decoration: InputDecoration(
           border: InputBorder.none,
-          hintStyle: TextStyle(
-              color: Theme.of(context).colorScheme.tertiary.withOpacity(0.4)),
+          hintStyle: TextStyle(color: Theme.of(context).colorScheme.tertiary.withOpacity(0.4)),
           hintText: widget.hintText,
         ),
       ),
@@ -129,9 +125,7 @@ class EditableTextFieldState extends State<EditableTextField> {
 
     String formattedCity = model.subTitle.replaceAll(' ', '%20').toLowerCase();
 
-    Provider.of<WeatherProvider>(context, listen: false)
-        .changeCity(formattedCity);
-    Provider.of<WeatherProvider>(context, listen: false)
-        .updateWeatherData(repeat: false);
+    Provider.of<WeatherProvider>(context, listen: false).changeCity(formattedCity);
+    Provider.of<WeatherProvider>(context, listen: false).updateWeatherData(context, repeat: false);
   }
 }

@@ -12,8 +12,7 @@ class SyncButton extends StatefulWidget {
   SyncButtonState createState() => SyncButtonState();
 }
 
-class SyncButtonState extends State<SyncButton>
-    with SingleTickerProviderStateMixin {
+class SyncButtonState extends State<SyncButton> with SingleTickerProviderStateMixin {
   late OverlayEntry _overlayEntry;
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -132,14 +131,13 @@ class _SyncDialogBoxState extends State<SyncDialogBox> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(
-            color: Theme.of(context).colorScheme.onSurface, width: 1),
+        border: Border.all(color: Theme.of(context).colorScheme.onSurface, width: 1),
         borderRadius: BorderRadius.circular(12),
         color: Theme.of(context).colorScheme.surface,
       ),
       width: 320,
       height: 180,
-      child: !isLogined
+      child: isLogined
           ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,

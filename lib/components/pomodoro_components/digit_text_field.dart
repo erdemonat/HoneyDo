@@ -17,8 +17,7 @@ class DigitTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController controller =
-        TextEditingController(text: userInput.toString());
+    final TextEditingController controller = TextEditingController(text: userInput.toString());
 
     return Flexible(
       child: Padding(
@@ -30,27 +29,19 @@ class DigitTextField extends StatelessWidget {
               focusColor: Theme.of(context).colorScheme.tertiary,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .secondary), // Normal border rengi
+                borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(
-                    color: Theme.of(context).colorScheme.tertiary,
-                    width: 2), // Tıklandığında border rengi
+                borderSide: BorderSide(color: Theme.of(context).colorScheme.tertiary, width: 2),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
-                borderSide: BorderSide(
-                    color: Theme.of(context).colorScheme.secondary,
-                    width: 1), // Enabled border rengi
+                borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary, width: 1),
               ),
               labelText: labelText,
               counterText: '',
-              floatingLabelStyle:
-                  TextStyle(color: Theme.of(context).colorScheme.tertiary)),
+              floatingLabelStyle: TextStyle(color: Theme.of(context).colorScheme.tertiary)),
           maxLength: 3,
           keyboardType: TextInputType.number,
           inputFormatters: <TextInputFormatter>[
@@ -71,19 +62,16 @@ class _NumberRangeFormatter extends TextInputFormatter {
   _NumberRangeFormatter({required this.min, required this.max});
 
   @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
     if (newValue.text.isEmpty) {
       return newValue;
     }
 
-    // Giriş bir sayı mı kontrol et
     final int? value = int.tryParse(newValue.text);
     if (value == null) {
       return oldValue;
     }
 
-    // Giriş 1 ile 12 arasında mı kontrol et
     if (value < min || value > max) {
       return oldValue;
     }

@@ -33,7 +33,8 @@ class IsarService {
           WeatherDataSchema,
           WindowSettingsSchema,
           preference_model.VolumeDataSchema,
-          preference_model.ThemeDataSchema
+          preference_model.ThemeDataSchema,
+          preference_model.LanguageSchema,
         ],
         directory: dir.path,
       );
@@ -41,8 +42,7 @@ class IsarService {
     return _isar!;
   }
 
-  Future<void> savePomodoroSettings(
-      pomodoro_model.PomodoroSettings settings) async {
+  Future<void> savePomodoroSettings(pomodoro_model.PomodoroSettings settings) async {
     final isar = await db;
     await isar.writeTxn(() async {
       await isar.pomodoroSettings.put(settings);
@@ -57,27 +57,20 @@ class IsarService {
 
   Future<List<task_model.HoneyDoData>> getAllHoneyDoData() async {
     final isar = await db;
-    return await isar.honeyDoDatas
-        .where()
-        .findAll(); // HoneyDoDatas'a erişim sağlama
+    return await isar.honeyDoDatas.where().findAll(); // HoneyDoDatas'a erişim sağlama
   }
 
   Future<task_model.HoneyDoData?> getTaskDataByName() async {
     final isar = await db;
-    return await isar.honeyDoDatas
-        .filter()
-        .nameEqualTo("HoneyDoData")
-        .findFirst();
+    return await isar.honeyDoDatas.filter().nameEqualTo("HoneyDoData").findFirst();
   }
 
-  Future<task_model.DateLinks?> getTaskDateByDate(
-      task_model.HoneyDoData honeyDoData, String date) async {
+  Future<task_model.DateLinks?> getTaskDateByDate(task_model.HoneyDoData honeyDoData, String date) async {
     await honeyDoData.dateLinks.load();
     return honeyDoData.dateLinks.filter().dateEqualTo(date).findFirst();
   }
 
-  Future<void> createOrUpdateTaskData(
-      BuildContext context, String date, String taskName) async {
+  Future<void> createOrUpdateTaskData(BuildContext context, String date, String taskName) async {
     final isar = await db;
     const String dataName = "HoneyDoData";
     await isar.writeTxn(() async {
@@ -86,8 +79,7 @@ class IsarService {
         honeyDoData = task_model.HoneyDoData()..name = dataName;
         await isar.honeyDoDatas.put(honeyDoData);
       }
-      task_model.DateLinks? dateLink =
-          await getTaskDateByDate(honeyDoData, date);
+      task_model.DateLinks? dateLink = await getTaskDateByDate(honeyDoData, date);
       if (dateLink == null) {
         dateLink = task_model.DateLinks()..date = date;
         await isar.dateLinks.put(dateLink);
@@ -107,8 +99,7 @@ class IsarService {
       dateLink.tasks.add(task);
       await dateLink.tasks.save();
     });
-    Provider.of<TasksMealsProvider>(context, listen: false)
-        .loadUpcomingEvents();
+    Provider.of<TasksMealsProvider>(context, listen: false).loadUpcomingEvents();
   }
 
   Future<void> createOrUpdateMealData(String date, String mealName) async {
@@ -121,8 +112,7 @@ class IsarService {
         honeyDoData = task_model.HoneyDoData()..name = dataName;
         await isar.honeyDoDatas.put(honeyDoData);
       }
-      task_model.DateLinks? dateLink =
-          await getTaskDateByDate(honeyDoData, date);
+      task_model.DateLinks? dateLink = await getTaskDateByDate(honeyDoData, date);
       if (dateLink == null) {
         dateLink = task_model.DateLinks()..date = date;
         await isar.dateLinks.put(dateLink);
@@ -149,8 +139,7 @@ class IsarService {
         honeyDoData = task_model.HoneyDoData()..name = "HoneyDoData";
         await isar.honeyDoDatas.put(honeyDoData);
       }
-      task_model.DateLinks? dateLink =
-          await getTaskDateByDate(honeyDoData, date);
+      task_model.DateLinks? dateLink = await getTaskDateByDate(honeyDoData, date);
       if (dateLink == null) {
         dateLink = task_model.DateLinks()..date = date;
         await isar.dateLinks.put(dateLink);
@@ -200,10 +189,8 @@ class IsarService {
     });
   }
 
-  Future<void> onReorderTask(
-      BuildContext context, int oldIndex, int newIndex) async {
-    TasksMealsProvider tasksMealsProvider =
-        Provider.of<TasksMealsProvider>(context, listen: false);
+  Future<void> onReorderTask(BuildContext context, int oldIndex, int newIndex) async {
+    TasksMealsProvider tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
     final isar = await db;
 
     await isar.writeTxn(() async {
@@ -214,8 +201,7 @@ class IsarService {
     });
   }
 
-  Future<void> addSubTask(task_model.Task tasks, task_model.SubTask subTask,
-      String subtitleText) async {
+  Future<void> addSubTask(task_model.Task tasks, task_model.SubTask subTask, String subtitleText) async {
     final isar = await db;
     await isar.writeTxn(() async {
       //subTask.task.value = tasks;
@@ -225,8 +211,7 @@ class IsarService {
     });
   }
 
-  Future<void> addSubMeal(task_model.Meal meals, task_model.SubMeal subMeal,
-      String subtitleText) async {
+  Future<void> addSubMeal(task_model.Meal meals, task_model.SubMeal subMeal, String subtitleText) async {
     final isar = await db;
     await isar.writeTxn(() async {
       //subMeal.meal.value = meals;
@@ -299,8 +284,7 @@ class IsarService {
     });
   }
 
-  Future<void> updateSubtaskCheckedStatus(
-      task_model.Task task, task_model.SubTask subTask) async {
+  Future<void> updateSubtaskCheckedStatus(task_model.Task task, task_model.SubTask subTask) async {
     final isar = await db;
     await isar.writeTxn(() async {
       await isar.subTasks.put(subTask);
@@ -316,8 +300,7 @@ class IsarService {
   }
 
   Future<String> getSavedCity(BuildContext context) async {
-    final weatherProvider =
-        Provider.of<WeatherProvider>(context, listen: false);
+    final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
     final isar = await db;
     final weatherData = await isar.weatherDatas.where().findFirst();
     if (weatherData == null) {
@@ -365,18 +348,17 @@ class IsarService {
     final settings = await isar.windowSettings.get(1);
 
     if (settings != null) {
-      appWindow.size = Size(settings.width, settings.height);
-      appWindow.position = Offset(settings.x, settings.y);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        appWindow.size = Size(settings.width, settings.height);
+        appWindow.position = Offset(settings.x, settings.y);
+      });
     }
   }
 
-  Future<void> saveVolumeData(
-      BuildContext context, double currentVolume) async {
-    final soundProvider =
-        Provider.of<SoundEffectProvider>(context, listen: false);
+  Future<void> saveVolumeData(BuildContext context, double currentVolume) async {
+    final soundProvider = Provider.of<SoundEffectProvider>(context, listen: false);
     final isar = await db;
-    final volumeData = preference_model.VolumeData()
-      ..currentVolume = soundProvider.currentVolume;
+    final volumeData = preference_model.VolumeData()..currentVolume = soundProvider.currentVolume;
 
     await isar.writeTxn(() async {
       await isar.volumeDatas.put(volumeData);
@@ -388,8 +370,7 @@ class IsarService {
     var volumeData = await isar.volumeDatas.get(1);
 
     if (volumeData == null) {
-      final defaultVolumeData = preference_model.VolumeData()
-        ..currentVolume = 0.5;
+      final defaultVolumeData = preference_model.VolumeData()..currentVolume = 0.5;
 
       await isar.writeTxn(() async {
         await isar.volumeDatas.put(defaultVolumeData);
@@ -455,7 +436,9 @@ class IsarService {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       dialogTitle: 'HoneyDo Verilerini İçe Aktar',
       type: FileType.custom,
-      allowedExtensions: ['isar'],
+      allowedExtensions: [
+        'isar'
+      ],
     );
 
     if (result != null) {
@@ -486,11 +469,39 @@ class IsarService {
             WeatherDataSchema,
             WindowSettingsSchema,
             preference_model.VolumeDataSchema,
-            preference_model.ThemeDataSchema
+            preference_model.ThemeDataSchema,
+            preference_model.LanguageSchema,
           ],
           directory: dbDirectory.path,
         );
       }
     }
+  }
+
+  Future<void> saveLanguage(index) async {
+    final isar = await db;
+    final language = preference_model.Language()..languageIndex = index;
+
+    await isar.writeTxn(() async {
+      await isar.languages.put(language);
+    });
+  }
+
+  Future<Object> getLanguage() async {
+    final isar = await db;
+
+    var language = await isar.languages.get(3);
+
+    if (language == null) {
+      final defaultLanguage = preference_model.Language()..languageIndex = 1;
+
+      await isar.writeTxn(() async {
+        await isar.languages.put(defaultLanguage);
+      });
+
+      return defaultLanguage.languageIndex;
+    }
+
+    return language.languageIndex;
   }
 }
