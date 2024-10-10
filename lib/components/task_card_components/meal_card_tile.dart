@@ -5,6 +5,7 @@ import 'package:honeydo/components/task_card_components/meal_subtitle_list_tile.
 import 'package:honeydo/model/task_model.dart';
 import 'package:honeydo/providers/tasks_meals_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MealCardTile extends StatefulWidget {
   final Meal meals;
@@ -44,8 +45,7 @@ class MealCardTileState extends State<MealCardTile> {
     super.initState();
     Future.microtask(() {
       if (mounted) {
-        final tasksMealsProvider =
-            Provider.of<TasksMealsProvider>(context, listen: false);
+        final tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
         tasksMealsProvider.loadSubMeals(widget.meals);
       }
     });
@@ -58,8 +58,7 @@ class MealCardTileState extends State<MealCardTile> {
   }
 
   Future<void> _deleteSubMeal(int mealId, String subtitleText) async {
-    final tasksMealsProvider =
-        Provider.of<TasksMealsProvider>(context, listen: false);
+    final tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
     try {
       await tasksMealsProvider.deleteSubMeal(mealId, subtitleText);
     } catch (e) {
@@ -70,13 +69,11 @@ class MealCardTileState extends State<MealCardTile> {
 
   @override
   Widget build(BuildContext context) {
-    final taskMealsProvider =
-        Provider.of<TasksMealsProvider>(context, listen: false);
+    final taskMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
 
     final subMeals = taskMealsProvider.getSubMeals(widget.meals.id);
 
-    _currentExpandedHeight =
-        _expandedBaseHeight + subMeals.length * _subtitleHeightIncrement;
+    _currentExpandedHeight = _expandedBaseHeight + subMeals.length * _subtitleHeightIncrement;
     if (_cardHeight > _collapsedHeight) {
       _cardHeight = _currentExpandedHeight;
     }
@@ -125,14 +122,13 @@ class MealCardTileState extends State<MealCardTile> {
                               SubItemTextField(
                                 controller: _subtitleController,
                                 onSubmitted: (p0) {
-                                  taskMealsProvider.addSubMeal(
-                                      widget.meals, _subtitleController.text);
+                                  taskMealsProvider.addSubMeal(widget.meals, _subtitleController.text);
                                   taskMealsProvider.loadSubMeals(widget.meals);
                                   _subtitleController.clear();
                                 },
-                                hintext: 'Öğün içeriği ekle',
+                                hintext: AppLocalizations.of(context)!.hintTextMeal,
                                 paddingHorizontal: 1,
-                                dotLenght: 160,
+                                dotLenght: 285,
                               ),
                             ],
                           ),

@@ -130,6 +130,8 @@
     "loginToSyncData": "データを同期するにはログインしてください",
     "exportData": "データをエクスポート",
     "importData": "データをインポート",
-    "downloadData": "データをデバイスにダウンロード"
+    "downloadData": "データをデバイスにダウンロード",
+    "subTaskHint": "メモに詳細を追加",
+    "subMealHint": "食事の内容を追加"
   }
   

@@ -130,6 +130,8 @@
   "loginToSyncData": "Log in to sync your data",  
   "exportData": "Export data",
   "importData": "Import data",
-  "downloadData": "Download data to device"
+  "downloadData": "Download data to device",
+  "subTaskHint": "Add detail to the note",
+  "subMealHint": "Add meal content"
   
 }

@@ -130,5 +130,7 @@
     "loginToSyncData": "Verilerinizi eşitlemek için \ngiriş yapın",
     "exportData":"Verileri dışa aktar",
     "importData":"Verileri içe aktar",
-    "downloadData": "Verileri cihaza indir"
+    "downloadData": "Verileri cihaza indir",
+    "subTaskHint": "Nota detay ekle",
+    "subMealHint": "Öğün içeriği ekle"
   }

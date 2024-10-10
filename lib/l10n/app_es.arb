@@ -130,6 +130,8 @@
     "loginToSyncData": "Inicia sesión para sincronizar tus datos",  
     "exportData": "Exportar datos",
     "importData": "Importar datos",
-    "downloadData": "Descargar datos al dispositivo"
+    "downloadData": "Descargar datos al dispositivo",
+    "subTaskHint": "Agregar detalle a la nota",
+    "subMealHint": "Agregar contenido de la comida"
   }
   

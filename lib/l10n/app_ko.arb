@@ -130,6 +130,8 @@
     "loginToSyncData": "데이터를 동기화하려면 로그인하세요.",
     "exportData": "데이터 내보내기",
     "importData": "데이터 가져오기",
-    "downloadData": "장치에 데이터 다운로드"
+    "downloadData": "장치에 데이터 다운로드",
+    "subTaskHint": "메모에 세부 사항 추가",
+    "subMealHint": "식사 내용을 추가"
   }
   

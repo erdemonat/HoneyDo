@@ -130,6 +130,8 @@
     "loginToSyncData": "登录以同步数据",
     "exportData": "导出数据",
     "importData": "导入数据",
-    "downloadData": "下载数据到设备"
+    "downloadData": "下载数据到设备",
+    "subTaskHint": "添加笔记详情",
+    "subMealHint": "添加餐点内容"
   }
   

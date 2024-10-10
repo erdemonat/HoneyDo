@@ -130,6 +130,8 @@
     "loginToSyncData": "Melden Sie sich an, um Ihre Daten zu synchronisieren",  
     "exportData": "Daten exportieren",
     "importData": "Daten importieren",
-    "downloadData": "Daten auf das Gerät herunterladen"
+    "downloadData": "Daten auf das Gerät herunterladen",
+    "subTaskHint": "Detail zur Notiz hinzufügen",
+    "subMealHint": "Mahlzeiteninhalt hinzufügen"
   }
   
