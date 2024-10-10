@@ -2,6 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:honeydo/main.dart';
 
 class LanguageProvider extends ChangeNotifier {
+  // Singleton instance
+  static final LanguageProvider _instance = LanguageProvider._internal();
+
+  // Private constructor
+  LanguageProvider._internal();
+
+  // Factory constructor to return the singleton instance
+  factory LanguageProvider() {
+    return _instance;
+  }
+
   int get languageIndex => _languageIndex;
   List<String> get languageCode => _languageCode;
   List<String> get weatherLanguageCode => _weatherLanguageCode;

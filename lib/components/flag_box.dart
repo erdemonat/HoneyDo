@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:honeydo/main.dart';
 import 'package:honeydo/providers/language_provider.dart';
+import 'package:honeydo/providers/tasks_meals_provider.dart';
 import 'package:honeydo/providers/weather_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -35,6 +36,7 @@ class FlagBox extends StatelessWidget {
         onTap: () {
           languageProvider.changeLanguage(index);
           Provider.of<WeatherProvider>(context, listen: false).updateWeatherData(context);
+          Provider.of<TasksMealsProvider>(context, listen: false).loadUpcomingEvents();
           isarService.saveLanguage(index);
         },
         child: Container(

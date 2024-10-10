@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:honeydo/providers/audio_player_provider.dart';
+import 'package:honeydo/providers/language_provider.dart';
 import 'package:honeydo/service/isar_service.dart';
 import 'package:honeydo/main.dart';
 import 'package:honeydo/model/subtitle_model.dart';
@@ -46,9 +47,9 @@ class TasksMealsProvider with ChangeNotifier {
     DateTime tomorrow = today.add(const Duration(days: 1));
     DateTime dayAfterTomorrow = today.add(const Duration(days: 2));
     DateTime twoDaysAfterTomorrow = today.add(const Duration(days: 3));
-    String tomorrowDay = DateFormat('EEEE', 'tr_TR').format(tomorrow);
-    String dayAfterTomorrowDay = DateFormat('EEEE', 'tr_TR').format(dayAfterTomorrow);
-    String twoDaysAfterTomorrowDay = DateFormat('EEEE', 'tr_TR').format(twoDaysAfterTomorrow);
+    String tomorrowDay = DateFormat('EEEE', LanguageProvider().getLanguageCode()).format(tomorrow);
+    String dayAfterTomorrowDay = DateFormat('EEEE', LanguageProvider().getLanguageCode()).format(dayAfterTomorrow);
+    String twoDaysAfterTomorrowDay = DateFormat('EEEE', LanguageProvider().getLanguageCode()).format(twoDaysAfterTomorrow);
 
     String formattedTomorrowDate = DateFormat('ddMMyyyy').format(tomorrow);
     String formattedDayAfterTomorrowDate = DateFormat('ddMMyyyy').format(dayAfterTomorrow);
