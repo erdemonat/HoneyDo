@@ -125,5 +125,11 @@
   "taskCardSentence7": "Click to record important moments.",
   "taskCardSentence8": "Plan and achieve!",
   "taskCardSentence9": "Add reminders so you don’t miss anything.",
-  "taskCardSentence10": "Start writing to turn your dreams into reality."
+  "taskCardSentence10": "Start writing to turn your dreams into reality.",  
+  "exportImportData": "Import or export your data",
+  "loginToSyncData": "Log in to sync your data",  
+  "exportData": "Export data",
+  "importData": "Import data",
+  "downloadData": "Download data to device"
+  
 }

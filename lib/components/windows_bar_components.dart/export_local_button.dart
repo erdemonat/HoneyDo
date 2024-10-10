@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:honeydo/service/isar_service.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ExportLocalButton extends StatelessWidget {
   const ExportLocalButton({
@@ -29,10 +30,10 @@ class ExportLocalButton extends StatelessWidget {
                 size: 55,
                 color: Theme.of(context).colorScheme.onSurface,
               ),
-              const Text(
-                'Verileri dışa aktar',
+              Text(
+                AppLocalizations.of(context)!.exportData,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.w600),
+                style: const TextStyle(fontWeight: FontWeight.w600),
               )
             ],
           ),

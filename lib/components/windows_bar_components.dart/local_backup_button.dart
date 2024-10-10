@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LocalBackUpButton extends StatelessWidget {
   final void Function()? onPressed;
@@ -9,6 +10,7 @@ class LocalBackUpButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     return Expanded(
         child: InkWell(
       borderRadius: BorderRadius.circular(10),
@@ -28,10 +30,10 @@ class LocalBackUpButton extends StatelessWidget {
               size: 55,
               color: Theme.of(context).colorScheme.onSurface,
             ),
-            const Text(
-              'Verilerinizi \niçe veya dışa \naktarın',
+            Text(
+              appLocalizations.exportImportData,
               textAlign: TextAlign.center,
-              style: TextStyle(fontWeight: FontWeight.w600),
+              style: const TextStyle(fontWeight: FontWeight.w600),
             )
           ],
         ),

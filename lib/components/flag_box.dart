@@ -15,15 +15,15 @@ class FlagBox extends StatelessWidget {
 
   // for provider
   final List<String> flagPaths = [
+    'assets/flags/de.svg',
     'assets/flags/us.svg',
-    'assets/flags/tr.svg',
+    'assets/flags/es.svg',
+    'assets/flags/fr.svg',
+    'assets/flags/jp.svg',
     'assets/flags/kr.svg',
     'assets/flags/ru.svg',
+    'assets/flags/tr.svg',
     'assets/flags/cn.svg',
-    'assets/flags/jp.svg',
-    'assets/flags/fr.svg',
-    'assets/flags/es.svg',
-    'assets/flags/de.svg',
   ];
 
   @override

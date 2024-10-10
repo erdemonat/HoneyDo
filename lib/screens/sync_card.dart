@@ -101,7 +101,7 @@ class SyncButtonState extends State<SyncButton> with SingleTickerProviderStateMi
   }
 }
 
-bool isLocalBackUp = false;
+bool isLocalBackUp = true;
 bool isLogined = false;
 bool isCloudBackUp = false;
 
@@ -137,7 +137,7 @@ class _SyncDialogBoxState extends State<SyncDialogBox> {
       ),
       width: 320,
       height: 180,
-      child: isLogined
+      child: !isLogined
           ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,

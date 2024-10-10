@@ -125,5 +125,10 @@
     "taskCardSentence7": "Önemli anları kaydetmek için tıklayın.",
     "taskCardSentence8": "Planlayın, başarın!",
     "taskCardSentence9": "Hatırlatmalar ekleyerek hiçbir şeyi kaçırmayın.",
-    "taskCardSentence10": "Hayallerinizi gerçeğe dönüştürmek için yazmaya başlayın."
+    "taskCardSentence10": "Hayallerinizi gerçeğe dönüştürmek için yazmaya başlayın.",
+    "exportImportData": "Verilerinizi \niçe veya dışa \naktarın",
+    "loginToSyncData": "Verilerinizi eşitlemek için \ngiriş yapın",
+    "exportData":"Verileri dışa aktar",
+    "importData":"Verileri içe aktar",
+    "downloadData": "Verileri cihaza indir"
   }

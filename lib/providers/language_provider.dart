@@ -9,13 +9,27 @@ class LanguageProvider extends ChangeNotifier {
   int _languageIndex = 0;
 
   final List<String> _languageCode = [
+    "de_DE",
     "en_EN",
-    "tr_TR"
+    "es_ES",
+    "fr_FR",
+    "ja_JP",
+    "ko_KR",
+    "ru_RU",
+    "tr_TR",
+    "zh_CN",
   ];
 
   final List<String> _weatherLanguageCode = [
+    "de",
     "en",
-    "tr"
+    "es",
+    "fr",
+    "ja",
+    "kr",
+    "ru",
+    "tr",
+    "zh_cn",
   ];
 
   void changeLanguage(index) {

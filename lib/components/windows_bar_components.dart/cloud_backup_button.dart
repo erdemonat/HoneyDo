@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CloudBackUpButton extends StatelessWidget {
   const CloudBackUpButton({
@@ -26,10 +27,10 @@ class CloudBackUpButton extends StatelessWidget {
                 size: 55,
                 color: Theme.of(context).colorScheme.onSurface,
               ),
-              const Text(
-                'Verilerinizi eşitlemek için \ngiriş yapın',
+              Text(
+                AppLocalizations.of(context)!.loginToSyncData,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.w600),
+                style: const TextStyle(fontWeight: FontWeight.w600),
               )
             ],
           ),

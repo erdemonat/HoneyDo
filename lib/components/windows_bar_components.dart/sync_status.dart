@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SyncStatus extends StatelessWidget {
   const SyncStatus({
@@ -7,6 +8,7 @@ class SyncStatus extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -41,8 +43,7 @@ class SyncStatus extends StatelessWidget {
                         color: Theme.of(context).colorScheme.tertiary,
                       ),
                     ),
-                    icon: Icon(Icons.sync,
-                        color: Theme.of(context).colorScheme.onSurface),
+                    icon: Icon(Icons.sync, color: Theme.of(context).colorScheme.onSurface),
                   )
                 ],
               ),
@@ -58,13 +59,12 @@ class SyncStatus extends StatelessWidget {
         TextButton.icon(
           onPressed: () {},
           label: Text(
-            'Verileri cihaza indir',
+            appLocalizations.downloadData,
             style: TextStyle(
               color: Theme.of(context).colorScheme.onPrimary,
             ),
           ),
-          icon: Icon(Icons.file_download_outlined,
-              size: 20, color: Theme.of(context).colorScheme.onPrimary),
+          icon: Icon(Icons.file_download_outlined, size: 20, color: Theme.of(context).colorScheme.onPrimary),
         ),
       ],
     );
