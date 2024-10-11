@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CloudBackUpButton extends StatelessWidget {
+  final VoidCallback onTap;
+
   const CloudBackUpButton({
     super.key,
+    required this.onTap,
   });
 
   @override
@@ -11,7 +14,7 @@ class CloudBackUpButton extends StatelessWidget {
     return Expanded(
       child: InkWell(
         borderRadius: BorderRadius.circular(10),
-        onTap: () {},
+        onTap: onTap,
         child: Container(
           margin: const EdgeInsets.all(10),
           padding: const EdgeInsets.all(8),

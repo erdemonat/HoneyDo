@@ -132,6 +132,11 @@
     "importData": "Импорт данных",
     "downloadData": "Загрузить данные на устройство",
     "subTaskHint": "Добавить подробность в заметку",
-    "subMealHint": "Добавить содержание еды"
+    "subMealHint": "Добавить содержание еды",
+    "authEmailLabel": "Адрес электронной почты",
+    "authPasswordLabel": "Пароль",
+    "authConfirmPasswordLabel": "Подтвердите пароль",
+    "authCreateAccountButton": "Создать аккаунт",
+    "authAlreadyHaveAccountButton": "У меня уже есть аккаунт"
   }
   

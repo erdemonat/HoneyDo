@@ -474,8 +474,20 @@ class IsarService {
           ],
           directory: dbDirectory.path,
         );
+
+        // Dosya başarıyla kopyalandıktan sonra uygulamayı yeniden başlat
+        await _restartApp();
       }
     }
+  }
+
+  Future<void> _restartApp() async {
+    final executable = Platform.resolvedExecutable;
+    final script = Platform.script.toFilePath();
+    final workingDirectory = p.dirname(script);
+
+    await Process.start(executable, [], workingDirectory: workingDirectory);
+    exit(0);
   }
 
   Future<void> saveLanguage(index) async {

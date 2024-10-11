@@ -132,6 +132,11 @@
     "importData": "Importer les données",
     "downloadData": "Télécharger les données sur l''appareil",
     "subTaskHint": "Ajouter un détail à la note",
-    "subMealHint": "Ajouter le contenu du repas"
+    "subMealHint": "Ajouter le contenu du repas",
+    "authEmailLabel": "Adresse e-mail",
+    "authPasswordLabel": "Mot de passe",
+    "authConfirmPasswordLabel": "Confirmez le mot de passe",
+    "authCreateAccountButton": "Créer un compte",
+    "authAlreadyHaveAccountButton": "J''ai déjà un compte"
   }
   

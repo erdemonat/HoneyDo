@@ -132,6 +132,11 @@
     "importData": "データをインポート",
     "downloadData": "データをデバイスにダウンロード",
     "subTaskHint": "メモに詳細を追加",
-    "subMealHint": "食事の内容を追加"
+    "subMealHint": "食事の内容を追加",
+    "authEmailLabel": "メールアドレス",
+    "authPasswordLabel": "パスワード",
+    "authConfirmPasswordLabel": "パスワードを確認",
+    "authCreateAccountButton": "アカウントを作成",
+    "authAlreadyHaveAccountButton": "すでにアカウントを持っています"
   }
   

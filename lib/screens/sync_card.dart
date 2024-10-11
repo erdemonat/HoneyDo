@@ -4,6 +4,9 @@ import 'package:honeydo/components/windows_bar_components.dart/export_local_butt
 import 'package:honeydo/components/windows_bar_components.dart/import_local_button.dart';
 import 'package:honeydo/components/windows_bar_components.dart/local_backup_button.dart';
 import 'package:honeydo/components/windows_bar_components.dart/sync_status.dart';
+import 'package:honeydo/providers/sync_card_provider.dart';
+import 'package:honeydo/screens/auth.dart';
+import 'package:provider/provider.dart';
 
 class SyncButton extends StatefulWidget {
   const SyncButton({super.key});
@@ -48,7 +51,7 @@ class SyncButtonState extends State<SyncButton> with SingleTickerProviderStateMi
             ),
           ),
           Positioned(
-            left: position.dx - (renderBox.size.height * 6),
+            left: position.dx - (renderBox.size.height * 8),
             top: position.dy + renderBox.size.height,
             child: FadeTransition(
               opacity: _animation,
@@ -71,10 +74,13 @@ class SyncButtonState extends State<SyncButton> with SingleTickerProviderStateMi
   }
 
   void _removeOverlay() {
-    _controller.reverse().then((_) {
-      _overlayEntry.remove();
-      isLocalBackUp = false;
-    });
+    SyncCardProvider syncCardProvider = Provider.of(context, listen: false);
+    _controller.reverse().then(
+      (_) {
+        _overlayEntry.remove();
+        syncCardProvider.setDefaultSyncCard();
+      },
+    );
   }
 
   @override
@@ -101,7 +107,7 @@ class SyncButtonState extends State<SyncButton> with SingleTickerProviderStateMi
   }
 }
 
-bool isLocalBackUp = true;
+bool isLocalBackUp = false;
 bool isLogined = false;
 bool isCloudBackUp = false;
 
@@ -115,45 +121,37 @@ class SyncDialogBox extends StatefulWidget {
 }
 
 class _SyncDialogBoxState extends State<SyncDialogBox> {
-  void isLocalBackup() {
-    setState(() {
-      isLocalBackUp = true;
-    });
-  }
-
-  void isCloudBackup() {
-    setState(() {
-      isCloudBackUp = true;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final SyncCardProvider syncCardProvider = Provider.of(context, listen: true);
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Theme.of(context).colorScheme.onSurface, width: 1),
         borderRadius: BorderRadius.circular(12),
         color: Theme.of(context).colorScheme.surface,
       ),
-      width: 320,
-      height: 180,
-      child: !isLogined
-          ? Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                if (!isLocalBackUp) CloudBackUpButton(),
-                if (!isLocalBackUp)
-                  LocalBackUpButton(
-                    onPressed: () {
-                      isLocalBackup();
-                    },
-                  ),
-                if (isLocalBackUp) const ImportLocalButton(),
-                if (isLocalBackUp) const ExportLocalButton(),
-              ],
-            )
-          : const SyncStatus(),
+      width: 400,
+      height: !syncCardProvider.showAuthScreen ? 186 : (syncCardProvider.isLoginMode ? 198 : 258),
+      child: syncCardProvider.showAuthScreen
+          ? const AuthScreen()
+          : !syncCardProvider.isLogined
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if (!syncCardProvider.isLocalBackUp)
+                      CloudBackUpButton(
+                        onTap: syncCardProvider.toggleAuth,
+                      ),
+                    if (!syncCardProvider.isLocalBackUp)
+                      LocalBackUpButton(
+                        onPressed: syncCardProvider.showLocalBackup,
+                      ),
+                    if (syncCardProvider.isLocalBackUp) const ImportLocalButton(),
+                    if (syncCardProvider.isLocalBackUp) const ExportLocalButton(),
+                  ],
+                )
+              : const SyncStatus(),
     );
   }
 }

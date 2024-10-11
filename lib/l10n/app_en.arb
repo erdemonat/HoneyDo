@@ -132,6 +132,10 @@
   "importData": "Import data",
   "downloadData": "Download data to device",
   "subTaskHint": "Add detail to the note",
-  "subMealHint": "Add meal content"
-  
+  "subMealHint": "Add meal content",
+  "authEmailLabel": "Email Address",
+  "authPasswordLabel": "Password",
+  "authConfirmPasswordLabel": "Confirm Password",
+  "authCreateAccountButton": "Create an account",
+  "authAlreadyHaveAccountButton": "I already have an account"  
 }

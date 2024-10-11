@@ -132,5 +132,10 @@
     "importData":"Verileri içe aktar",
     "downloadData": "Verileri cihaza indir",
     "subTaskHint": "Nota detay ekle",
-    "subMealHint": "Öğün içeriği ekle"
+    "subMealHint": "Öğün içeriği ekle",
+    "authEmailLabel": "E-posta Adresi",
+    "authPasswordLabel": "Şifre",
+    "authConfirmPasswordLabel": "Şifreyi Onayla",
+    "authCreateAccountButton": "Hesap oluştur",
+    "authAlreadyHaveAccountButton": "Zaten bir hesabım var"
   }

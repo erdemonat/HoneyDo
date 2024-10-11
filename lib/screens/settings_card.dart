@@ -111,6 +111,23 @@ class SettingsCardState extends State<SettingsCard> {
                 ),
               ),
               TitledContainer(
+                titleText: appLocalizations.pomodoro,
+                borderCutWidth: appLocalizations.pomodoro.length * 9,
+                child: PomodoroSettings(
+                  userPomodoroDuration: pomodoroProvider.pomodoroDuration.inMinutes,
+                  userShortBreakDuration: pomodoroProvider.shortBreakDuration.inMinutes,
+                  userLongBreakDuration: pomodoroProvider.longBreakDuration.inMinutes,
+                  userSetCount: pomodoroProvider.setCount,
+                  autoBreak: pomodoroProvider.autoBreak,
+                  autoPomodoro: pomodoroProvider.autoPomodoro,
+                  onSettingsChanged: (pomodoro, shortBreak, longBreak, setCount, autoBreak, autoPomodoro) {
+                    setState(() {
+                      pomodoroProvider.setAllPomodoroSettings(Duration(minutes: pomodoro), Duration(minutes: shortBreak), Duration(minutes: longBreak), setCount, autoBreak, autoPomodoro);
+                    });
+                  },
+                ),
+              ),
+              TitledContainer(
                 titleText: appLocalizations.weather,
                 borderCutWidth: appLocalizations.weather.length * 9,
                 child: SizedBox(
@@ -171,23 +188,6 @@ class SettingsCardState extends State<SettingsCard> {
                       ],
                     ),
                   ],
-                ),
-              ),
-              TitledContainer(
-                titleText: appLocalizations.pomodoro,
-                borderCutWidth: appLocalizations.pomodoro.length * 9,
-                child: PomodoroSettings(
-                  userPomodoroDuration: pomodoroProvider.pomodoroDuration.inMinutes,
-                  userShortBreakDuration: pomodoroProvider.shortBreakDuration.inMinutes,
-                  userLongBreakDuration: pomodoroProvider.longBreakDuration.inMinutes,
-                  userSetCount: pomodoroProvider.setCount,
-                  autoBreak: pomodoroProvider.autoBreak,
-                  autoPomodoro: pomodoroProvider.autoPomodoro,
-                  onSettingsChanged: (pomodoro, shortBreak, longBreak, setCount, autoBreak, autoPomodoro) {
-                    setState(() {
-                      pomodoroProvider.setAllPomodoroSettings(Duration(minutes: pomodoro), Duration(minutes: shortBreak), Duration(minutes: longBreak), setCount, autoBreak, autoPomodoro);
-                    });
-                  },
                 ),
               ),
             ],

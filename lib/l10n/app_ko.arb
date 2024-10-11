@@ -132,6 +132,11 @@
     "importData": "데이터 가져오기",
     "downloadData": "장치에 데이터 다운로드",
     "subTaskHint": "메모에 세부 사항 추가",
-    "subMealHint": "식사 내용을 추가"
+    "subMealHint": "식사 내용을 추가",
+    "authEmailLabel": "이메일 주소",
+    "authPasswordLabel": "비밀번호",
+    "authConfirmPasswordLabel": "비밀번호 확인",
+    "authCreateAccountButton": "계정 만들기",
+    "authAlreadyHaveAccountButton": "이미 계정이 있습니다"
   }
   

@@ -132,6 +132,11 @@
     "importData": "Daten importieren",
     "downloadData": "Daten auf das Gerät herunterladen",
     "subTaskHint": "Detail zur Notiz hinzufügen",
-    "subMealHint": "Mahlzeiteninhalt hinzufügen"
+    "subMealHint": "Mahlzeiteninhalt hinzufügen",
+    "authEmailLabel": "E-Mail-Adresse",
+    "authPasswordLabel": "Passwort",
+    "authConfirmPasswordLabel": "Passwort bestätigen",
+    "authCreateAccountButton": "Ein Konto erstellen",
+    "authAlreadyHaveAccountButton": "Ich habe bereits ein Konto"
   }
   

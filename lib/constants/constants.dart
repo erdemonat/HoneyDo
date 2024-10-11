@@ -60,10 +60,26 @@ TextStyle kCalendarMonthYearTextStyle(BuildContext context) {
 TextStyle kPomodoroStatusTextStyle(BuildContext context) {
   // Metin boyutunu ekrana göre ayarlama
 
-  return TextStyle(
-      color: Theme.of(context).colorScheme.tertiary,
-      fontSize: 18,
-      fontWeight: FontWeight.bold
+  return TextStyle(color: Theme.of(context).colorScheme.tertiary, fontSize: 18, fontWeight: FontWeight.bold
       // fontFeatures: const [FontFeature.enable('smcp')],
       );
+}
+
+InputDecoration kAuthScreenInputDecoration(BuildContext context) {
+  return InputDecoration(
+    hoverColor: Theme.of(context).colorScheme.secondary,
+    focusColor: Theme.of(context).colorScheme.tertiary,
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide(color: Theme.of(context).colorScheme.tertiary, width: 2),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary, width: 1),
+    ),
+  );
 }

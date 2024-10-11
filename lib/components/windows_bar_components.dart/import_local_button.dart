@@ -1,9 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:honeydo/service/isar_service.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:path/path.dart' as path;
 
 class ImportLocalButton extends StatelessWidget {
   const ImportLocalButton({
@@ -17,7 +14,6 @@ class ImportLocalButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         onTap: () async {
           await IsarService().restoreDB();
-          restartApp();
         },
         child: Container(
           margin: const EdgeInsets.all(10),
@@ -45,17 +41,4 @@ class ImportLocalButton extends StatelessWidget {
       ),
     );
   }
-}
-
-void restartApp() async {
-  // Mevcut uygulamanın executable yolunu buluyoruz
-  final executable = Platform.resolvedExecutable;
-  final script = Platform.script.toFilePath();
-  final workingDirectory = path.dirname(script);
-
-  // Uygulamayı yeniden çalıştır
-  await Process.start(executable, [], workingDirectory: workingDirectory);
-
-  // Uygulamayı kapat
-  exit(0);
 }

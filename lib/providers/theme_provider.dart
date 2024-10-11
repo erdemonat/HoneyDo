@@ -33,31 +33,24 @@ class ThemeProvider extends ChangeNotifier {
   bool _isDarkMode = true;
   int _currentThemeIndex = 1;
 
-  ThemeData get getThemeData => _isDarkMode
-      ? _darkThemes[_currentThemeIndex]
-      : _lightThemes[_currentThemeIndex];
+  ThemeData get getThemeData => _isDarkMode ? _darkThemes[_currentThemeIndex] : _lightThemes[_currentThemeIndex];
 
   Color getThemePrimaryColor(int index) {
     if (index >= 0 && index < _darkThemes.length) {
-      return _isDarkMode
-          ? _darkThemes[index].colorScheme.primary
-          : _lightThemes[index].colorScheme.primary;
+      return _isDarkMode ? _darkThemes[index].colorScheme.primary : _lightThemes[index].colorScheme.primary;
     }
     return Colors.transparent;
   }
 
   Color getThemeTertiaryColor(int index) {
     if (index >= 0 && index < _darkThemes.length) {
-      return _isDarkMode
-          ? _darkThemes[index].colorScheme.tertiary
-          : _lightThemes[index].colorScheme.tertiary;
+      return _isDarkMode ? _darkThemes[index].colorScheme.tertiary : _lightThemes[index].colorScheme.tertiary;
     }
     return Colors.transparent;
   }
 
   void switchThemeIndex(int index) {
-    if (index >= 0 &&
-        index < (_isDarkMode ? _darkThemes.length : _lightThemes.length)) {
+    if (index >= 0 && index < (_isDarkMode ? _darkThemes.length : _lightThemes.length)) {
       _currentThemeIndex = index;
       notifyListeners();
     }

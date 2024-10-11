@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:honeydo/providers/audio_player_provider.dart';
 import 'package:honeydo/providers/language_provider.dart';
+import 'package:honeydo/providers/sync_card_provider.dart';
 import 'package:honeydo/service/isar_service.dart';
 import 'package:honeydo/providers/focus_date_provider.dart';
 import 'package:honeydo/providers/pomodoro_provider.dart';
@@ -55,13 +56,16 @@ Future main() async {
       ChangeNotifierProvider(
         create: (_) => languageProvider,
       ),
+      ChangeNotifierProvider(
+        create: (_) => SyncCardProvider(),
+      ),
     ],
     child: const MyApp(),
   ));
   appWindow.show();
   doWhenWindowReady(() {
     final win = appWindow;
-    win.minSize = const Size(1200, 780);
+    win.minSize = const Size(1200, 820);
     win.maxSize = const Size(2560, 1440);
     win.title = "HoneyDo";
     win.show();
