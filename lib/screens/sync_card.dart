@@ -78,7 +78,7 @@ class SyncButtonState extends State<SyncButton> with SingleTickerProviderStateMi
     _controller.reverse().then(
       (_) {
         _overlayEntry.remove();
-        syncCardProvider.setDefaultSyncCard();
+        syncCardProvider.resetSyncCardState();
       },
     );
   }
