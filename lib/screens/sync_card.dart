@@ -1,8 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:honeydo/components/windows_bar_components.dart/cloud_backup_button.dart';
 import 'package:honeydo/components/windows_bar_components.dart/export_local_button.dart';
 import 'package:honeydo/components/windows_bar_components.dart/import_local_button.dart';
-import 'package:honeydo/components/windows_bar_components.dart/local_backup_button.dart';
 import 'package:honeydo/components/windows_bar_components.dart/sync_status.dart';
 import 'package:honeydo/providers/sync_card_provider.dart';
 import 'package:honeydo/screens/auth.dart';
@@ -15,7 +14,8 @@ class SyncButton extends StatefulWidget {
   SyncButtonState createState() => SyncButtonState();
 }
 
-class SyncButtonState extends State<SyncButton> with SingleTickerProviderStateMixin {
+class SyncButtonState extends State<SyncButton>
+    with SingleTickerProviderStateMixin {
   late OverlayEntry _overlayEntry;
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -123,35 +123,44 @@ class SyncDialogBox extends StatefulWidget {
 class _SyncDialogBoxState extends State<SyncDialogBox> {
   @override
   Widget build(BuildContext context) {
-    final SyncCardProvider syncCardProvider = Provider.of(context, listen: true);
+    final SyncCardProvider syncCardProvider =
+        Provider.of(context, listen: true);
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: Theme.of(context).colorScheme.onSurface, width: 1),
+        border:
+            Border.all(color: Theme.of(context).colorScheme.primary, width: 1),
         borderRadius: BorderRadius.circular(12),
         color: Theme.of(context).colorScheme.surface,
       ),
       width: 400,
-      height: !syncCardProvider.showAuthScreen ? 186 : (syncCardProvider.isLoginMode ? 198 : 258),
-      child: syncCardProvider.showAuthScreen
-          ? const AuthScreen()
-          : !syncCardProvider.isLogined
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    if (!syncCardProvider.isLocalBackUp)
-                      CloudBackUpButton(
-                        onTap: syncCardProvider.toggleAuth,
-                      ),
-                    if (!syncCardProvider.isLocalBackUp)
-                      LocalBackUpButton(
-                        onPressed: syncCardProvider.showLocalBackup,
-                      ),
-                    if (syncCardProvider.isLocalBackUp) const ImportLocalButton(),
-                    if (syncCardProvider.isLocalBackUp) const ExportLocalButton(),
-                  ],
-                )
-              : const SyncStatus(),
+      height: syncCardProvider.isLocalBackUp
+          ? 236
+          : (syncCardProvider.isLoginMode ? 236 : 310),
+      child: !syncCardProvider.isLocalBackUp
+          ? StreamBuilder<User?>(
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasData) {
+                  return const SyncStatus();
+                } else {
+                  return const AuthScreen();
+                }
+              })
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                IconButton(
+                    onPressed: () {
+                      syncCardProvider.toggleLocalBackUp();
+                    },
+                    icon: Icon(Icons.arrow_back_ios)),
+                ImportLocalButton(),
+                ExportLocalButton(),
+              ],
+            ),
     );
   }
 }

@@ -8,7 +8,6 @@ import 'package:honeydo/model/task_model.dart';
 import 'package:honeydo/providers/focus_date_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TasksMealsProvider with ChangeNotifier {
   List<Task> _tasks = [];

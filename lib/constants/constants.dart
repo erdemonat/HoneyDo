@@ -60,7 +60,10 @@ TextStyle kCalendarMonthYearTextStyle(BuildContext context) {
 TextStyle kPomodoroStatusTextStyle(BuildContext context) {
   // Metin boyutunu ekrana göre ayarlama
 
-  return TextStyle(color: Theme.of(context).colorScheme.tertiary, fontSize: 18, fontWeight: FontWeight.bold
+  return TextStyle(
+      color: Theme.of(context).colorScheme.tertiary,
+      fontSize: 18,
+      fontWeight: FontWeight.bold
       // fontFeatures: const [FontFeature.enable('smcp')],
       );
 }
@@ -71,15 +74,23 @@ InputDecoration kAuthScreenInputDecoration(BuildContext context) {
     focusColor: Theme.of(context).colorScheme.tertiary,
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(10),
-      borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
+      borderSide: BorderSide(color: Theme.of(context).colorScheme.surface),
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(10),
-      borderSide: BorderSide(color: Theme.of(context).colorScheme.tertiary, width: 2),
+      borderSide:
+          BorderSide(color: Theme.of(context).colorScheme.tertiary, width: 2),
     ),
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(10),
-      borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary, width: 1),
+      borderSide:
+          BorderSide(color: Theme.of(context).colorScheme.tertiary, width: 1.2),
+    ),
+    floatingLabelStyle:
+        TextStyle(color: Theme.of(context).colorScheme.tertiary),
+    labelStyle: TextStyle(
+      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
+      fontSize: 14,
     ),
   );
 }

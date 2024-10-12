@@ -1,6 +1,8 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:honeydo/firebase_options.dart';
 import 'package:honeydo/providers/audio_player_provider.dart';
 import 'package:honeydo/providers/language_provider.dart';
 import 'package:honeydo/providers/sync_card_provider.dart';
@@ -21,6 +23,9 @@ late IsarService isarService;
 Future main() async {
   await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   isarService = IsarService();
   await isarService.db;
   await isarService.restoreWindowSizeAndPosition();
@@ -84,7 +89,8 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      locale: AppLocalizations.supportedLocales[Provider.of<LanguageProvider>(context).languageIndex],
+      locale: AppLocalizations.supportedLocales[
+          Provider.of<LanguageProvider>(context).languageIndex],
       supportedLocales: AppLocalizations.supportedLocales,
       theme: Provider.of<ThemeProvider>(context).getThemeData,
       debugShowCheckedModeBanner: false,

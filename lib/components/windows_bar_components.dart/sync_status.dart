@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:honeydo/screens/auth.dart';
 
 class SyncStatus extends StatelessWidget {
   const SyncStatus({
     super.key,
   });
+
+  Future<void> signOut(BuildContext context) async {
+    await auth.signOut();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +27,9 @@ class SyncStatus extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextButton.icon(
-                    onPressed: () {},
+                    onPressed: () => signOut(context),
                     label: Text(
-                      'sefa__uzun61_ts_uzun@gmail.com',
+                      auth.currentUser?.email ?? '',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.tertiary,
                       ),
@@ -43,7 +48,8 @@ class SyncStatus extends StatelessWidget {
                         color: Theme.of(context).colorScheme.tertiary,
                       ),
                     ),
-                    icon: Icon(Icons.sync, color: Theme.of(context).colorScheme.onSurface),
+                    icon: Icon(Icons.sync,
+                        color: Theme.of(context).colorScheme.onSurface),
                   )
                 ],
               ),
@@ -64,7 +70,8 @@ class SyncStatus extends StatelessWidget {
               color: Theme.of(context).colorScheme.onPrimary,
             ),
           ),
-          icon: Icon(Icons.file_download_outlined, size: 20, color: Theme.of(context).colorScheme.onPrimary),
+          icon: Icon(Icons.file_download_outlined,
+              size: 20, color: Theme.of(context).colorScheme.onPrimary),
         ),
       ],
     );
