@@ -126,8 +126,6 @@
     "taskCardSentence8": "Planen und erreichen!",
     "taskCardSentence9": "Fügen Sie Erinnerungen hinzu, damit Sie nichts verpassen.",
     "taskCardSentence10": "Beginnen Sie zu schreiben, um Ihre Träume Wirklichkeit werden zu lassen.",  
-    "exportImportData": "Daten importieren oder exportieren",
-    "loginToSyncData": "Melden Sie sich an, um Ihre Daten zu synchronisieren",  
     "exportData": "Daten exportieren",
     "importData": "Daten importieren",
     "downloadData": "Daten auf das Gerät herunterladen",
@@ -137,6 +135,17 @@
     "authPasswordLabel": "Passwort",
     "authConfirmPasswordLabel": "Passwort bestätigen",
     "authCreateAccountButton": "Ein Konto erstellen",
-    "authAlreadyHaveAccountButton": "Ich habe bereits ein Konto"
+    "authAlreadyHaveAccountButton": "Ich habe bereits ein Konto",
+    "emailValidationError": "Ungültige E-Mail-Adresse",
+    "passwordConfirmValidationError": "Passwörter stimmen nicht überein",
+    "passwordValidationError": "Das Passwort muss mindestens 6 Zeichen lang sein",
+    "forgotMyPassword": "Passwort vergessen?",
+    "localImportExport": "Lokaler Datentransfer",
+    "emailAlreadyInUse": "E-Mail wird bereits verwendet",
+    "authFailed": "Authentifizierung fehlgeschlagen",
+    "back": "Zurück",
+    "resetPassword": "Passwort zurücksetzen",
+    "resetPasswordEmailSent": "Passwort-Reset-E-Mail wurde gesendet!",
+    "resetPasswordEmailFailed": "Fehler beim Senden der Passwort-Reset-E-Mail"
   }
   

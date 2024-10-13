@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:honeydo/constants/constants.dart';
 import 'package:honeydo/components/pomodoro_components/digit_text_field.dart';
+import 'package:honeydo/main.dart';
 import 'package:honeydo/providers/audio_player_provider.dart';
 import 'package:honeydo/providers/settings_provider.model.dart';
 import 'package:provider/provider.dart';

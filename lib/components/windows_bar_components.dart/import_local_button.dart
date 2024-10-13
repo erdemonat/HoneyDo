@@ -16,20 +16,21 @@ class ImportLocalButton extends StatelessWidget {
           await IsarService().restoreDB();
         },
         child: Container(
-          margin: const EdgeInsets.all(10),
+          margin: const EdgeInsets.only(left: 25),
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: Theme.of(context).colorScheme.primary,
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Icon(
                 Icons.file_download_outlined,
                 size: 55,
                 color: Theme.of(context).colorScheme.onSurface,
               ),
+              const SizedBox(height: 25),
               Text(
                 AppLocalizations.of(context)!.importData,
                 textAlign: TextAlign.center,

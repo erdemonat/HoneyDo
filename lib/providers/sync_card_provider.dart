@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 class SyncCardProvider extends ChangeNotifier {
   bool _isLoginMode = true;
+  bool _isPasswordResetMode = false;
   bool _isLocalBackUp = false;
 
   bool get isLoginMode => _isLoginMode;
   bool get isLocalBackUp => _isLocalBackUp;
+  bool get isPasswordResetMode => _isPasswordResetMode;
 
   void toggleLoginMode() {
     _isLoginMode = !_isLoginMode;
@@ -14,6 +16,11 @@ class SyncCardProvider extends ChangeNotifier {
 
   void setLoginMode(bool value) {
     _isLoginMode = value;
+    notifyListeners();
+  }
+
+  void setPasswordResetMode(bool isPasswordResetMode) {
+    _isPasswordResetMode = isPasswordResetMode;
     notifyListeners();
   }
 
@@ -30,5 +37,7 @@ class SyncCardProvider extends ChangeNotifier {
   void resetSyncCardState() {
     _isLocalBackUp = false;
     _isLoginMode = true;
+    _isPasswordResetMode = false;
+    notifyListeners();
   }
 }

@@ -126,8 +126,6 @@
     "taskCardSentence8": "계획하고 이루세요!",
     "taskCardSentence9": "아무 것도 놓치지 않도록 알림을 추가하세요.",
     "taskCardSentence10": "꿈을 현실로 만들기 위해 글을 쓰기 시작하세요.",
-    "exportImportData": "데이터를 가져오거나 내보내세요.",
-    "loginToSyncData": "데이터를 동기화하려면 로그인하세요.",
     "exportData": "데이터 내보내기",
     "importData": "데이터 가져오기",
     "downloadData": "장치에 데이터 다운로드",
@@ -137,6 +135,17 @@
     "authPasswordLabel": "비밀번호",
     "authConfirmPasswordLabel": "비밀번호 확인",
     "authCreateAccountButton": "계정 만들기",
-    "authAlreadyHaveAccountButton": "이미 계정이 있습니다"
+    "authAlreadyHaveAccountButton": "이미 계정이 있습니다",
+    "emailValidationError": "유효하지 않은 이메일입니다",
+    "passwordConfirmValidationError": "비밀번호가 일치하지 않습니다",
+    "passwordValidationError": "비밀번호는 최소 6자 이상이어야 합니다",
+    "forgotMyPassword": "비밀번호를 잊으셨습니까?",
+    "localImportExport": "로컬 데이터 전송",
+    "emailAlreadyInUse": "이메일이 이미 사용 중입니다",
+    "authFailed": "인증 실패",
+    "back": "뒤로",
+    "resetPassword": "비밀번호 재설정",
+    "resetPasswordEmailSent": "비밀번호 재설정 이메일이 발송되었습니다!",
+    "resetPasswordEmailFailed": "재설정 이메일 전송 실패"
   }
   

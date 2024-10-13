@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
@@ -433,6 +434,13 @@ class IsarService {
   Future<void> restoreDB() async {
     final isar = await db;
 
+    final weatherSchema = await isar.weatherDatas.get(2);
+
+    final windowSchema = await isar.windowSettings.get(1);
+
+    final volumeSchema = await isar.volumeDatas.get(1);
+    final themeSchema = await isar.themeDatas.get(2);
+
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       dialogTitle: 'HoneyDo Verilerini İçe Aktar',
       type: FileType.custom,
@@ -457,7 +465,7 @@ class IsarService {
 
         await backupFile.copy(dbPath);
 
-        _isar = await Isar.open(
+        final reopenedIsar = await Isar.open(
           [
             pomodoro_model.PomodoroSettingsSchema,
             task_model.HoneyDoDataSchema,
@@ -475,7 +483,23 @@ class IsarService {
           directory: dbDirectory.path,
         );
 
-        // Dosya başarıyla kopyalandıktan sonra uygulamayı yeniden başlat
+        await reopenedIsar.writeTxn(
+          () async {
+            if (weatherSchema != null) {
+              await reopenedIsar.weatherDatas.put(weatherSchema);
+            }
+            if (windowSchema != null) {
+              await reopenedIsar.windowSettings.put(windowSchema);
+            }
+            if (volumeSchema != null) {
+              await reopenedIsar.volumeDatas.put(volumeSchema);
+            }
+            if (themeSchema != null) {
+              await reopenedIsar.themeDatas.put(themeSchema);
+            }
+          },
+        );
+
         await _restartApp();
       }
     }

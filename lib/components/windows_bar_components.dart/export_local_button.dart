@@ -16,20 +16,21 @@ class ExportLocalButton extends StatelessWidget {
           await IsarService().createBackUp();
         },
         child: Container(
-          margin: const EdgeInsets.all(10),
+          margin: const EdgeInsets.only(right: 25),
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: Theme.of(context).colorScheme.primary,
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Icon(
                 Icons.upload_file_outlined,
                 size: 55,
                 color: Theme.of(context).colorScheme.onSurface,
               ),
+              const SizedBox(height: 25),
               Text(
                 AppLocalizations.of(context)!.exportData,
                 textAlign: TextAlign.center,

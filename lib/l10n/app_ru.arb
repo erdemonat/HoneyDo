@@ -126,8 +126,6 @@
     "taskCardSentence8": "Планируйте и достигайте!",
     "taskCardSentence9": "Добавьте напоминания, чтобы ничего не пропустить.",
     "taskCardSentence10": "Начните писать, чтобы превратить мечты в реальность.",
-    "exportImportData": "Импортировать или экспортировать данные",
-    "loginToSyncData": "Войдите, чтобы синхронизировать данные",
     "exportData": "Экспорт данных",
     "importData": "Импорт данных",
     "downloadData": "Загрузить данные на устройство",
@@ -137,6 +135,17 @@
     "authPasswordLabel": "Пароль",
     "authConfirmPasswordLabel": "Подтвердите пароль",
     "authCreateAccountButton": "Создать аккаунт",
-    "authAlreadyHaveAccountButton": "У меня уже есть аккаунт"
+    "authAlreadyHaveAccountButton": "У меня уже есть аккаунт",
+    "emailValidationError": "Неверный адрес электронной почты",
+    "passwordConfirmValidationError": "Пароли не совпадают",
+    "passwordValidationError": "Пароль должен содержать не менее 6 символов",
+    "forgotMyPassword": "Забыли пароль?",
+    "localImportExport": "Локальная передача данных",
+    "emailAlreadyInUse": "Электронная почта уже используется",
+    "authFailed": "Ошибка аутентификации",
+    "back": "Назад",
+    "resetPassword": "Сбросить пароль",
+    "resetPasswordEmailSent": "Письмо для сброса пароля отправлено!",
+    "resetPasswordEmailFailed": "Не удалось отправить письмо для сброса пароля"
   }
   

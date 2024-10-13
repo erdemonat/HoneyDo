@@ -18,16 +18,15 @@ class _AuthScreenState extends State<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
   bool _isObscurePassword = true;
 
   var _enteredEmail = '';
   var _enteredPassword = '';
 
   void _submit() async {
-    final SyncCardProvider syncCardProvider =
-        Provider.of(context, listen: false);
+    final SyncCardProvider syncCardProvider = Provider.of(context, listen: false);
+    final AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     final isValid = _formKey.currentState!.validate();
 
     if (!isValid) {
@@ -37,12 +36,10 @@ class _AuthScreenState extends State<AuthScreen> {
 
     try {
       if (syncCardProvider.isLoginMode) {
-        final userCredential = await auth.signInWithEmailAndPassword(
-            email: _enteredEmail, password: _enteredPassword);
+        final userCredential = await auth.signInWithEmailAndPassword(email: _enteredEmail, password: _enteredPassword);
         print(userCredential);
       } else {
-        final userCredentials = await auth.createUserWithEmailAndPassword(
-            email: _enteredEmail, password: _enteredPassword);
+        final userCredentials = await auth.createUserWithEmailAndPassword(email: _enteredEmail, password: _enteredPassword);
         print(userCredentials);
       }
     } on FirebaseAuthException catch (e) {
@@ -50,14 +47,16 @@ class _AuthScreenState extends State<AuthScreen> {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(e.message ?? 'appLocalizations.emailAlreadyInUse'),
+            behavior: SnackBarBehavior.floating,
+            content: Text(appLocalizations.emailAlreadyInUse),
           ),
         );
       }
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.message ?? 'appLocalizations.authFailed'),
+          behavior: SnackBarBehavior.floating,
+          content: Text(appLocalizations.authFailed),
         ),
       );
     }
@@ -65,8 +64,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final SyncCardProvider syncCardProvider =
-        Provider.of(context, listen: false);
+    final SyncCardProvider syncCardProvider = Provider.of(context, listen: false);
     final AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
@@ -79,30 +77,42 @@ class _AuthScreenState extends State<AuthScreen> {
               child: Form(
                 key: _formKey,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    if (syncCardProvider.isLoginMode)
+                      TextButton.icon(
+                        icon: Icon(
+                          Icons.backup,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                        onPressed: () {
+                          syncCardProvider.toggleLocalBackUp();
+                        },
+                        label: Text(
+                          appLocalizations.localImportExport,
+                          style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                        ),
+                      ),
+                    if (syncCardProvider.isLoginMode) const SizedBox(height: 6),
                     TextFormField(
                         controller: _emailController,
                         onSaved: (value) {
                           _enteredEmail = value!;
                         },
                         validator: (value) {
-                          if (value == null ||
-                              value.isEmpty ||
-                              !value.contains('@')) {
-                            return 'appLocalizations.emailValidationError';
+                          if (value == null || value.isEmpty || !value.contains('@')) {
+                            return appLocalizations.emailValidationError;
                           }
                           return null;
                         },
-                        decoration: kAuthScreenInputDecoration(context)
-                            .copyWith(
-                                labelText: appLocalizations.authEmailLabel)),
+                        decoration: kAuthScreenInputDecoration(context).copyWith(labelText: appLocalizations.authEmailLabel)),
                     const SizedBox(height: 12),
                     TextFormField(
                       controller: _passwordController,
                       validator: (value) {
                         if (value == null || value.trim().length < 6) {
-                          return 'appLocalizations.passwordValidationError';
+                          return appLocalizations.passwordValidationError;
                         }
                         return null;
                       },
@@ -111,50 +121,50 @@ class _AuthScreenState extends State<AuthScreen> {
                       },
                       decoration: kAuthScreenInputDecoration(context).copyWith(
                         labelText: appLocalizations.authPasswordLabel,
-                        suffixIcon: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _isObscurePassword = !_isObscurePassword;
-                                });
-                              },
-                              icon: Icon(_isObscurePassword
-                                  ? Icons.visibility
-                                  : Icons.visibility_off),
-                            ),
-                            if (syncCardProvider.isLoginMode)
+                        suffixIcon: Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
                               IconButton(
-                                onPressed: _submit,
-                                icon:
-                                    const Icon(Icons.arrow_forward_ios_rounded),
-                              )
-                          ],
+                                onPressed: () {
+                                  setState(() {
+                                    _isObscurePassword = !_isObscurePassword;
+                                  });
+                                },
+                                icon: Icon(_isObscurePassword ? Icons.visibility : Icons.visibility_off),
+                              ),
+                              if (syncCardProvider.isLoginMode)
+                                IconButton(
+                                  onPressed: _submit,
+                                  icon: const Icon(Icons.arrow_forward_ios_rounded),
+                                ),
+                            ],
+                          ),
                         ),
                       ),
                       obscureText: _isObscurePassword,
                     ),
-                    if (!syncCardProvider.isLoginMode)
-                      const SizedBox(height: 12),
+                    if (!syncCardProvider.isLoginMode) const SizedBox(height: 12),
                     if (!syncCardProvider.isLoginMode)
                       TextFormField(
                         controller: _confirmPasswordController,
                         validator: (value) {
-                          if (_passwordController.text !=
-                              _confirmPasswordController.text) {
-                            return 'appLocalizations.passwordConfirmValidationError';
+                          if (_passwordController.text != _confirmPasswordController.text) {
+                            return appLocalizations.passwordConfirmValidationError;
                           }
                           return null;
                         },
-                        decoration:
-                            kAuthScreenInputDecoration(context).copyWith(
+                        decoration: kAuthScreenInputDecoration(context).copyWith(
                           labelText: appLocalizations.authConfirmPasswordLabel,
-                          suffixIcon: IconButton(
+                          suffixIcon: Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: IconButton(
                               onPressed: _submit,
-                              icon:
-                                  const Icon(Icons.arrow_forward_ios_rounded)),
+                              icon: const Icon(Icons.arrow_forward_ios_rounded),
+                            ),
+                          ),
                         ),
                         obscureText: _isObscurePassword,
                       ),
@@ -162,53 +172,28 @@ class _AuthScreenState extends State<AuthScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            TextButton(
-                              onPressed: () {
-                                syncCardProvider.toggleLocalBackUp();
-                              },
-                              child: Text(
-                                'Local export/import',
-                                style: TextStyle(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .secondary),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                auth.sendPasswordResetEmail(
-                                    email: _emailController.text);
-                              },
-                              child: Text(
-                                'Şifremi Unuttum',
-                                style: TextStyle(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .secondary),
-                              ),
-                            )
-                          ],
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              syncCardProvider.setLoginMode(!syncCardProvider.isLoginMode);
+                            });
+                          },
+                          child: Text(
+                            syncCardProvider.isLoginMode ? appLocalizations.authCreateAccountButton : appLocalizations.authAlreadyHaveAccountButton,
+                            style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                          ),
                         ),
                         const Spacer(),
                         TextButton(
-                            onPressed: () {
-                              setState(() {
-                                syncCardProvider.setLoginMode(
-                                    !syncCardProvider.isLoginMode);
-                              });
-                            },
-                            child: Text(
-                              syncCardProvider.isLoginMode
-                                  ? appLocalizations.authCreateAccountButton
-                                  : appLocalizations
-                                      .authAlreadyHaveAccountButton,
-                              style: TextStyle(
-                                  color:
-                                      Theme.of(context).colorScheme.secondary),
-                            )),
+                          onPressed: () {
+                            syncCardProvider.setPasswordResetMode(true);
+                            syncCardProvider.setLoginMode(true);
+                          },
+                          child: Text(
+                            appLocalizations.forgotMyPassword,
+                            style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                          ),
+                        ),
                       ],
                     )
                   ],

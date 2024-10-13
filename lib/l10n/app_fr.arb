@@ -126,8 +126,6 @@
     "taskCardSentence8": "Planifiez et réalisez !",
     "taskCardSentence9": "Ajoutez des rappels pour ne rien manquer.",
     "taskCardSentence10": "Commencez à écrire pour transformer vos rêves en réalité.",  
-    "exportImportData": "Importer ou exporter vos données",
-    "loginToSyncData": "Connectez-vous pour synchroniser vos données",  
     "exportData": "Exporter les données",
     "importData": "Importer les données",
     "downloadData": "Télécharger les données sur l''appareil",
@@ -137,6 +135,17 @@
     "authPasswordLabel": "Mot de passe",
     "authConfirmPasswordLabel": "Confirmez le mot de passe",
     "authCreateAccountButton": "Créer un compte",
-    "authAlreadyHaveAccountButton": "J''ai déjà un compte"
+    "authAlreadyHaveAccountButton": "J''ai déjà un compte",
+    "emailValidationError": "Email invalide",
+    "passwordConfirmValidationError": "Les mots de passe ne correspondent pas",
+    "passwordValidationError": "Le mot de passe doit contenir au moins 6 caractères",
+    "forgotMyPassword": "Mot de passe oublié?",
+    "localImportExport": "Transfert de données local",
+    "emailAlreadyInUse": "L''email est déjà utilisé",
+    "authFailed": "Échec de l''authentification",
+    "back": "Retour",
+    "resetPassword": "Réinitialiser le mot de passe",
+    "resetPasswordEmailSent": "Email de réinitialisation du mot de passe envoyé !",
+    "resetPasswordEmailFailed": "Échec de l'envoi de l'email de réinitialisation"
   }
   

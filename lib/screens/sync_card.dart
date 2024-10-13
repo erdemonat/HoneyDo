@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:honeydo/components/windows_bar_components.dart/export_local_button.dart';
 import 'package:honeydo/components/windows_bar_components.dart/import_local_button.dart';
 import 'package:honeydo/components/windows_bar_components.dart/sync_status.dart';
+import 'package:honeydo/constants/constants.dart';
 import 'package:honeydo/providers/sync_card_provider.dart';
 import 'package:honeydo/screens/auth.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SyncButton extends StatefulWidget {
   const SyncButton({super.key});
@@ -14,8 +16,7 @@ class SyncButton extends StatefulWidget {
   SyncButtonState createState() => SyncButtonState();
 }
 
-class SyncButtonState extends State<SyncButton>
-    with SingleTickerProviderStateMixin {
+class SyncButtonState extends State<SyncButton> with SingleTickerProviderStateMixin {
   late OverlayEntry _overlayEntry;
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -123,44 +124,174 @@ class SyncDialogBox extends StatefulWidget {
 class _SyncDialogBoxState extends State<SyncDialogBox> {
   @override
   Widget build(BuildContext context) {
-    final SyncCardProvider syncCardProvider =
-        Provider.of(context, listen: true);
+    final SyncCardProvider syncCardProvider = Provider.of(context, listen: true);
+
     return Container(
       decoration: BoxDecoration(
-        border:
-            Border.all(color: Theme.of(context).colorScheme.primary, width: 1),
+        border: Border.all(color: Theme.of(context).colorScheme.primary, width: 1),
         borderRadius: BorderRadius.circular(12),
         color: Theme.of(context).colorScheme.surface,
       ),
       width: 400,
-      height: syncCardProvider.isLocalBackUp
-          ? 236
-          : (syncCardProvider.isLoginMode ? 236 : 310),
-      child: !syncCardProvider.isLocalBackUp
-          ? StreamBuilder<User?>(
-              stream: FirebaseAuth.instance.authStateChanges(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasData) {
-                  return const SyncStatus();
-                } else {
-                  return const AuthScreen();
-                }
-              })
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+      height: syncCardProvider.isLocalBackUp ? 236 : (syncCardProvider.isLoginMode ? 236 : 310),
+      child: syncCardProvider.isPasswordResetMode ? StackBackButton(widget: _buildPasswordReset(context)) : _buildAuthOrSyncScreen(context, syncCardProvider),
+    );
+  }
+
+  Widget _buildAuthOrSyncScreen(BuildContext context, SyncCardProvider syncCardProvider) {
+    return !syncCardProvider.isLocalBackUp
+        ? StreamBuilder<User?>(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasData) {
+                return const SyncStatus();
+              } else {
+                return const AuthScreen();
+              }
+            },
+          )
+        : const StackBackButton(widget: LocalSyncButtons());
+  }
+
+  Widget _buildPasswordReset(BuildContext context) {
+    final TextEditingController emailController = TextEditingController();
+    final AppLocalizations appLocalizations = AppLocalizations.of(context)!;
+
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                IconButton(
-                    onPressed: () {
-                      syncCardProvider.toggleLocalBackUp();
-                    },
-                    icon: Icon(Icons.arrow_back_ios)),
-                ImportLocalButton(),
-                ExportLocalButton(),
+                Text(appLocalizations.resetPassword, style: kCalendarDayNumberTextStyle(context).copyWith(fontSize: 18)),
+                Icon(
+                  Icons.lock_reset,
+                  color: Theme.of(context).colorScheme.onSurface,
+                  size: 22,
+                ),
               ],
             ),
+            const SizedBox(height: 18),
+            SizedBox(
+              height: 50,
+              child: TextFormField(
+                controller: emailController,
+                decoration: kAuthScreenInputDecoration(context).copyWith(
+                  label: Text(appLocalizations.authEmailLabel),
+                  suffixIcon: Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: IconButton(
+                      onPressed: () async {
+                        try {
+                          await FirebaseAuth.instance.sendPasswordResetEmail(email: emailController.text);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(appLocalizations.resetPasswordEmailSent),
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+                          Provider.of<SyncCardProvider>(context, listen: false).setPasswordResetMode(false); // Close reset screen
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(appLocalizations.resetPasswordEmailFailed),
+                              behavior: SnackBarBehavior.floating,
+                            ),
+                          );
+                        }
+                      },
+                      icon: const Icon(Icons.arrow_forward_ios),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class StackBackButton extends StatelessWidget {
+  final Widget widget;
+  const StackBackButton({
+    super.key,
+    required this.widget,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    SyncCardProvider syncCardProvider = Provider.of(context, listen: false);
+    AppLocalizations appLocalizations = AppLocalizations.of(context)!;
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: [
+        Container(
+          height: 42,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: TextButton.icon(
+              onPressed: syncCardProvider.resetSyncCardState,
+              label: Text(
+                appLocalizations.back,
+                style: TextStyle(color: Theme.of(context).colorScheme.surface),
+              ),
+              icon: Icon(
+                Icons.arrow_back_ios,
+                color: Theme.of(context).colorScheme.surface,
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 30),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              color: Theme.of(context).colorScheme.surface,
+            ),
+            width: double.infinity,
+            height: 200,
+            child: widget,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class LocalSyncButtons extends StatelessWidget {
+  const LocalSyncButtons({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const ImportLocalButton(),
+        Padding(
+          padding: const EdgeInsets.all(32),
+          child: VerticalDivider(
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+        ),
+        const ExportLocalButton(),
+      ],
     );
   }
 }

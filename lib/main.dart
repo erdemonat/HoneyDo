@@ -89,8 +89,7 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      locale: AppLocalizations.supportedLocales[
-          Provider.of<LanguageProvider>(context).languageIndex],
+      locale: AppLocalizations.supportedLocales[Provider.of<LanguageProvider>(context).languageIndex],
       supportedLocales: AppLocalizations.supportedLocales,
       theme: Provider.of<ThemeProvider>(context).getThemeData,
       debugShowCheckedModeBanner: false,

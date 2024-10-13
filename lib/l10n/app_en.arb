@@ -125,9 +125,7 @@
   "taskCardSentence7": "Click to record important moments.",
   "taskCardSentence8": "Plan and achieve!",
   "taskCardSentence9": "Add reminders so you don’t miss anything.",
-  "taskCardSentence10": "Start writing to turn your dreams into reality.",  
-  "exportImportData": "Import or export your data",
-  "loginToSyncData": "Log in to sync your data",  
+  "taskCardSentence10": "Start writing to turn your dreams into reality.", 
   "exportData": "Export data",
   "importData": "Import data",
   "downloadData": "Download data to device",
@@ -137,5 +135,16 @@
   "authPasswordLabel": "Password",
   "authConfirmPasswordLabel": "Confirm Password",
   "authCreateAccountButton": "Create an account",
-  "authAlreadyHaveAccountButton": "I already have an account"  
+  "authAlreadyHaveAccountButton": "I already have an account",
+  "emailValidationError": "Invalid email",
+  "passwordConfirmValidationError": "Passwords don''t match",
+  "passwordValidationError": "Password must be at least 6 characters",
+  "forgotMyPassword": "Forgot password?",
+  "localImportExport": "Local data transfer",
+  "emailAlreadyInUse": "Email already in use",
+  "authFailed": "Authentication failed",
+  "back": "Back",
+  "resetPassword": "Reset Password",
+  "resetPasswordEmailSent": "Password reset email sent!",
+  "resetPasswordEmailFailed": "Failed to send reset email"
 }

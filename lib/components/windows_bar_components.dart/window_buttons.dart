@@ -18,7 +18,7 @@ class WindowButtons extends StatelessWidget {
     );
     return Row(
       children: [
-        SyncButton(),
+        const SyncButton(),
         MinimizeWindowButton(
           colors: buttonColors,
         ),

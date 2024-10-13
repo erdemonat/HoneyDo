@@ -126,8 +126,6 @@
     "taskCardSentence8": "計画して達成しましょう！",
     "taskCardSentence9": "何も見逃さないようにリマインダーを追加してください。",
     "taskCardSentence10": "夢を現実にするために書き始めましょう。",
-    "exportImportData": "データをインポートまたはエクスポート",
-    "loginToSyncData": "データを同期するにはログインしてください",
     "exportData": "データをエクスポート",
     "importData": "データをインポート",
     "downloadData": "データをデバイスにダウンロード",
@@ -137,6 +135,17 @@
     "authPasswordLabel": "パスワード",
     "authConfirmPasswordLabel": "パスワードを確認",
     "authCreateAccountButton": "アカウントを作成",
-    "authAlreadyHaveAccountButton": "すでにアカウントを持っています"
+    "authAlreadyHaveAccountButton": "すでにアカウントを持っています",
+    "emailValidationError": "無効なメールアドレスです",
+    "passwordConfirmValidationError": "パスワードが一致しません",
+    "passwordValidationError": "パスワードは6文字以上でなければなりません",
+    "forgotMyPassword": "パスワードをお忘れですか？",
+    "localImportExport": "ローカルデータ転送",
+    "emailAlreadyInUse": "このメールアドレスは既に使用されています",
+    "authFailed": "認証に失敗しました",
+    "back": "戻る",
+    "resetPassword": "パスワードをリセット",
+    "resetPasswordEmailSent": "パスワードリセットのメールが送信されました！",
+    "resetPasswordEmailFailed": "リセットメールの送信に失敗しました"
   }
   

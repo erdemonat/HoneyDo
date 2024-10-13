@@ -126,8 +126,6 @@
     "taskCardSentence8": "计划并实现！",
     "taskCardSentence9": "添加提醒，确保不会错过任何事情。",
     "taskCardSentence10": "开始写作，将梦想变为现实。",
-    "exportImportData": "导入或导出数据",
-    "loginToSyncData": "登录以同步数据",
     "exportData": "导出数据",
     "importData": "导入数据",
     "downloadData": "下载数据到设备",
@@ -137,6 +135,17 @@
     "authPasswordLabel": "密码",
     "authConfirmPasswordLabel": "确认密码",
     "authCreateAccountButton": "创建账户",
-    "authAlreadyHaveAccountButton": "我已经有一个账户"
+    "authAlreadyHaveAccountButton": "我已经有一个账户",
+    "emailValidationError": "无效的电子邮件",
+    "passwordConfirmValidationError": "密码不匹配",
+    "passwordValidationError": "密码必须至少6个字符",
+    "forgotMyPassword": "忘记密码？",
+    "localImportExport": "本地数据传输",
+    "emailAlreadyInUse": "电子邮件已被使用",
+    "authFailed": "身份验证失败",
+    "back": "返回",
+    "resetPassword": "重置密码",
+    "resetPasswordEmailSent": "密码重置电子邮件已发送！",
+    "resetPasswordEmailFailed": "发送重置电子邮件失败"
   }
   

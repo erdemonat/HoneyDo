@@ -126,8 +126,6 @@
     "taskCardSentence8": "¡Planifica y logra!",
     "taskCardSentence9": "Agrega recordatorios para no olvidar nada.",
     "taskCardSentence10": "Empieza a escribir para convertir tus sueños en realidad.",  
-    "exportImportData": "Importa o exporta tus datos",
-    "loginToSyncData": "Inicia sesión para sincronizar tus datos",  
     "exportData": "Exportar datos",
     "importData": "Importar datos",
     "downloadData": "Descargar datos al dispositivo",
@@ -137,6 +135,17 @@
     "authPasswordLabel": "Contraseña",
     "authConfirmPasswordLabel": "Confirmar Contraseña",
     "authCreateAccountButton": "Crear una cuenta",
-    "authAlreadyHaveAccountButton": "Ya tengo una cuenta"
+    "authAlreadyHaveAccountButton": "Ya tengo una cuenta",
+    "emailValidationError": "Correo electrónico inválido",
+    "passwordConfirmValidationError": "Las contraseñas no coinciden",
+    "passwordValidationError": "La contraseña debe tener al menos 6 caracteres",
+    "forgotMyPassword": "¿Olvidaste tu contraseña?",
+    "localImportExport": "Transferencia de datos local",
+    "emailAlreadyInUse": "El correo electrónico ya está en uso",
+    "authFailed": "Autenticación fallida",
+    "back": "Atrás",
+    "resetPassword": "Restablecer la contraseña",   
+    "resetPasswordEmailSent": "¡Correo de restablecimiento de contraseña enviado!",
+    "resetPasswordEmailFailed": "Error al enviar el correo de restablecimiento"
   }
   
