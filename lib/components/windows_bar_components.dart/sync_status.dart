@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:honeydo/main.dart';
 import 'package:honeydo/screens/auth.dart';
 
 class SyncStatus extends StatelessWidget {
@@ -41,15 +42,14 @@ class SyncStatus extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   TextButton.icon(
-                    onPressed: () {},
+                    onPressed: isarService.createCloudBackUp,
                     label: Text(
                       'Son eşitleme: 18.09.2024 - 22:36',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.tertiary,
                       ),
                     ),
-                    icon: Icon(Icons.sync,
-                        color: Theme.of(context).colorScheme.onSurface),
+                    icon: Icon(Icons.sync, color: Theme.of(context).colorScheme.onSurface),
                   )
                 ],
               ),
@@ -63,15 +63,14 @@ class SyncStatus extends StatelessWidget {
           ),
         ),
         TextButton.icon(
-          onPressed: () {},
+          onPressed: isarService.downloadDataToDevice,
           label: Text(
             appLocalizations.downloadData,
             style: TextStyle(
               color: Theme.of(context).colorScheme.onPrimary,
             ),
           ),
-          icon: Icon(Icons.file_download_outlined,
-              size: 20, color: Theme.of(context).colorScheme.onPrimary),
+          icon: Icon(Icons.file_download_outlined, size: 20, color: Theme.of(context).colorScheme.onPrimary),
         ),
       ],
     );

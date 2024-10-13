@@ -1,5 +1,6 @@
 import 'dart:io';
-import 'package:flutter/foundation.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:honeydo/screens/auth.dart';
 import 'package:path/path.dart' as p;
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
@@ -23,6 +24,7 @@ class IsarService {
     if (_isar == null) {
       final dir = await getApplicationDocumentsDirectory();
       _isar = await Isar.open(
+        compactOnLaunch: const CompactCondition(minRatio: 1.5),
         [
           pomodoro_model.PomodoroSettingsSchema,
           task_model.HoneyDoDataSchema,
@@ -429,6 +431,38 @@ class IsarService {
       }
       await isar.copyToFile(outputFile);
     }
+  }
+
+  Future<void> downloadDataToDevice() async {
+    await createCloudBackUp();
+    await createBackUp();
+  }
+
+  Future<void> createCloudBackUp() async {
+    final isar = await db;
+    var currentUserUID = auth.currentUser!.uid;
+    var storageRef = FirebaseStorage.instance.ref().child(currentUserUID).child("$currentUserUID.isar");
+    DateTime now = DateTime.now();
+
+    // Get the application documents directory
+    final appDocDir = await getApplicationDocumentsDirectory();
+
+    // Create a backup file path
+    String backupPath = '${appDocDir.path}/$currentUserUID.isar';
+
+    // Create a File instance for the backup file
+    final File backupFile = File(backupPath);
+
+    // Check if the backup file exists; if so, delete it
+    if (await backupFile.exists()) {
+      await backupFile.delete();
+    }
+
+    // Copy the database to the backup file
+    await isar.copyToFile(backupPath);
+
+    // Now upload the file to Firebase Storage
+    await storageRef.putFile(backupFile);
   }
 
   Future<void> restoreDB() async {
