@@ -67,7 +67,6 @@ Future main() async {
     ],
     child: const MyApp(),
   ));
-  appWindow.show();
   doWhenWindowReady(() {
     final win = appWindow;
     win.minSize = const Size(1200, 820);

@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:honeydo/service/isar_service.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class ImportLocalButton extends StatelessWidget {
-  const ImportLocalButton({
+class ExportImportButton extends StatelessWidget {
+  final String buttonText;
+  final Widget? subtitleText;
+  final void Function() onTap;
+  final EdgeInsetsGeometry? margin;
+  final IconData icon;
+  const ExportImportButton({
     super.key,
+    required this.buttonText,
+    this.subtitleText,
+    required this.onTap,
+    this.margin,
+    required this.icon,
   });
 
   @override
@@ -12,11 +20,9 @@ class ImportLocalButton extends StatelessWidget {
     return Expanded(
       child: InkWell(
         borderRadius: BorderRadius.circular(10),
-        onTap: () async {
-          await IsarService().restoreDB();
-        },
+        onTap: onTap,
         child: Container(
-          margin: const EdgeInsets.only(left: 25),
+          margin: margin,
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -26,16 +32,18 @@ class ImportLocalButton extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Icon(
-                Icons.file_download_outlined,
+                icon,
                 size: 55,
                 color: Theme.of(context).colorScheme.onSurface,
               ),
-              const SizedBox(height: 25),
+              const SizedBox(height: 16),
               Text(
-                AppLocalizations.of(context)!.importData,
+                buttonText,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontWeight: FontWeight.w600),
-              )
+                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+              ),
+              if (subtitleText != null) const SizedBox(height: 5),
+              if (subtitleText != null) subtitleText!,
             ],
           ),
         ),

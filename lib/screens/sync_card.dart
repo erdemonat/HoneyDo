@@ -1,11 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:honeydo/components/windows_bar_components.dart/export_local_button.dart';
-import 'package:honeydo/components/windows_bar_components.dart/import_local_button.dart';
+import 'package:honeydo/components/export_import_button.dart';
 import 'package:honeydo/components/windows_bar_components.dart/sync_status.dart';
 import 'package:honeydo/constants/constants.dart';
 import 'package:honeydo/providers/sync_card_provider.dart';
 import 'package:honeydo/screens/auth.dart';
+import 'package:honeydo/service/isar_service.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -283,14 +284,28 @@ class LocalSyncButtons extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const ImportLocalButton(),
+        ExportImportButton(
+          buttonText: AppLocalizations.of(context)!.exportData,
+          onTap: () async {
+            await IsarService().createBackUp();
+          },
+          icon: Symbols.drive_folder_upload_rounded,
+          margin: const EdgeInsets.only(left: 25),
+        ),
         Padding(
           padding: const EdgeInsets.all(32),
           child: VerticalDivider(
             color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
-        const ExportLocalButton(),
+        ExportImportButton(
+          buttonText: AppLocalizations.of(context)!.importData,
+          onTap: () async {
+            await IsarService().restoreDB();
+          },
+          icon: Symbols.install_desktop_rounded,
+          margin: const EdgeInsets.only(right: 25),
+        ),
       ],
     );
   }

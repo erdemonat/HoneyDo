@@ -83,7 +83,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     if (syncCardProvider.isLoginMode)
                       TextButton.icon(
                         icon: Icon(
-                          Icons.backup,
+                          Icons.drive_file_move,
                           color: Theme.of(context).colorScheme.onSurface,
                         ),
                         onPressed: () {

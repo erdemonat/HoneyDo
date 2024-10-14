@@ -52,7 +52,6 @@ class IsarService {
     });
   }
 
-  // Pomodoro ayarlarını çekmek için
   Future<pomodoro_model.PomodoroSettings?> getPomodoroSettings() async {
     final isar = await db;
     return await isar.pomodoroSettings.get(1);
@@ -60,7 +59,7 @@ class IsarService {
 
   Future<List<task_model.HoneyDoData>> getAllHoneyDoData() async {
     final isar = await db;
-    return await isar.honeyDoDatas.where().findAll(); // HoneyDoDatas'a erişim sağlama
+    return await isar.honeyDoDatas.where().findAll();
   }
 
   Future<task_model.HoneyDoData?> getTaskDataByName() async {
@@ -186,7 +185,7 @@ class IsarService {
 
     await isar.writeTxn(() async {
       for (int i = 0; i < meals.length; i++) {
-        meals[i].order = i; // Sıralamayı güncelle
+        meals[i].order = i;
         await isar.meals.put(meals[i]);
       }
     });
@@ -434,11 +433,13 @@ class IsarService {
   }
 
   Future<void> downloadDataToDevice() async {
-    await createCloudBackUp();
+    await createCloudBackUp(
+      (bytesTransferred, totalBytes) {},
+    );
     await createBackUp();
   }
 
-  Future<void> createCloudBackUp() async {
+  Future<void> createCloudBackUp(Function(int bytesTransferred, int totalBytes) onProgress) async {
     final isar = await db;
     var currentUserUID = auth.currentUser!.uid;
     var storageRef = FirebaseStorage.instance.ref().child(currentUserUID).child("$currentUserUID.isar");
@@ -462,7 +463,16 @@ class IsarService {
     await isar.copyToFile(backupPath);
 
     // Now upload the file to Firebase Storage
-    await storageRef.putFile(backupFile);
+    final uploadTask = storageRef.putFile(backupFile);
+
+    uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
+      int bytesTransferred = snapshot.bytesTransferred;
+      int totalBytes = snapshot.totalBytes;
+
+      onProgress(bytesTransferred, totalBytes);
+    });
+
+    await uploadTask;
   }
 
   Future<void> restoreDB() async {

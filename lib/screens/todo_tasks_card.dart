@@ -47,9 +47,9 @@ class _TasksCardState extends State<TasksCard> {
     String taskDate = focusDateProvider.getFocusDate();
     if (taskTextController.text.isNotEmpty) {
       await IsarService().createOrUpdateTaskData(context, taskDate, taskName);
+      soundEffectProvider.playSound('notificationBeep');
+      await tasksMealsProvider.loadTasks(context);
     }
-    await tasksMealsProvider.loadTasks(context);
-    soundEffectProvider.playSound('notificationBeep');
     taskTextController.clear();
   }
 
@@ -58,9 +58,9 @@ class _TasksCardState extends State<TasksCard> {
     String mealDate = focusDateProvider.getFocusDate();
     if (taskTextController.text.isNotEmpty) {
       await IsarService().createOrUpdateMealData(mealDate, mealName);
+      soundEffectProvider.playSound('notificationBeep');
+      await tasksMealsProvider.loadMeals(context);
     }
-    await tasksMealsProvider.loadMeals(context);
-    soundEffectProvider.playSound('notificationBeep');
     taskTextController.clear();
   }
 
