@@ -271,9 +271,22 @@ class _PomodoroCardState extends State<PomodoroCard> with SingleTickerProviderSt
         ),
         IconButton(
           onPressed: _playPauseTimer,
-          icon: Icon(
-            _isPlay ? Icons.pause : Icons.play_arrow_rounded,
-            size: screenHeight * 0.070,
+          icon: AnimatedSwitcher(
+            duration: Duration(milliseconds: 300),
+            transitionBuilder: (Widget child, Animation<double> animation) {
+              return SlideTransition(
+                position: Tween<Offset>(
+                  begin: Offset(0.5, 0.0), // Sağdan sola kayma
+                  end: Offset.zero,
+                ).animate(animation),
+                child: FadeTransition(opacity: animation, child: child),
+              );
+            },
+            child: Icon(
+              _isPlay ? Icons.pause : Icons.play_arrow_rounded,
+              key: ValueKey<bool>(_isPlay),
+              size: screenHeight * 0.070,
+            ),
           ),
         ),
         IconButton(

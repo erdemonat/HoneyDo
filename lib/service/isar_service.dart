@@ -1,6 +1,9 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:honeydo/providers/sync_card_provider.dart';
 import 'package:honeydo/screens/auth.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart' as p;
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
@@ -439,11 +442,21 @@ class IsarService {
     await createBackUp();
   }
 
-  Future<void> createCloudBackUp(Function(int bytesTransferred, int totalBytes) onProgress) async {
+  Future<void> createCloudBackUp(Function(double bytesTransferred, double totalBytes) onProgress) async {
     final isar = await db;
     var currentUserUID = auth.currentUser!.uid;
-    var storageRef = FirebaseStorage.instance.ref().child(currentUserUID).child("$currentUserUID.isar");
-    DateTime now = DateTime.now();
+
+    DateTime localTimeNow = DateTime.now();
+    String localFormattedDate = DateFormat('dd-MM-yyyy HH:mm').format(localTimeNow);
+
+    var fileName = "$currentUserUID.isar";
+    var storageRef = FirebaseStorage.instance.ref().child(currentUserUID).child(fileName);
+
+    SettableMetadata metadata = SettableMetadata(
+      customMetadata: {
+        'uploadDateLocal': localFormattedDate,
+      },
+    );
 
     // Get the application documents directory
     final appDocDir = await getApplicationDocumentsDirectory();
@@ -463,16 +476,103 @@ class IsarService {
     await isar.copyToFile(backupPath);
 
     // Now upload the file to Firebase Storage
-    final uploadTask = storageRef.putFile(backupFile);
+    final uploadTask = storageRef.putFile(backupFile, metadata);
 
     uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
-      int bytesTransferred = snapshot.bytesTransferred;
-      int totalBytes = snapshot.totalBytes;
+      double bytesTransferred = snapshot.bytesTransferred / (1024 * 1024);
+      double totalBytes = snapshot.totalBytes / (1024 * 1024);
 
       onProgress(bytesTransferred, totalBytes);
     });
 
     await uploadTask;
+  }
+
+  Future<void> restoreDBOnCloud() async {
+    final isar = await db;
+    var currentUserUID = auth.currentUser!.uid;
+
+    var fileName = "$currentUserUID.isar";
+    var storageRef = FirebaseStorage.instance.ref().child(currentUserUID).child(fileName);
+
+    // Firebase Storage'den veriyi indiriyoruz
+    Uint8List? fileData = await storageRef.getData();
+
+    if (fileData != null) {
+      // Geçici dosya yolu oluşturuluyor
+      final tempDir = await getTemporaryDirectory();
+      final tempFilePath = p.join(tempDir.path, fileName);
+      final backupFile = File(tempFilePath);
+
+      // İndirilen veriyi geçici dosyaya yazıyoruz
+      await backupFile.writeAsBytes(fileData);
+
+      // Eğer geçici dosya gerçekten varsa
+      if (await backupFile.exists()) {
+        final dbDirectory = await getApplicationDocumentsDirectory();
+        final dbPath = p.join(dbDirectory.path, 'default.isar');
+
+        // Veritabanı kapatılmadan önce verileri belleğe alıyoruz
+        final weatherSchema = await isar.weatherDatas.get(2);
+        final windowSchema = await isar.windowSettings.get(1);
+        final volumeSchema = await isar.volumeDatas.get(1);
+        final themeSchema = await isar.themeDatas.get(2);
+
+        // Eğer veritabanı açıksa kapatıyoruz
+        if (isar.isOpen) {
+          await isar.close();
+        }
+
+        // Hedefte var olan dosyayı kontrol ediyoruz
+        final existingDbFile = File(dbPath);
+        if (await existingDbFile.exists()) {
+          // Dosya varsa siliyoruz
+          await existingDbFile.delete();
+        }
+
+        // Geçici dosyayı veritabanı dosyasına kopyalıyoruz
+        await backupFile.copy(dbPath);
+
+        // Veritabanını yeniden açıyoruz
+        final reopenedIsar = await Isar.open(
+          [
+            pomodoro_model.PomodoroSettingsSchema,
+            task_model.HoneyDoDataSchema,
+            task_model.DateLinksSchema,
+            task_model.TaskSchema,
+            task_model.SubTaskSchema,
+            task_model.MealSchema,
+            task_model.SubMealSchema,
+            WeatherDataSchema,
+            WindowSettingsSchema,
+            preference_model.VolumeDataSchema,
+            preference_model.ThemeDataSchema,
+            preference_model.LanguageSchema,
+          ],
+          directory: dbDirectory.path,
+        );
+
+        // Verileri geri yüklüyoruz
+        await reopenedIsar.writeTxn(
+          () async {
+            if (weatherSchema != null) {
+              await reopenedIsar.weatherDatas.put(weatherSchema);
+            }
+            if (windowSchema != null) {
+              await reopenedIsar.windowSettings.put(windowSchema);
+            }
+            if (volumeSchema != null) {
+              await reopenedIsar.volumeDatas.put(volumeSchema);
+            }
+            if (themeSchema != null) {
+              await reopenedIsar.themeDatas.put(themeSchema);
+            }
+          },
+        );
+
+        await _restartApp();
+      }
+    } else {}
   }
 
   Future<void> restoreDB() async {

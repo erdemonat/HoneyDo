@@ -1,22 +1,31 @@
+import 'dart:async';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:honeydo/main.dart';
+import 'package:honeydo/screens/auth.dart';
+import 'package:intl/intl.dart';
 
 class SyncCardProvider extends ChangeNotifier {
+  Timer? _debounceTimer;
+
   // Auth
   bool _isLoginMode = true;
   bool _isPasswordResetMode = false;
   bool _isLocalBackUp = false;
   // Sync Status
+  bool _isUploadMode = false;
   double _uploadProgress = 0;
-  int _dataBytesTransferred = 0;
-  int _dataTotalBytes = 0;
+  double _dataBytesTransferred = 0;
+  double _dataTotalBytes = 0;
 
   bool get isLoginMode => _isLoginMode;
   bool get isLocalBackUp => _isLocalBackUp;
   bool get isPasswordResetMode => _isPasswordResetMode;
+  bool get isUploadMode => _isUploadMode;
   double get uploadProgress => _uploadProgress;
-  int get databytesTransferred => _dataBytesTransferred;
-  int get datatotalBytes => _dataTotalBytes;
+  double get databytesTransferred => _dataBytesTransferred;
+  double get datatotalBytes => _dataTotalBytes;
 
   void toggleLoginMode() {
     _isLoginMode = !_isLoginMode;
@@ -25,6 +34,11 @@ class SyncCardProvider extends ChangeNotifier {
 
   void setLoginMode(bool value) {
     _isLoginMode = value;
+    notifyListeners();
+  }
+
+  void setIsUploadMode(bool value) {
+    _isUploadMode = value;
     notifyListeners();
   }
 
@@ -51,22 +65,40 @@ class SyncCardProvider extends ChangeNotifier {
   }
 
   void startBackup() async {
-    await isarService.createCloudBackUp((int bytesTransferred, int totalBytes) {
-      double progress = (bytesTransferred / totalBytes) * 100;
-      _uploadProgress = progress;
-      _dataBytesTransferred = bytesTransferred;
-      _dataTotalBytes = totalBytes;
-      notifyListeners();
+    _isUploadMode = true;
+    notifyListeners();
+
+    await isarService.createCloudBackUp((double bytesTransferred, double totalBytes) {
+      if (_debounceTimer?.isActive ?? false) _debounceTimer!.cancel();
+      _debounceTimer = Timer(const Duration(milliseconds: 100), () {
+        _uploadProgress = bytesTransferred / totalBytes;
+        _dataBytesTransferred = bytesTransferred;
+        _dataTotalBytes = totalBytes;
+        notifyListeners();
+      });
     });
+
+    _isUploadMode = false;
+    notifyListeners();
   }
 
-  String uploadStatus() {
-    if (_uploadProgress == 0) {
-      return 'Son eşitleme: 18.09.2024 - 22:36';
-    } else if (_uploadProgress < 100) {
-      return 'Yükleme devam ediyor: ${_uploadProgress.toStringAsFixed(0)}%';
-    } else {
-      return 'Yükleme tamamlandı: ${_uploadProgress.toStringAsFixed(0)}%';
-    }
+  Future<void> getUploadDateFromMetadata() async {
+    var currentUserUID = auth.currentUser!.uid;
+    var fileName = "$currentUserUID.isar";
+    var storageRef = FirebaseStorage.instance.ref().child(currentUserUID).child(fileName);
+
+    // Get the file's metadata
+    FullMetadata metadata = await storageRef.getMetadata();
+
+    // Get the updated time (in UTC)
+    DateTime updatedTimeUtc = metadata.updated!;
+
+    // Convert UTC time to local time
+    DateTime updatedTimeLocal = updatedTimeUtc.toLocal();
+
+    // Format the date as a string
+    String formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(updatedTimeLocal);
+
+    print('Upload Date (Local Time): $formattedDate');
   }
 }
