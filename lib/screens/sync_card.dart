@@ -38,7 +38,8 @@ class SyncButtonState extends State<SyncButton> with SingleTickerProviderStateMi
     super.dispose();
   }
 
-  void _showOverlay(BuildContext context) {
+  void _showOverlay(BuildContext context) async {
+    final SyncCardProvider syncCardProvider = Provider.of<SyncCardProvider>(context, listen: false);
     final overlay = Overlay.of(context);
     final RenderBox renderBox = context.findRenderObject() as RenderBox;
     final Offset position = renderBox.localToGlobal(Offset.zero);
@@ -73,6 +74,7 @@ class SyncButtonState extends State<SyncButton> with SingleTickerProviderStateMi
 
     overlay.insert(_overlayEntry);
     _controller.forward();
+    syncCardProvider.getFileMetadata();
   }
 
   void _removeOverlay() {
@@ -91,6 +93,7 @@ class SyncButtonState extends State<SyncButton> with SingleTickerProviderStateMi
       width: 46,
       child: IconButton(
         onPressed: () {
+          Provider.of<SyncCardProvider>(context, listen: false).getFileMetadata;
           _showOverlay(context);
         },
         hoverColor: Theme.of(context).colorScheme.primary,

@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:honeydo/main.dart';
+import 'package:honeydo/model/user_preferences_model.dart';
 import 'package:honeydo/screens/auth.dart';
-import 'package:intl/intl.dart';
 
 class SyncCardProvider extends ChangeNotifier {
   Timer? _debounceTimer;
@@ -15,17 +15,29 @@ class SyncCardProvider extends ChangeNotifier {
   bool _isLocalBackUp = false;
   // Sync Status
   bool _isUploadMode = false;
+  bool _isDownloadMode = false;
   double _uploadProgress = 0;
-  double _dataBytesTransferred = 0;
-  double _dataTotalBytes = 0;
+  double _dataBytesTransferredUpload = 0;
+  double _dataTotalBytesUpload = 0;
+  double _downloadProgress = 0;
+  double _dataBytesTransferredDownload = 0;
+  double _dataTotalBytesDownload = 0;
+  String _lastUploadTime = "";
+  String _lastDownloadTime = "";
 
   bool get isLoginMode => _isLoginMode;
   bool get isLocalBackUp => _isLocalBackUp;
   bool get isPasswordResetMode => _isPasswordResetMode;
   bool get isUploadMode => _isUploadMode;
+  bool get isDownloadMode => _isDownloadMode;
   double get uploadProgress => _uploadProgress;
-  double get databytesTransferred => _dataBytesTransferred;
-  double get datatotalBytes => _dataTotalBytes;
+  double get downloadProgress => _downloadProgress;
+  double get dataBytesTransferredUpload => _dataBytesTransferredUpload;
+  double get dataBytesTransferredDownload => _dataBytesTransferredDownload;
+  double get dataTotalBytesUpload => _dataTotalBytesUpload;
+  double get dataTotalBytesDownload => _dataBytesTransferredDownload;
+  String get lastUploadTime => _lastUploadTime;
+  String get lastDownloadTime => _lastDownloadTime;
 
   void toggleLoginMode() {
     _isLoginMode = !_isLoginMode;
@@ -72,33 +84,65 @@ class SyncCardProvider extends ChangeNotifier {
       if (_debounceTimer?.isActive ?? false) _debounceTimer!.cancel();
       _debounceTimer = Timer(const Duration(milliseconds: 100), () {
         _uploadProgress = bytesTransferred / totalBytes;
-        _dataBytesTransferred = bytesTransferred;
-        _dataTotalBytes = totalBytes;
+        _dataBytesTransferredUpload = bytesTransferred;
+        _dataTotalBytesUpload = totalBytes;
         notifyListeners();
       });
     });
 
     _isUploadMode = false;
+    getFileMetadata();
     notifyListeners();
   }
 
-  Future<void> getUploadDateFromMetadata() async {
+  void startRestoreDB() async {
+    _isDownloadMode = true;
+    notifyListeners();
+
+    await isarService.restoreDBOnCloud((double bytesTransferred, double totalBytes) {
+      if (_debounceTimer?.isActive ?? false) _debounceTimer!.cancel();
+      _debounceTimer = Timer(const Duration(milliseconds: 100), () {
+        _downloadProgress = bytesTransferred / totalBytes;
+        _dataBytesTransferredDownload = bytesTransferred;
+        _dataTotalBytesDownload = totalBytes;
+        notifyListeners();
+      });
+    });
+
+    _isDownloadMode = false;
+    getFileMetadata();
+    notifyListeners();
+  }
+
+  Future<void> getFileMetadata() async {
+    final isar = await isarService.db;
     var currentUserUID = auth.currentUser!.uid;
     var fileName = "$currentUserUID.isar";
-    var storageRef = FirebaseStorage.instance.ref().child(currentUserUID).child(fileName);
+    var oldLastUploadTime = _lastUploadTime;
+    var oldLastDownloadTime = _lastDownloadTime;
+    try {
+      final storageRef = FirebaseStorage.instance.ref().child(currentUserUID).child(fileName);
+      final FullMetadata metadata = await storageRef.getMetadata();
 
-    // Get the file's metadata
-    FullMetadata metadata = await storageRef.getMetadata();
+      if (metadata.customMetadata != null) {
+        final uploadDateLocal = metadata.customMetadata?['uploadDateLocal'];
+        _lastUploadTime = uploadDateLocal!;
+      } else {
+        _lastUploadTime = "";
+      }
+    } catch (e) {}
 
-    // Get the updated time (in UTC)
-    DateTime updatedTimeUtc = metadata.updated!;
+    try {
+      final cloudMetaData = await isar.cloudMetaDatas.get(4);
 
-    // Convert UTC time to local time
-    DateTime updatedTimeLocal = updatedTimeUtc.toLocal();
-
-    // Format the date as a string
-    String formattedDate = DateFormat('yyyy-MM-dd HH:mm:ss').format(updatedTimeLocal);
-
-    print('Upload Date (Local Time): $formattedDate');
+      if (cloudMetaData != null && cloudMetaData.lastDownloadTime != null) {
+        _lastDownloadTime = cloudMetaData.lastDownloadTime!;
+      } else {
+        _lastDownloadTime = "";
+      }
+    } catch (e) {
+      _lastDownloadTime = "";
+    }
+    if (_lastDownloadTime != oldLastDownloadTime || _lastUploadTime != oldLastUploadTime) notifyListeners();
   }
 }

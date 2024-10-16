@@ -23,3 +23,16 @@ class Language {
 
   late int languageIndex;
 }
+
+@Collection()
+class CloudMetaData {
+  Id id = 4;
+
+  String? lastDownloadTime;
+
+  CloudMetaData({this.lastDownloadTime});
+
+  void updateDownloadTime(String newDownloadTime) {
+    lastDownloadTime = newDownloadTime;
+  }
+}

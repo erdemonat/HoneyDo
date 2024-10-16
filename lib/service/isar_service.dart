@@ -41,6 +41,7 @@ class IsarService {
           preference_model.VolumeDataSchema,
           preference_model.ThemeDataSchema,
           preference_model.LanguageSchema,
+          preference_model.CloudMetaDataSchema,
         ],
         directory: dir.path,
       );
@@ -447,7 +448,7 @@ class IsarService {
     var currentUserUID = auth.currentUser!.uid;
 
     DateTime localTimeNow = DateTime.now();
-    String localFormattedDate = DateFormat('dd-MM-yyyy HH:mm').format(localTimeNow);
+    String localFormattedDate = DateFormat('dd.MM.yyyy-HH:mm').format(localTimeNow);
 
     var fileName = "$currentUserUID.isar";
     var storageRef = FirebaseStorage.instance.ref().child(currentUserUID).child(fileName);
@@ -488,91 +489,99 @@ class IsarService {
     await uploadTask;
   }
 
-  Future<void> restoreDBOnCloud() async {
+  Future<void> restoreDBOnCloud(Function(double bytesTransferred, double totalBytes) onProgress) async {
     final isar = await db;
     var currentUserUID = auth.currentUser!.uid;
 
     var fileName = "$currentUserUID.isar";
     var storageRef = FirebaseStorage.instance.ref().child(currentUserUID).child(fileName);
 
-    // Firebase Storage'den veriyi indiriyoruz
-    Uint8List? fileData = await storageRef.getData();
+    // Get file metadata to determine the total file size
+    final metadata = await storageRef.getMetadata();
+    final totalBytes = metadata.size ?? 0;
 
-    if (fileData != null) {
-      // Geçici dosya yolu oluşturuluyor
-      final tempDir = await getTemporaryDirectory();
-      final tempFilePath = p.join(tempDir.path, fileName);
-      final backupFile = File(tempFilePath);
+    if (totalBytes == 0) {
+      throw Exception("File size is zero, cannot download.");
+    }
 
-      // İndirilen veriyi geçici dosyaya yazıyoruz
-      await backupFile.writeAsBytes(fileData);
+    final tempDir = await getTemporaryDirectory();
+    final tempFilePath = p.join(tempDir.path, fileName);
+    final backupFile = File(tempFilePath);
 
-      // Eğer geçici dosya gerçekten varsa
-      if (await backupFile.exists()) {
-        final dbDirectory = await getApplicationDocumentsDirectory();
-        final dbPath = p.join(dbDirectory.path, 'default.isar');
+    // Start the download and track progress
+    final downloadTask = storageRef.writeToFile(backupFile);
 
-        // Veritabanı kapatılmadan önce verileri belleğe alıyoruz
-        final weatherSchema = await isar.weatherDatas.get(2);
-        final windowSchema = await isar.windowSettings.get(1);
-        final volumeSchema = await isar.volumeDatas.get(1);
-        final themeSchema = await isar.themeDatas.get(2);
+    downloadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
+      double bytesTransferred = snapshot.bytesTransferred / (1024 * 1024);
+      double totalBytes = snapshot.totalBytes / (1024 * 1024);
 
-        // Eğer veritabanı açıksa kapatıyoruz
-        if (isar.isOpen) {
-          await isar.close();
-        }
+      onProgress(bytesTransferred, totalBytes);
+    });
 
-        // Hedefte var olan dosyayı kontrol ediyoruz
-        final existingDbFile = File(dbPath);
-        if (await existingDbFile.exists()) {
-          // Dosya varsa siliyoruz
-          await existingDbFile.delete();
-        }
+    await downloadTask;
 
-        // Geçici dosyayı veritabanı dosyasına kopyalıyoruz
-        await backupFile.copy(dbPath);
+    if (await backupFile.exists()) {
+      final dbDirectory = await getApplicationDocumentsDirectory();
+      final dbPath = p.join(dbDirectory.path, 'default.isar');
 
-        // Veritabanını yeniden açıyoruz
-        final reopenedIsar = await Isar.open(
-          [
-            pomodoro_model.PomodoroSettingsSchema,
-            task_model.HoneyDoDataSchema,
-            task_model.DateLinksSchema,
-            task_model.TaskSchema,
-            task_model.SubTaskSchema,
-            task_model.MealSchema,
-            task_model.SubMealSchema,
-            WeatherDataSchema,
-            WindowSettingsSchema,
-            preference_model.VolumeDataSchema,
-            preference_model.ThemeDataSchema,
-            preference_model.LanguageSchema,
-          ],
-          directory: dbDirectory.path,
-        );
+      final weatherSchema = await isar.weatherDatas.get(2);
+      final windowSchema = await isar.windowSettings.get(1);
+      final volumeSchema = await isar.volumeDatas.get(1);
+      final themeSchema = await isar.themeDatas.get(2);
 
-        // Verileri geri yüklüyoruz
-        await reopenedIsar.writeTxn(
-          () async {
-            if (weatherSchema != null) {
-              await reopenedIsar.weatherDatas.put(weatherSchema);
-            }
-            if (windowSchema != null) {
-              await reopenedIsar.windowSettings.put(windowSchema);
-            }
-            if (volumeSchema != null) {
-              await reopenedIsar.volumeDatas.put(volumeSchema);
-            }
-            if (themeSchema != null) {
-              await reopenedIsar.themeDatas.put(themeSchema);
-            }
-          },
-        );
-
-        await _restartApp();
+      if (isar.isOpen) {
+        await isar.close();
       }
-    } else {}
+
+      final existingDbFile = File(dbPath);
+      if (await existingDbFile.exists()) {
+        await existingDbFile.delete();
+      }
+
+      await backupFile.copy(dbPath);
+
+      final reopenedIsar = await Isar.open(
+        [
+          pomodoro_model.PomodoroSettingsSchema,
+          task_model.HoneyDoDataSchema,
+          task_model.DateLinksSchema,
+          task_model.TaskSchema,
+          task_model.SubTaskSchema,
+          task_model.MealSchema,
+          task_model.SubMealSchema,
+          WeatherDataSchema,
+          WindowSettingsSchema,
+          preference_model.VolumeDataSchema,
+          preference_model.ThemeDataSchema,
+          preference_model.LanguageSchema,
+          preference_model.CloudMetaDataSchema,
+        ],
+        directory: dbDirectory.path,
+      );
+
+      await reopenedIsar.writeTxn(
+        () async {
+          if (weatherSchema != null) {
+            await reopenedIsar.weatherDatas.put(weatherSchema);
+          }
+          if (windowSchema != null) {
+            await reopenedIsar.windowSettings.put(windowSchema);
+          }
+          if (volumeSchema != null) {
+            await reopenedIsar.volumeDatas.put(volumeSchema);
+          }
+          if (themeSchema != null) {
+            await reopenedIsar.themeDatas.put(themeSchema);
+          }
+          DateTime localTimeNow = DateTime.now();
+          String localFormattedDate = DateFormat('dd.MM.yyyy-HH:mm').format(localTimeNow);
+          final newCloudMetaData = preference_model.CloudMetaData(lastDownloadTime: localFormattedDate);
+          await reopenedIsar.cloudMetaDatas.put(newCloudMetaData);
+        },
+      );
+
+      await _restartApp();
+    }
   }
 
   Future<void> restoreDB() async {
@@ -622,6 +631,7 @@ class IsarService {
             WindowSettingsSchema,
             preference_model.VolumeDataSchema,
             preference_model.ThemeDataSchema,
+            preference_model.LanguageSchema,
             preference_model.LanguageSchema,
           ],
           directory: dbDirectory.path,

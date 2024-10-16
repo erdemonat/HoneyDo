@@ -1109,3 +1109,469 @@ extension LanguageQueryProperty
     });
   }
 }
+
+// coverage:ignore-file
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+
+extension GetCloudMetaDataCollection on Isar {
+  IsarCollection<CloudMetaData> get cloudMetaDatas => this.collection();
+}
+
+const CloudMetaDataSchema = CollectionSchema(
+  name: r'CloudMetaData',
+  id: 2597621320577676011,
+  properties: {
+    r'lastDownloadTime': PropertySchema(
+      id: 0,
+      name: r'lastDownloadTime',
+      type: IsarType.string,
+    )
+  },
+  estimateSize: _cloudMetaDataEstimateSize,
+  serialize: _cloudMetaDataSerialize,
+  deserialize: _cloudMetaDataDeserialize,
+  deserializeProp: _cloudMetaDataDeserializeProp,
+  idName: r'id',
+  indexes: {},
+  links: {},
+  embeddedSchemas: {},
+  getId: _cloudMetaDataGetId,
+  getLinks: _cloudMetaDataGetLinks,
+  attach: _cloudMetaDataAttach,
+  version: '3.1.0+1',
+);
+
+int _cloudMetaDataEstimateSize(
+  CloudMetaData object,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  var bytesCount = offsets.last;
+  {
+    final value = object.lastDownloadTime;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  return bytesCount;
+}
+
+void _cloudMetaDataSerialize(
+  CloudMetaData object,
+  IsarWriter writer,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  writer.writeString(offsets[0], object.lastDownloadTime);
+}
+
+CloudMetaData _cloudMetaDataDeserialize(
+  Id id,
+  IsarReader reader,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  final object = CloudMetaData(
+    lastDownloadTime: reader.readStringOrNull(offsets[0]),
+  );
+  object.id = id;
+  return object;
+}
+
+P _cloudMetaDataDeserializeProp<P>(
+  IsarReader reader,
+  int propertyId,
+  int offset,
+  Map<Type, List<int>> allOffsets,
+) {
+  switch (propertyId) {
+    case 0:
+      return (reader.readStringOrNull(offset)) as P;
+    default:
+      throw IsarError('Unknown property with id $propertyId');
+  }
+}
+
+Id _cloudMetaDataGetId(CloudMetaData object) {
+  return object.id;
+}
+
+List<IsarLinkBase<dynamic>> _cloudMetaDataGetLinks(CloudMetaData object) {
+  return [];
+}
+
+void _cloudMetaDataAttach(
+    IsarCollection<dynamic> col, Id id, CloudMetaData object) {
+  object.id = id;
+}
+
+extension CloudMetaDataQueryWhereSort
+    on QueryBuilder<CloudMetaData, CloudMetaData, QWhere> {
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterWhere> anyId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+}
+
+extension CloudMetaDataQueryWhere
+    on QueryBuilder<CloudMetaData, CloudMetaData, QWhereClause> {
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterWhereClause> idEqualTo(
+      Id id) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IdWhereClause.between(
+        lower: id,
+        upper: id,
+      ));
+    });
+  }
+
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterWhereClause> idNotEqualTo(
+      Id id) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(
+              IdWhereClause.lessThan(upper: id, includeUpper: false),
+            )
+            .addWhereClause(
+              IdWhereClause.greaterThan(lower: id, includeLower: false),
+            );
+      } else {
+        return query
+            .addWhereClause(
+              IdWhereClause.greaterThan(lower: id, includeLower: false),
+            )
+            .addWhereClause(
+              IdWhereClause.lessThan(upper: id, includeUpper: false),
+            );
+      }
+    });
+  }
+
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterWhereClause> idGreaterThan(
+      Id id,
+      {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IdWhereClause.greaterThan(lower: id, includeLower: include),
+      );
+    });
+  }
+
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterWhereClause> idLessThan(
+      Id id,
+      {bool include = false}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        IdWhereClause.lessThan(upper: id, includeUpper: include),
+      );
+    });
+  }
+
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterWhereClause> idBetween(
+    Id lowerId,
+    Id upperId, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IdWhereClause.between(
+        lower: lowerId,
+        includeLower: includeLower,
+        upper: upperId,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+}
+
+extension CloudMetaDataQueryFilter
+    on QueryBuilder<CloudMetaData, CloudMetaData, QFilterCondition> {
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterFilterCondition> idEqualTo(
+      Id value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterFilterCondition>
+      idGreaterThan(
+    Id value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterFilterCondition> idLessThan(
+    Id value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'id',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterFilterCondition> idBetween(
+    Id lower,
+    Id upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterFilterCondition>
+      lastDownloadTimeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'lastDownloadTime',
+      ));
+    });
+  }
+
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterFilterCondition>
+      lastDownloadTimeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'lastDownloadTime',
+      ));
+    });
+  }
+
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterFilterCondition>
+      lastDownloadTimeEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'lastDownloadTime',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterFilterCondition>
+      lastDownloadTimeGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'lastDownloadTime',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterFilterCondition>
+      lastDownloadTimeLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'lastDownloadTime',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterFilterCondition>
+      lastDownloadTimeBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'lastDownloadTime',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterFilterCondition>
+      lastDownloadTimeStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'lastDownloadTime',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterFilterCondition>
+      lastDownloadTimeEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'lastDownloadTime',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterFilterCondition>
+      lastDownloadTimeContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'lastDownloadTime',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterFilterCondition>
+      lastDownloadTimeMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'lastDownloadTime',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterFilterCondition>
+      lastDownloadTimeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'lastDownloadTime',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterFilterCondition>
+      lastDownloadTimeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'lastDownloadTime',
+        value: '',
+      ));
+    });
+  }
+}
+
+extension CloudMetaDataQueryObject
+    on QueryBuilder<CloudMetaData, CloudMetaData, QFilterCondition> {}
+
+extension CloudMetaDataQueryLinks
+    on QueryBuilder<CloudMetaData, CloudMetaData, QFilterCondition> {}
+
+extension CloudMetaDataQuerySortBy
+    on QueryBuilder<CloudMetaData, CloudMetaData, QSortBy> {
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterSortBy>
+      sortByLastDownloadTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastDownloadTime', Sort.asc);
+    });
+  }
+
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterSortBy>
+      sortByLastDownloadTimeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastDownloadTime', Sort.desc);
+    });
+  }
+}
+
+extension CloudMetaDataQuerySortThenBy
+    on QueryBuilder<CloudMetaData, CloudMetaData, QSortThenBy> {
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterSortBy> thenById() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.asc);
+    });
+  }
+
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterSortBy> thenByIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'id', Sort.desc);
+    });
+  }
+
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterSortBy>
+      thenByLastDownloadTime() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastDownloadTime', Sort.asc);
+    });
+  }
+
+  QueryBuilder<CloudMetaData, CloudMetaData, QAfterSortBy>
+      thenByLastDownloadTimeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastDownloadTime', Sort.desc);
+    });
+  }
+}
+
+extension CloudMetaDataQueryWhereDistinct
+    on QueryBuilder<CloudMetaData, CloudMetaData, QDistinct> {
+  QueryBuilder<CloudMetaData, CloudMetaData, QDistinct>
+      distinctByLastDownloadTime({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'lastDownloadTime',
+          caseSensitive: caseSensitive);
+    });
+  }
+}
+
+extension CloudMetaDataQueryProperty
+    on QueryBuilder<CloudMetaData, CloudMetaData, QQueryProperty> {
+  QueryBuilder<CloudMetaData, int, QQueryOperations> idProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<CloudMetaData, String?, QQueryOperations>
+      lastDownloadTimeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'lastDownloadTime');
+    });
+  }
+}
