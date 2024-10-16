@@ -2,7 +2,6 @@ import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:honeydo/components/banner.dart';
 import 'package:honeydo/providers/settings_provider.model.dart';
-import 'package:honeydo/providers/sync_card_provider.dart';
 import 'package:honeydo/screens/calender_card.dart';
 import 'package:honeydo/screens/motivation_card.dart';
 import 'package:honeydo/screens/pomodoro_card.dart';
@@ -79,7 +78,8 @@ class HomeScreenState extends State<HomeScreen> {
                             ),
                           ],
                         ),
-                        if (settingsProvider.showSettingCards) const SettingsCard(),
+                        if (settingsProvider.showSettingCards)
+                          const SettingsCard(),
                       ],
                     ),
                   ),

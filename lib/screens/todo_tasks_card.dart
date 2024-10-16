@@ -4,7 +4,6 @@ import 'package:honeydo/components/task_card_components/task_card_tile.dart';
 import 'package:honeydo/components/task_card_components/task_text_field.dart';
 import 'package:honeydo/data/random_task_sentence.dart';
 import 'package:honeydo/providers/audio_player_provider.dart';
-import 'package:honeydo/providers/sync_card_provider.dart';
 import 'package:honeydo/service/isar_service.dart';
 import 'package:honeydo/providers/focus_date_provider.dart';
 import 'package:honeydo/providers/tasks_meals_provider.dart';
