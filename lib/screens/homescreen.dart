@@ -1,7 +1,9 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:honeydo/components/banner.dart';
 import 'package:honeydo/providers/settings_provider.model.dart';
+import 'package:honeydo/screens/auth.dart';
 import 'package:honeydo/screens/calender_card.dart';
 import 'package:honeydo/screens/motivation_card.dart';
 import 'package:honeydo/screens/pomodoro_card.dart';
@@ -18,6 +20,21 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 500), () {
+      _checkInternetAndSignOut();
+    });
+  }
+
+  Future<void> _checkInternetAndSignOut() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult.toString() == "[${ConnectivityResult.none}]") {
+      auth.signOut();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final settingsProvider = Provider.of<SettingsProvider>(context);
@@ -78,8 +95,7 @@ class HomeScreenState extends State<HomeScreen> {
                             ),
                           ],
                         ),
-                        if (settingsProvider.showSettingCards)
-                          const SettingsCard(),
+                        if (settingsProvider.showSettingCards) const SettingsCard(),
                       ],
                     ),
                   ),

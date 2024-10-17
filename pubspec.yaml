@@ -56,6 +56,7 @@ dependencies:
   firebase_auth: ^5.3.1
   firebase_storage: ^12.3.3
   material_symbols_icons: ^4.2788.0
+  connectivity_plus: ^6.1.0
   
 dev_dependencies:
   flutter_test:
@@ -76,6 +77,13 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   generate: true
+  plugin:
+    platforms:
+      windows:
+        pluginClass: ConnectivityPlugin
+        dartPluginClass: ConnectivityPlusWindowsPlugin
+
+
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
@@ -119,3 +127,4 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  

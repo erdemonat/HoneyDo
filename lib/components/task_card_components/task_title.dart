@@ -32,8 +32,7 @@ class TaskTitleState extends State<TaskTitle> {
             if (value != null) {
               widget.onTaskChecked(value);
               if (value) {
-                Provider.of<SoundEffectProvider>(context, listen: false)
-                    .playSound('arcade1');
+                Provider.of<SoundEffectProvider>(context, listen: false).playSound('arcade1');
               }
             }
           },
@@ -85,20 +84,17 @@ class TaskTitleState extends State<TaskTitle> {
           overlayEntry.remove();
         },
         onColorSelected: (color) async {
-          final tasksMealsProvider =
-              Provider.of<TasksMealsProvider>(context, listen: false);
+          final tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
           setState(() {
             widget.task.markColor = color.value.toString();
             widget.task.isMarked = true;
           });
 
-          await tasksMealsProvider.updateTaskMarkStatus(
-              widget.task, color.value.toString(), true);
+          await tasksMealsProvider.updateTaskMarkStatus(widget.task, color.value.toString(), true);
           overlayEntry.remove();
         },
         onClear: () async {
-          final tasksMealsProvider =
-              Provider.of<TasksMealsProvider>(context, listen: false);
+          final tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
           await tasksMealsProvider.updateTaskMarkStatus(widget.task, "", false);
           overlayEntry.remove();
         },
@@ -126,8 +122,7 @@ class _AnimatedOverlay extends StatefulWidget {
   __AnimatedOverlayState createState() => __AnimatedOverlayState();
 }
 
-class __AnimatedOverlayState extends State<_AnimatedOverlay>
-    with SingleTickerProviderStateMixin {
+class __AnimatedOverlayState extends State<_AnimatedOverlay> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
   Color? _hoveredColor;
@@ -231,8 +226,7 @@ class __AnimatedOverlayState extends State<_AnimatedOverlay>
       },
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(
-              width: 2.0, color: Theme.of(context).colorScheme.tertiary),
+          border: Border.all(width: 2.0, color: Theme.of(context).colorScheme.tertiary),
           color: color,
           borderRadius: BorderRadius.circular(_hoveredColor == color ? 6 : 16),
         ),
@@ -252,8 +246,7 @@ class __AnimatedOverlayState extends State<_AnimatedOverlay>
       },
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(
-              width: 2.0, color: Theme.of(context).colorScheme.tertiary),
+          border: Border.all(width: 2.0, color: Theme.of(context).colorScheme.tertiary),
           color: color,
           borderRadius: BorderRadius.circular(_hoveredColor == color ? 6 : 16),
         ),

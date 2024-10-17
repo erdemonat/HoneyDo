@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:honeydo/components/export_import_button.dart';
-import 'package:honeydo/components/puzzle_confirmation_dialog.dart';
 import 'package:honeydo/providers/sync_card_provider.dart';
 import 'package:honeydo/screens/auth.dart';
 import 'package:provider/provider.dart';
@@ -127,10 +126,7 @@ class SyncStatus extends StatelessWidget {
                       : ExportImportButton(
                           buttonText: 'Buluta Yükle',
                           onTap: () async {
-                            showDialog(
-                              context: context,
-                              builder: (context) => PuzzleConfirmationDialog(),
-                            );
+                            syncCardProvider.startBackup();
                           },
                           subtitleText: Column(
                             children: [
