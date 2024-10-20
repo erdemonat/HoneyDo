@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:honeydo/constants/constants.dart';
 import 'package:honeydo/providers/sync_card_provider.dart';
 import 'package:provider/provider.dart';
@@ -97,6 +98,9 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                     if (syncCardProvider.isLoginMode) const SizedBox(height: 6),
                     TextFormField(
+                        inputFormatters: [
+                          FilteringTextInputFormatter.deny(RegExp(r'\s'))
+                        ],
                         controller: _emailController,
                         onSaved: (value) {
                           _enteredEmail = value!;
@@ -110,6 +114,9 @@ class _AuthScreenState extends State<AuthScreen> {
                         decoration: kAuthScreenInputDecoration(context).copyWith(labelText: appLocalizations.authEmailLabel)),
                     const SizedBox(height: 12),
                     TextFormField(
+                      inputFormatters: [
+                        FilteringTextInputFormatter.deny(RegExp(r'\s'))
+                      ],
                       controller: _passwordController,
                       validator: (value) {
                         if (value == null || value.trim().length < 6) {
@@ -150,6 +157,9 @@ class _AuthScreenState extends State<AuthScreen> {
                     if (!syncCardProvider.isLoginMode) const SizedBox(height: 12),
                     if (!syncCardProvider.isLoginMode)
                       TextFormField(
+                        inputFormatters: [
+                          FilteringTextInputFormatter.deny(RegExp(r'\s'))
+                        ],
                         controller: _confirmPasswordController,
                         validator: (value) {
                           if (_passwordController.text != _confirmPasswordController.text) {
