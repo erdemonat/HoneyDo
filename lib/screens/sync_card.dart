@@ -74,7 +74,10 @@ class SyncButtonState extends State<SyncButton> with SingleTickerProviderStateMi
 
     overlay.insert(_overlayEntry);
     _controller.forward();
-    syncCardProvider.getFileMetadata();
+    Future.delayed(
+      Durations.long2,
+      () => syncCardProvider.getFileMetadata(),
+    );
   }
 
   void _removeOverlay() {

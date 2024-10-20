@@ -57,6 +57,7 @@ dependencies:
   firebase_storage: ^12.3.3
   material_symbols_icons: ^4.2788.0
   connectivity_plus: ^6.1.0
+  slide_to_confirm: ^1.1.0
   
 dev_dependencies:
   flutter_test:

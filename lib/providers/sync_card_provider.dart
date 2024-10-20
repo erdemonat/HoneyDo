@@ -16,6 +16,9 @@ class SyncCardProvider extends ChangeNotifier {
   // Sync Status
   bool _isUploadMode = false;
   bool _isDownloadMode = false;
+  bool _isUploadConfirmation = false;
+  bool _isDownloadConfirmation = false;
+  bool _isSignOutMode = false;
   double _uploadProgress = 0;
   double _dataBytesTransferredUpload = 0;
   double _dataTotalBytesUpload = 0;
@@ -30,6 +33,9 @@ class SyncCardProvider extends ChangeNotifier {
   bool get isPasswordResetMode => _isPasswordResetMode;
   bool get isUploadMode => _isUploadMode;
   bool get isDownloadMode => _isDownloadMode;
+  bool get isUploadConfirmation => _isUploadConfirmation;
+  bool get isDownloadConfirmation => _isDownloadConfirmation;
+  bool get isSignOutMode => _isSignOutMode;
   double get uploadProgress => _uploadProgress;
   double get downloadProgress => _downloadProgress;
   double get dataBytesTransferredUpload => _dataBytesTransferredUpload;
@@ -49,8 +55,23 @@ class SyncCardProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setSignOutMode(bool value) {
+    _isSignOutMode = value;
+    notifyListeners();
+  }
+
   void setIsUploadMode(bool value) {
     _isUploadMode = value;
+    notifyListeners();
+  }
+
+  void setIsUploadConfirmation(bool value) {
+    _isUploadConfirmation = value;
+    notifyListeners();
+  }
+
+  void setIsDownloadConfirmation(bool value) {
+    _isDownloadConfirmation = value;
     notifyListeners();
   }
 
@@ -73,11 +94,14 @@ class SyncCardProvider extends ChangeNotifier {
     _isLocalBackUp = false;
     _isLoginMode = true;
     _isPasswordResetMode = false;
+    _isDownloadConfirmation = false;
+    _isUploadConfirmation = false;
     notifyListeners();
   }
 
   void startBackup() async {
     _isUploadMode = true;
+    _isUploadConfirmation = false;
     notifyListeners();
 
     await isarService.createCloudBackUp((double bytesTransferred, double totalBytes) {
@@ -97,6 +121,7 @@ class SyncCardProvider extends ChangeNotifier {
 
   void startRestoreDB() async {
     _isDownloadMode = true;
+    _isDownloadConfirmation = false;
     notifyListeners();
 
     await isarService.restoreDBOnCloud((double bytesTransferred, double totalBytes) {
