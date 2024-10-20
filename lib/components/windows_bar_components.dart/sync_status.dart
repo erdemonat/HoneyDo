@@ -273,6 +273,7 @@ class SyncStatus extends StatelessWidget {
                                   textAlign: TextAlign.center,
                                   style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
                                 ),
+                                const SizedBox(height: 12),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
