@@ -41,7 +41,7 @@ class SyncCardProvider extends ChangeNotifier {
   double get dataBytesTransferredUpload => _dataBytesTransferredUpload;
   double get dataBytesTransferredDownload => _dataBytesTransferredDownload;
   double get dataTotalBytesUpload => _dataTotalBytesUpload;
-  double get dataTotalBytesDownload => _dataBytesTransferredDownload;
+  double get dataTotalBytesDownload => _dataTotalBytesDownload;
   String get lastUploadTime => _lastUploadTime;
   String get lastDownloadTime => _lastDownloadTime;
 
