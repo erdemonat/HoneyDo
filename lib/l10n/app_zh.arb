@@ -146,6 +146,17 @@
     "back": "返回",
     "resetPassword": "重置密码",
     "resetPasswordEmailSent": "密码重置电子邮件已发送！",
-    "resetPasswordEmailFailed": "发送重置电子邮件失败"
+    "resetPasswordEmailFailed": "发送重置电子邮件失败",
+    "swipeToLogout": "滑动以登出",
+    "lastUpload": "上次上传: ",
+    "confirmUpload": "确认上传",
+    "confirmDownload": "确认下载",
+    "downloading": "正在下载...",
+    "uploadToCloud": "上传到云端",
+    "lastDownload": "上次下载: ",
+    "downloadFromCloud": "从云端下载",
+    "uploading": "正在上传...",
+    "resetData": "重置数据",
+    "resetAllData": "重置所有数据？"
   }
   

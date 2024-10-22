@@ -146,6 +146,17 @@
     "back": "Назад",
     "resetPassword": "Сбросить пароль",
     "resetPasswordEmailSent": "Письмо для сброса пароля отправлено!",
-    "resetPasswordEmailFailed": "Не удалось отправить письмо для сброса пароля"
+    "resetPasswordEmailFailed": "Не удалось отправить письмо для сброса пароля",
+    "swipeToLogout": "Проведите, чтобы выйти",
+    "lastUpload": "Последняя загрузка: ",
+    "confirmUpload": "Подтвердить загрузку",
+    "confirmDownload": "Подтвердить скачивание",
+    "downloading": "Скачивание...",
+    "uploadToCloud": "Загрузить в облако",
+    "lastDownload": "Последнее скачивание: ",
+    "downloadFromCloud": "Скачать из облака",
+    "uploading": "Загрузка...",
+    "resetData": "Сбросить данные",
+    "resetAllData": "Сбросить все данные?"
   }
   

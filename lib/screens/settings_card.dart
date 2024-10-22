@@ -5,6 +5,7 @@ import 'package:honeydo/components/flag_box.dart';
 import 'package:honeydo/components/pomodoro_components/pomodoro_settings.dart';
 import 'package:honeydo/components/sound_slider.dart';
 import 'package:honeydo/components/titled_container.dart';
+import 'package:honeydo/constants/constants.dart';
 import 'package:honeydo/main.dart';
 import 'package:honeydo/model/editable_textfield_model.dart';
 import 'package:honeydo/providers/pomodoro_provider.dart';
@@ -184,6 +185,54 @@ class SettingsCardState extends State<SettingsCard> {
                       ],
                     ),
                   ],
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: TextButton(
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          appLocalizations.resetAllData,
+                          style: kCalendarMonthYearTextStyle(context).copyWith(fontSize: 18),
+                        ),
+                      ),
+                      actions: [
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(Icons.close),
+                        ),
+                        const SizedBox(
+                          width: 24,
+                        ),
+                        IconButton(
+                          onPressed: () async {
+                            isarService.clearIsarDatabase();
+                          },
+                          icon: const Icon(Icons.check),
+                        ),
+                      ],
+                    ),
+                  ),
+                  style: TextButton.styleFrom(
+                    side: BorderSide(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      width: 1,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Text(
+                    appLocalizations.resetData,
+                    style: kCardSubTitleTextStyle(context),
+                  ),
                 ),
               ),
             ],

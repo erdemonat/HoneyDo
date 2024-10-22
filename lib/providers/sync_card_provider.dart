@@ -96,6 +96,7 @@ class SyncCardProvider extends ChangeNotifier {
     _isPasswordResetMode = false;
     _isDownloadConfirmation = false;
     _isUploadConfirmation = false;
+    _isSignOutMode = false;
     notifyListeners();
   }
 

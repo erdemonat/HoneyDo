@@ -146,5 +146,16 @@
     "back": "Geri",
     "resetPassword": "Şifreyi Sıfırla",
     "resetPasswordEmailSent": "Şifre sıfırlama e-postası gönderildi!",
-    "resetPasswordEmailFailed": "Sıfırlama e-postası gönderilemedi"
+    "resetPasswordEmailFailed": "Sıfırlama e-postası gönderilemedi",
+    "swipeToLogout": "Çıkış yapmak için kaydırın",
+    "lastUpload": "Son Yükleme: ",
+    "confirmUpload": "Yüklemeyi Onayla",
+    "confirmDownload": "İndirmeyi Onayla",
+    "downloading": "İndiriliyor...",
+    "uploadToCloud": "Buluta Yükle",
+    "lastDownload": "Son İndirme: ",
+    "downloadFromCloud": "Buluttan İndir",
+    "uploading": "Yükleniyor...",
+    "resetData": "Verileri Sıfırla",
+    "resetAllData": "Tüm verileri sıfırla?"
   }

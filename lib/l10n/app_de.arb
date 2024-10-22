@@ -146,6 +146,17 @@
     "back": "Zurück",
     "resetPassword": "Passwort zurücksetzen",
     "resetPasswordEmailSent": "Passwort-Reset-E-Mail wurde gesendet!",
-    "resetPasswordEmailFailed": "Fehler beim Senden der Passwort-Reset-E-Mail"
+    "resetPasswordEmailFailed": "Fehler beim Senden der Passwort-Reset-E-Mail",
+    "swipeToLogout": "Zum Abmelden wischen",
+    "lastUpload": "Letzter Upload: ",
+    "confirmUpload": "Upload bestätigen",
+    "confirmDownload": "Download bestätigen",
+    "downloading": "Wird heruntergeladen...",
+    "uploadToCloud": "In die Cloud hochladen",
+    "lastDownload": "Letzter Download: ",
+    "downloadFromCloud": "Aus der Cloud herunterladen",
+    "uploading": "Wird hochgeladen...",
+    "resetData": "Daten zurücksetzen",
+    "resetAllData": "Alle Daten zurücksetzen?"    
   }
   

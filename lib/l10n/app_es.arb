@@ -146,6 +146,17 @@
     "back": "Atrás",
     "resetPassword": "Restablecer la contraseña",   
     "resetPasswordEmailSent": "¡Correo de restablecimiento de contraseña enviado!",
-    "resetPasswordEmailFailed": "Error al enviar el correo de restablecimiento"
+    "resetPasswordEmailFailed": "Error al enviar el correo de restablecimiento",
+    "swipeToLogout": "Desliza para cerrar sesión",
+    "lastUpload": "Última subida: ",
+    "confirmUpload": "Confirmar subida",
+    "confirmDownload": "Confirmar descarga",
+    "downloading": "Descargando...",
+    "uploadToCloud": "Subir a la nube",
+    "lastDownload": "Última descarga: ",
+    "downloadFromCloud": "Descargar de la nube",
+    "uploading": "Subiendo...",
+    "resetData": "Restablecer datos",
+    "resetAllData": "¿Restablecer todos los datos?"
   }
   

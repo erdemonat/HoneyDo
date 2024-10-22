@@ -146,6 +146,17 @@
     "back": "戻る",
     "resetPassword": "パスワードをリセット",
     "resetPasswordEmailSent": "パスワードリセットのメールが送信されました！",
-    "resetPasswordEmailFailed": "リセットメールの送信に失敗しました"
+    "resetPasswordEmailFailed": "リセットメールの送信に失敗しました",
+    "swipeToLogout": "ログアウトするにはスワイプ",
+    "lastUpload": "最終アップロード: ",
+    "confirmUpload": "アップロードを確認",
+    "confirmDownload": "ダウンロードを確認",
+    "downloading": "ダウンロード中...",
+    "uploadToCloud": "クラウドにアップロード",
+    "lastDownload": "最終ダウンロード: ",
+    "downloadFromCloud": "クラウドからダウンロード",
+    "uploading": "アップロード中...",
+    "resetData": "データをリセット",
+    "resetAllData": "すべてのデータをリセットしますか？"
   }
   

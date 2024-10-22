@@ -584,6 +584,19 @@ class IsarService {
     }
   }
 
+  Future<void> clearIsarDatabase() async {
+    final isar = await db;
+    await isar.writeTxn(() async {
+      await isar.tasks.clear();
+      await isar.meals.clear();
+      await isar.subMeals.clear();
+      await isar.subTasks.clear();
+      await isar.dateLinks.clear();
+      await isar.cloudMetaDatas.clear();
+    });
+    await _restartApp();
+  }
+
   Future<void> restoreDB() async {
     final isar = await db;
 

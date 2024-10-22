@@ -146,5 +146,16 @@
   "back": "Back",
   "resetPassword": "Reset Password",
   "resetPasswordEmailSent": "Password reset email sent!",
-  "resetPasswordEmailFailed": "Failed to send reset email"
+  "resetPasswordEmailFailed": "Failed to send reset email",
+  "swipeToLogout": "Swipe to log out",
+  "lastUpload": "Last Upload: ",
+  "confirmUpload": "Confirm Upload",
+  "confirmDownload": "Confirm Download",
+  "downloading": "Downloading...",
+  "uploadToCloud": "Upload to \nCloud",
+  "lastDownload": "Last Download: ",
+  "downloadFromCloud": "Download from Cloud",
+  "uploading": "Uploading...",
+  "resetData": "Reset Data",
+  "resetAllData": "Reset all data?"
 }

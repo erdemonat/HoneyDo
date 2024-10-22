@@ -146,6 +146,17 @@
     "back": "Retour",
     "resetPassword": "Réinitialiser le mot de passe",
     "resetPasswordEmailSent": "Email de réinitialisation du mot de passe envoyé !",
-    "resetPasswordEmailFailed": "Échec de l'envoi de l'email de réinitialisation"
-  }
+    "resetPasswordEmailFailed": "Échec de l'envoi de l'email de réinitialisation",
+    "swipeToLogout": "Balayer pour se déconnecter",
+    "lastUpload": "Dernier téléversement : ",
+    "confirmUpload": "Confirmer le téléversement",
+    "confirmDownload": "Confirmer le téléchargement",
+    "downloading": "Téléchargement...",
+    "uploadToCloud": "Téléverser vers le cloud",
+    "lastDownload": "Dernier téléchargement : ",
+    "downloadFromCloud": "Télécharger depuis le cloud",
+    "uploading": "Téléversement en cours...",
+    "resetData": "Réinitialiser les données",
+    "resetAllData": "Réinitialiser toutes les données ?"
+    }
   
