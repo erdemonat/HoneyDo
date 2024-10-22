@@ -36,7 +36,7 @@ class SyncStatus extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ConfirmationSlider(
-                          text: 'Slide to sign out',
+                          text: appLocalizations.swipeToLogout,
                           textStyle: TextStyle(color: Theme.of(context).colorScheme.tertiary, fontSize: 11),
                           sliderButtonContent: const SizedBox(),
                           iconColor: Theme.of(context).colorScheme.tertiary,
@@ -102,7 +102,7 @@ class SyncStatus extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  'Son Yükleme: ',
+                                  appLocalizations.lastUpload,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 12,
@@ -119,10 +119,10 @@ class SyncStatus extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(height: 16),
-                                const Text(
-                                  'Upload \nConfirmation',
+                                Text(
+                                  appLocalizations.confirmUpload,
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
                                 ),
                                 const SizedBox(height: 12),
                                 Row(
@@ -194,24 +194,24 @@ class SyncStatus extends StatelessWidget {
                                       ],
                                     ),
                                     const SizedBox(height: 16),
-                                    const Text(
-                                      'Yükleniyor...',
+                                    Text(
+                                      appLocalizations.uploading,
                                       textAlign: TextAlign.center,
-                                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                                      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
                                     ),
                                   ],
                                 ),
                               ),
                             )
                           : ExportImportButton(
-                              buttonText: 'Buluta Yükle',
+                              buttonText: appLocalizations.uploadToCloud,
                               onTap: () async {
                                 syncCardProvider.setIsUploadConfirmation(true);
                               },
                               subtitleText: Column(
                                 children: [
                                   Text(
-                                    'Son Yükleme: ',
+                                    appLocalizations.lastUpload,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 12,
@@ -251,7 +251,7 @@ class SyncStatus extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  'Son İndirme: ',
+                                  appLocalizations.lastDownload,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 12,
@@ -268,10 +268,10 @@ class SyncStatus extends StatelessWidget {
                                   ),
                                 ),
                                 const SizedBox(height: 16),
-                                const Text(
-                                  'Download Confirmation',
+                                Text(
+                                  appLocalizations.confirmDownload,
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
                                 ),
                                 const SizedBox(height: 12),
                                 Row(
@@ -343,24 +343,24 @@ class SyncStatus extends StatelessWidget {
                                       ],
                                     ),
                                     const SizedBox(height: 16),
-                                    const Text(
-                                      'İndiriliyor...',
+                                    Text(
+                                      appLocalizations.downloading,
                                       textAlign: TextAlign.center,
-                                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                                      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
                                     ),
                                   ],
                                 ),
                               ),
                             )
                           : ExportImportButton(
-                              buttonText: 'Buluttan indir',
+                              buttonText: appLocalizations.downloadFromCloud,
                               onTap: () => syncCardProvider.setIsDownloadConfirmation(true),
                               icon: Symbols.cloud_download,
                               margin: const EdgeInsets.only(right: 25),
                               subtitleText: Column(
                                 children: [
                                   Text(
-                                    'Son İndirme: ',
+                                    appLocalizations.lastDownload,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 12,
