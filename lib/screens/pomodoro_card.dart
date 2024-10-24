@@ -272,11 +272,11 @@ class _PomodoroCardState extends State<PomodoroCard> with SingleTickerProviderSt
         IconButton(
           onPressed: _playPauseTimer,
           icon: AnimatedSwitcher(
-            duration: Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 300),
             transitionBuilder: (Widget child, Animation<double> animation) {
               return SlideTransition(
                 position: Tween<Offset>(
-                  begin: Offset(0.5, 0.0), // Sağdan sola kayma
+                  begin: const Offset(0.5, 0.0), // Sağdan sola kayma
                   end: Offset.zero,
                 ).animate(animation),
                 child: FadeTransition(opacity: animation, child: child),
@@ -340,7 +340,7 @@ class _PomodoroCardState extends State<PomodoroCard> with SingleTickerProviderSt
               onPressed: () {
                 _resetTimer(true);
                 Navigator.of(context).pop();
-                soundEffectProvider.playSound('minimalPop4');
+                soundEffectProvider.playSound('levelUp3');
               },
               icon: const Icon(Icons.check)),
         ],

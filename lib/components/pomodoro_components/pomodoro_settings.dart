@@ -174,7 +174,7 @@ class _PomodoroSettingsState extends State<PomodoroSettings> {
                     autoPomodoro,
                   );
                   settingsProvider.toggleSettingsCard();
-                  playerProvider.playSound('minimalPop4');
+                  playerProvider.playSound('swipeWhoosh1');
                 },
                 icon: const Icon(Icons.check),
               ),

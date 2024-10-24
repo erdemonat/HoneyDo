@@ -54,7 +54,7 @@ class SyncButtonState extends State<SyncButton> with SingleTickerProviderStateMi
             ),
           ),
           Positioned(
-            left: position.dx - (renderBox.size.height * 8),
+            left: position.dx - (renderBox.size.height * 7.64),
             top: position.dy + renderBox.size.height,
             child: FadeTransition(
               opacity: _animation,
@@ -139,7 +139,7 @@ class _SyncDialogBoxState extends State<SyncDialogBox> {
         borderRadius: BorderRadius.circular(12),
         color: Theme.of(context).colorScheme.surface,
       ),
-      width: 400,
+      width: 412,
       height: syncCardProvider.isLocalBackUp ? 236 : (syncCardProvider.isLoginMode ? 236 : 310),
       child: syncCardProvider.isPasswordResetMode ? StackBackButton(widget: _buildPasswordReset(context)) : _buildAuthOrSyncScreen(context, syncCardProvider),
     );

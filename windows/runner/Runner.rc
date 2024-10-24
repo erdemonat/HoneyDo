@@ -89,14 +89,14 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.honeydo" "\0"
-            VALUE "FileDescription", "honeydo" "\0"
-            VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "honeydo" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2024 com.honeydo. All rights reserved." "\0"
-            VALUE "OriginalFilename", "honeydo.exe" "\0"
-            VALUE "ProductName", "honeydo" "\0"
-            VALUE "ProductVersion", VERSION_AS_STRING "\0"
+            VALUE "CompanyName", "HoneyDo Software Solutions" "\0"
+            VALUE "FileDescription", "HoneyDo Task Management Application" "\0"
+            VALUE "FileVersion", "1.0.0" "\0"
+            VALUE "InternalName", "HoneyDo" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2024 HoneyDo Software Solutions. All rights reserved." "\0"
+            VALUE "OriginalFilename", "HoneyDo.exe" "\0"
+            VALUE "ProductName", "HoneyDo" "\0"
+            VALUE "ProductVersion", "1.0.0" "\0"
         END
     END
     BLOCK "VarFileInfo"

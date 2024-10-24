@@ -47,9 +47,9 @@ class _CalenderCardState extends State<CalenderCard> {
             children: [
               IconButton(
                 onPressed: () {
-                  if (focusDateProvider.focusDate != focusDateProvider.now) {
-                    Provider.of<SoundEffectProvider>(context, listen: false).playSound('softClick');
-                  }
+                  // if (focusDateProvider.focusDate != focusDateProvider.now) {
+                  //   Provider.of<SoundEffectProvider>(context, listen: false).playSound('softClick');
+                  // }
                   VoidCallback;
                   focusDateProvider.updateFocusDate(focusDateProvider.now);
                   tasksMealsProvider.createEmptyTaskDate(context, focusDateProvider.getFocusDate());

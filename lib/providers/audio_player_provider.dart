@@ -29,8 +29,7 @@ class SoundEffectProvider with ChangeNotifier {
     try {
       await _audioPlayer.stop();
 
-      await _audioPlayer.play(AssetSource(_soundEffects[audioId]!),
-          mode: PlayerMode.lowLatency, volume: _currentVolume);
+      await _audioPlayer.play(AssetSource(_soundEffects[audioId]!), mode: PlayerMode.lowLatency, volume: _currentVolume);
     } catch (e) {
       print("Sound effect failed to play: $e");
     }

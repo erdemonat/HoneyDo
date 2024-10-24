@@ -196,11 +196,19 @@ class SettingsCardState extends State<SettingsCard> {
                     builder: (context) => AlertDialog(
                       title: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          appLocalizations.resetAllData,
-                          style: kCalendarMonthYearTextStyle(context).copyWith(fontSize: 18),
+                        child: Center(
+                          child: Text(
+                            appLocalizations.resetAllData,
+                            style: kCalendarMonthYearTextStyle(context).copyWith(fontSize: 18),
+                          ),
                         ),
                       ),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(12.0),
+                        ),
+                      ),
+                      actionsAlignment: MainAxisAlignment.center,
                       actions: [
                         IconButton(
                           onPressed: () {

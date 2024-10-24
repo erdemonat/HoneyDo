@@ -74,19 +74,19 @@ class HoneydoBannerState extends State<HoneydoBanner> with SingleTickerProviderS
     return Center(
       child: Row(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 15),
-            child: SvgPicture.asset(
-              'assets/app_icon/honeydoicon.svg',
-              width: 18,
-              height: 18,
-              colorFilter: ColorFilter.mode(
-                Theme.of(context).colorScheme.onSurface,
-                BlendMode.srcIn,
-              ),
-            ),
-          ),
-          const SizedBox(width: 6),
+          // Padding(
+          //   padding: const EdgeInsets.only(left: 15),
+          //   child: SvgPicture.asset(
+          //     'assets/app_icon/honeydoicon.svg',
+          //     width: 18,
+          //     height: 18,
+          //     colorFilter: ColorFilter.mode(
+          //       Theme.of(context).colorScheme.onSurface,
+          //       BlendMode.srcIn,
+          //     ),
+          //   ),
+          // ),
+          const SizedBox(width: 20),
           RichText(
             text: TextSpan(
               text: 'Honey',

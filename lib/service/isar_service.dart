@@ -1,7 +1,5 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:honeydo/providers/sync_card_provider.dart';
 import 'package:honeydo/screens/auth.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart' as p;
@@ -25,7 +23,13 @@ class IsarService {
   static Isar? _isar;
   Future<Isar> get db async {
     if (_isar == null) {
-      final dir = await getApplicationDocumentsDirectory();
+      String username = Platform.environment['USERNAME'] ?? 'Unknown User';
+
+      String path = 'C:\\Users\\$username\\AppData\\Roaming\\HoneyDo';
+      final dir = Directory(path);
+      if (!dir.existsSync()) {
+        dir.createSync(recursive: true);
+      }
       _isar = await Isar.open(
         compactOnLaunch: const CompactCondition(minRatio: 1.5),
         [
@@ -43,7 +47,7 @@ class IsarService {
           preference_model.LanguageSchema,
           preference_model.CloudMetaDataSchema,
         ],
-        directory: dir.path,
+        directory: path,
       );
     }
     return _isar!;
@@ -210,7 +214,6 @@ class IsarService {
   Future<void> addSubTask(task_model.Task tasks, task_model.SubTask subTask, String subtitleText) async {
     final isar = await db;
     await isar.writeTxn(() async {
-      //subTask.task.value = tasks;
       await isar.subTasks.put(subTask);
       tasks.subtasks.add(subTask);
       await tasks.subtasks.save();
@@ -220,7 +223,6 @@ class IsarService {
   Future<void> addSubMeal(task_model.Meal meals, task_model.SubMeal subMeal, String subtitleText) async {
     final isar = await db;
     await isar.writeTxn(() async {
-      //subMeal.meal.value = meals;
       await isar.subMeals.put(subMeal);
       meals.submeals.add(subMeal);
       await meals.submeals.save();
@@ -459,24 +461,20 @@ class IsarService {
       },
     );
 
-    // Get the application documents directory
-    final appDocDir = await getApplicationDocumentsDirectory();
+    String username = Platform.environment['USERNAME'] ?? 'Unknown User';
 
-    // Create a backup file path
-    String backupPath = '${appDocDir.path}/$currentUserUID.isar';
+    String path = 'C:\\Users\\$username\\AppData\\Roaming\\HoneyDo';
 
-    // Create a File instance for the backup file
+    String backupPath = '$path/$currentUserUID.isar';
+
     final File backupFile = File(backupPath);
 
-    // Check if the backup file exists; if so, delete it
     if (await backupFile.exists()) {
       await backupFile.delete();
     }
 
-    // Copy the database to the backup file
     await isar.copyToFile(backupPath);
 
-    // Now upload the file to Firebase Storage
     final uploadTask = storageRef.putFile(backupFile, metadata);
 
     uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
@@ -496,7 +494,6 @@ class IsarService {
     var fileName = "$currentUserUID.isar";
     var storageRef = FirebaseStorage.instance.ref().child(currentUserUID).child(fileName);
 
-    // Get file metadata to determine the total file size
     final metadata = await storageRef.getMetadata();
     final totalBytes = metadata.size ?? 0;
 
@@ -508,7 +505,6 @@ class IsarService {
     final tempFilePath = p.join(tempDir.path, fileName);
     final backupFile = File(tempFilePath);
 
-    // Start the download and track progress
     final downloadTask = storageRef.writeToFile(backupFile);
 
     downloadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
@@ -521,8 +517,10 @@ class IsarService {
     await downloadTask;
 
     if (await backupFile.exists()) {
-      final dbDirectory = await getApplicationDocumentsDirectory();
-      final dbPath = p.join(dbDirectory.path, 'default.isar');
+      String username = Platform.environment['USERNAME'] ?? 'Unknown User';
+      String path = 'C:\\Users\\$username\\AppData\\Roaming\\HoneyDo';
+
+      final dbPath = p.join(path, 'default.isar');
 
       final weatherSchema = await isar.weatherDatas.get(2);
       final windowSchema = await isar.windowSettings.get(1);
@@ -556,7 +554,7 @@ class IsarService {
           preference_model.LanguageSchema,
           preference_model.CloudMetaDataSchema,
         ],
-        directory: dbDirectory.path,
+        directory: path,
       );
 
       await reopenedIsar.writeTxn(
@@ -579,7 +577,6 @@ class IsarService {
           await reopenedIsar.cloudMetaDatas.put(newCloudMetaData);
         },
       );
-
       await _restartApp();
     }
   }
@@ -620,8 +617,9 @@ class IsarService {
       final backupFile = File(filePath);
 
       if (await backupFile.exists()) {
-        final dbDirectory = await getApplicationDocumentsDirectory();
-        final dbPath = p.join(dbDirectory.path, 'default.isar');
+        String username = Platform.environment['USERNAME'] ?? 'Unknown User';
+        String path = 'C:\\Users\\$username\\AppData\\Roaming\\HoneyDo';
+        final dbPath = p.join(path, 'default.isar');
 
         if (!isar.isOpen) {
           print('Veritabanı zaten kapalı');
@@ -647,7 +645,7 @@ class IsarService {
             preference_model.LanguageSchema,
             preference_model.LanguageSchema,
           ],
-          directory: dbDirectory.path,
+          directory: path,
         );
 
         await reopenedIsar.writeTxn(
