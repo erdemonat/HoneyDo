@@ -9,20 +9,17 @@ class SoundEffectProvider with ChangeNotifier {
   double get currentVolume => _currentVolume;
 
   final Map<String, String> _soundEffects = {
-    'arcade1': 'sfx/arcade-ui-1.mp3',
-    'arcade4': 'sfx/arcade-ui-4.mp3',
-    'arcade18': 'sfx/arcade-ui-18.mp3',
-    'bloop1': 'sfx/bloop-1.mp3',
-    'bloop4': 'sfx/bloop-4.mp3',
-    'happyPop1': 'sfx/happy-pop-1.mp3',
-    'happyPop2': 'sfx/happy-pop-2.mp3',
-    'softClick': 'sfx/interface-soft-click.mp3',
-    'levelUp3': 'sfx/level-up-3.mp3',
-    'levelUp': 'sfx/level-up.mp3',
-    'minimalPop4': 'sfx/minimal-pop-click-ui-4.mp3',
-    'notificationBeep': 'sfx/notification-beep.mp3',
-    'pianoOutro': 'sfx/soft-cinematic-piano-outro.mp3',
-    'pianoIntro': 'sfx/soft-piano-logo.mp3'
+    'arcade1': 'sfx/arcade-ui-1.wav',
+    'arcade4': 'sfx/arcade-ui-4.wav',
+    'bloop1': 'sfx/bloop-1.wav',
+    'bloop4': 'sfx/bloop-4.wav',
+    'happyPop1': 'sfx/happy-pop-1.wav',
+    'happyPop2': 'sfx/happy-pop-2.wav',
+    'levelUp3': 'sfx/level-up-3.wav',
+    'swipeWhoosh1': 'sfx/movement-swipe-whoosh-1.wav',
+    'notificationBeep': 'sfx/notification-beep.wav',
+    'pianoOutro': 'sfx/soft-cinematic-piano-outro.wav',
+    'pianoIntro': 'sfx/soft-piano-logo.wav'
   };
 
   Future<void> playSound(String audioId) async {
