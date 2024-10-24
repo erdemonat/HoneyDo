@@ -1,7 +1,6 @@
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:honeydo/constants/constants.dart';
-import 'package:honeydo/providers/audio_player_provider.dart';
 import 'package:honeydo/providers/focus_date_provider.dart';
 import 'package:honeydo/providers/language_provider.dart';
 import 'package:honeydo/providers/tasks_meals_provider.dart';
@@ -47,9 +46,6 @@ class _CalenderCardState extends State<CalenderCard> {
             children: [
               IconButton(
                 onPressed: () {
-                  // if (focusDateProvider.focusDate != focusDateProvider.now) {
-                  //   Provider.of<SoundEffectProvider>(context, listen: false).playSound('softClick');
-                  // }
                   VoidCallback;
                   focusDateProvider.updateFocusDate(focusDateProvider.now);
                   tasksMealsProvider.createEmptyTaskDate(context, focusDateProvider.getFocusDate());
