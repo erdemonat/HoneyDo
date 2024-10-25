@@ -15,11 +15,11 @@ class SoundEffectProvider with ChangeNotifier {
     'bloop4': 'sfx/bloop-4.wav',
     'happyPop1': 'sfx/happy-pop-1.wav',
     'happyPop2': 'sfx/happy-pop-2.wav',
-    'levelUp3': 'sfx/level-up-3.wav',
-    'swipeWhoosh1': 'sfx/movement-swipe-whoosh-1.wav',
+    'infoPop1': 'sfx/infographic-pop-1.wav',
+    'infoPop2': 'sfx/infographic-pop-2.wav',
     'notificationBeep': 'sfx/notification-beep.wav',
     'pianoOutro': 'sfx/soft-cinematic-piano-outro.wav',
-    'pianoIntro': 'sfx/soft-piano-logo.wav'
+    'pianoIntro': 'sfx/soft-piano-logo.wav',
   };
 
   Future<void> playSound(String audioId) async {
