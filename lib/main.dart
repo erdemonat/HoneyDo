@@ -17,10 +17,13 @@ import 'package:honeydo/screens/homescreen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:windows_single_instance/windows_single_instance.dart';
 
 late IsarService isarService;
 
-Future main() async {
+Future main(List<String> args) async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await WindowsSingleInstance.ensureSingleInstance(args, "", onSecondWindow: (args) {});
   await dotenv.load(fileName: ".env");
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
