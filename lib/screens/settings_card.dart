@@ -9,6 +9,7 @@ import 'package:honeydo/constants/constants.dart';
 import 'package:honeydo/main.dart';
 import 'package:honeydo/model/editable_textfield_model.dart';
 import 'package:honeydo/providers/pomodoro_provider.dart';
+import 'package:honeydo/providers/settings_provider.model.dart';
 import 'package:honeydo/providers/theme_provider.dart';
 import 'package:honeydo/providers/weather_provider.dart';
 import 'package:provider/provider.dart';
@@ -27,223 +28,226 @@ class SettingsCardState extends State<SettingsCard> {
     final pomodoroProvider = Provider.of<PomodoroProvider>(context, listen: false);
     final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
     final AppLocalizations appLocalizations = AppLocalizations.of(context)!;
-    return Container(
-      width: double.infinity,
-      height: double.maxFinite,
-      margin: const EdgeInsets.all(5),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Theme.of(context).colorScheme.surface,
-      ),
-      child: Theme(
-        data: Theme.of(context).copyWith(
-          scrollbarTheme: const ScrollbarThemeData(
-            thumbVisibility: WidgetStatePropertyAll(false),
-            trackVisibility: WidgetStatePropertyAll(false),
-            thumbColor: WidgetStatePropertyAll(Colors.transparent),
-            trackColor: WidgetStatePropertyAll(Colors.transparent),
-            trackBorderColor: WidgetStatePropertyAll(Colors.transparent),
-          ),
+    return GestureDetector(
+      onSecondaryTap: () => Provider.of<SettingsProvider>(context, listen: false).toggleSettingsCard(),
+      child: Container(
+        width: double.infinity,
+        height: double.maxFinite,
+        margin: const EdgeInsets.all(5),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Theme.of(context).colorScheme.surface,
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TitledContainer(
-                titleText: appLocalizations.theme,
-                child: const Padding(
-                  padding: EdgeInsets.all(5),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        width: 140,
-                        height: 40,
-                        child: DarkModeSwitch(),
-                      ),
-                      SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            children: [
-                              ColorThemeBox(index: 0),
-                              ColorThemeBox(index: 1),
-                              ColorThemeBox(index: 2),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            children: [
-                              ColorThemeBox(index: 3),
-                              ColorThemeBox(index: 4),
-                              ColorThemeBox(index: 5),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            children: [
-                              ColorThemeBox(index: 6),
-                              ColorThemeBox(index: 7),
-                              ColorThemeBox(index: 8),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            scrollbarTheme: const ScrollbarThemeData(
+              thumbVisibility: WidgetStatePropertyAll(false),
+              trackVisibility: WidgetStatePropertyAll(false),
+              thumbColor: WidgetStatePropertyAll(Colors.transparent),
+              trackColor: WidgetStatePropertyAll(Colors.transparent),
+              trackBorderColor: WidgetStatePropertyAll(Colors.transparent),
+            ),
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TitledContainer(
+                  titleText: appLocalizations.theme,
+                  child: const Padding(
+                    padding: EdgeInsets.all(5),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          width: 140,
+                          height: 40,
+                          child: DarkModeSwitch(),
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              children: [
+                                ColorThemeBox(index: 0),
+                                ColorThemeBox(index: 1),
+                                ColorThemeBox(index: 2),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              children: [
+                                ColorThemeBox(index: 3),
+                                ColorThemeBox(index: 4),
+                                ColorThemeBox(index: 5),
+                              ],
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              children: [
+                                ColorThemeBox(index: 6),
+                                ColorThemeBox(index: 7),
+                                ColorThemeBox(index: 8),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              TitledContainer(
-                titleText: appLocalizations.voiceVolume,
-                child: const SizedBox(
-                  height: 90,
-                  child: SoundSlider(),
+                TitledContainer(
+                  titleText: appLocalizations.voiceVolume,
+                  child: const SizedBox(
+                    height: 90,
+                    child: SoundSlider(),
+                  ),
                 ),
-              ),
-              TitledContainer(
-                titleText: appLocalizations.pomodoro,
-                child: PomodoroSettings(
-                  userPomodoroDuration: pomodoroProvider.pomodoroDuration.inMinutes,
-                  userShortBreakDuration: pomodoroProvider.shortBreakDuration.inMinutes,
-                  userLongBreakDuration: pomodoroProvider.longBreakDuration.inMinutes,
-                  userSetCount: pomodoroProvider.setCount,
-                  autoBreak: pomodoroProvider.autoBreak,
-                  autoPomodoro: pomodoroProvider.autoPomodoro,
-                  onSettingsChanged: (pomodoro, shortBreak, longBreak, setCount, autoBreak, autoPomodoro) {
-                    setState(() {
-                      pomodoroProvider.setAllPomodoroSettings(Duration(minutes: pomodoro), Duration(minutes: shortBreak), Duration(minutes: longBreak), setCount, autoBreak, autoPomodoro);
-                    });
-                  },
+                TitledContainer(
+                  titleText: appLocalizations.pomodoro,
+                  child: PomodoroSettings(
+                    userPomodoroDuration: pomodoroProvider.pomodoroDuration.inMinutes,
+                    userShortBreakDuration: pomodoroProvider.shortBreakDuration.inMinutes,
+                    userLongBreakDuration: pomodoroProvider.longBreakDuration.inMinutes,
+                    userSetCount: pomodoroProvider.setCount,
+                    autoBreak: pomodoroProvider.autoBreak,
+                    autoPomodoro: pomodoroProvider.autoPomodoro,
+                    onSettingsChanged: (pomodoro, shortBreak, longBreak, setCount, autoBreak, autoPomodoro) {
+                      setState(() {
+                        pomodoroProvider.setAllPomodoroSettings(Duration(minutes: pomodoro), Duration(minutes: shortBreak), Duration(minutes: longBreak), setCount, autoBreak, autoPomodoro);
+                      });
+                    },
+                  ),
                 ),
-              ),
-              TitledContainer(
-                titleText: appLocalizations.weather,
-                child: SizedBox(
-                  width: double.maxFinite,
+                TitledContainer(
+                  titleText: appLocalizations.weather,
+                  child: SizedBox(
+                    width: double.maxFinite,
+                    child: Wrap(
+                      children: [
+                        EditableTextField(
+                          key: ValueKey(appLocalizations.city),
+                          hintText: '',
+                          maxLength: 100,
+                          model: ListModel(
+                            title: appLocalizations.city,
+                            subTitle: weatherProvider.formattedCity,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                TitledContainer(
+                  titleText: appLocalizations.language,
                   child: Wrap(
                     children: [
-                      EditableTextField(
-                        key: ValueKey(appLocalizations.city),
-                        hintText: '',
-                        maxLength: 100,
-                        model: ListModel(
-                          title: appLocalizations.city,
-                          subTitle: weatherProvider.formattedCity,
-                        ),
-                      )
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              FlagBox(index: 7),
+                              FlagBox(index: 1),
+                              FlagBox(index: 0),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              FlagBox(index: 4),
+                              FlagBox(index: 2),
+                              FlagBox(index: 6),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              FlagBox(index: 3),
+                              FlagBox(index: 5),
+                              FlagBox(index: 8),
+                            ],
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
-              ),
-              TitledContainer(
-                titleText: appLocalizations.language,
-                child: Wrap(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          children: [
-                            FlagBox(index: 7),
-                            FlagBox(index: 1),
-                            FlagBox(index: 0),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          children: [
-                            FlagBox(index: 4),
-                            FlagBox(index: 2),
-                            FlagBox(index: 6),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Row(
-                          children: [
-                            FlagBox(index: 3),
-                            FlagBox(index: 5),
-                            FlagBox(index: 8),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Center(
-                          child: Text(
-                            appLocalizations.resetAllData,
-                            style: kCalendarMonthYearTextStyle(context).copyWith(fontSize: 18),
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: TextButton(
+                    onPressed: () => showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Center(
+                            child: Text(
+                              appLocalizations.resetAllData,
+                              style: kCalendarMonthYearTextStyle(context).copyWith(fontSize: 18),
+                            ),
                           ),
                         ),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(12.0),
+                          ),
+                        ),
+                        actionsAlignment: MainAxisAlignment.center,
+                        actions: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: const Icon(Icons.close),
+                          ),
+                          const SizedBox(
+                            width: 24,
+                          ),
+                          IconButton(
+                            onPressed: () async {
+                              isarService.clearIsarDatabase();
+                            },
+                            icon: const Icon(Icons.check),
+                          ),
+                        ],
                       ),
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(12.0),
-                        ),
+                    ),
+                    style: TextButton.styleFrom(
+                      side: BorderSide(
+                        color: Theme.of(context).colorScheme.onSurface,
+                        width: 1,
                       ),
-                      actionsAlignment: MainAxisAlignment.center,
-                      actions: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: const Icon(Icons.close),
-                        ),
-                        const SizedBox(
-                          width: 24,
-                        ),
-                        IconButton(
-                          onPressed: () async {
-                            isarService.clearIsarDatabase();
-                          },
-                          icon: const Icon(Icons.check),
-                        ),
-                      ],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
-                  ),
-                  style: TextButton.styleFrom(
-                    side: BorderSide(
-                      color: Theme.of(context).colorScheme.onSurface,
-                      width: 1,
+                    child: Text(
+                      appLocalizations.resetData,
+                      style: kCardSubTitleTextStyle(context),
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: Text(
-                    appLocalizations.resetData,
-                    style: kCardSubTitleTextStyle(context),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

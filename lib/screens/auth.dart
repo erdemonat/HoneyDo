@@ -37,12 +37,11 @@ class _AuthScreenState extends State<AuthScreen> {
 
     try {
       if (syncCardProvider.isLoginMode) {
-        final userCredential = await auth.signInWithEmailAndPassword(email: _enteredEmail, password: _enteredPassword);
+        await auth.signInWithEmailAndPassword(email: _enteredEmail, password: _enteredPassword);
         syncCardProvider.getFileMetadata();
-        print(userCredential);
       } else {
-        final userCredentials = await auth.createUserWithEmailAndPassword(email: _enteredEmail, password: _enteredPassword);
-        print(userCredentials);
+        await auth.createUserWithEmailAndPassword(email: _enteredEmail, password: _enteredPassword);
+        syncCardProvider.setLoginMode(true);
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
