@@ -154,7 +154,7 @@ class TaskCardTileState extends State<TaskCardTile> {
                                 },
                                 hintext: AppLocalizations.of(context)!.hintTextTask,
                                 paddingHorizontal: 10,
-                                dotLenght: 285,
+                                dotLenght: _calculateTextWidth(AppLocalizations.of(context)!.hintTextTask, Theme.of(context).textTheme.bodyLarge!) + 17,
                               ),
                             ],
                           ),
@@ -168,5 +168,14 @@ class TaskCardTileState extends State<TaskCardTile> {
         ),
       ),
     );
+  }
+
+  double _calculateTextWidth(String text, TextStyle style) {
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      maxLines: 1,
+      textDirection: TextDirection.ltr,
+    )..layout(minWidth: 0, maxWidth: double.infinity);
+    return textPainter.size.width;
   }
 }

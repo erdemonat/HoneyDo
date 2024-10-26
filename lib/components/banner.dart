@@ -27,10 +27,10 @@ class HoneydoBannerState extends State<HoneydoBanner> with SingleTickerProviderS
     );
 
     _initAnimations();
-    Future.microtask(() {
+    Future.microtask(() async {
       final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
-      weatherProvider.loadSavedCity(context);
-      weatherProvider.updateWeatherData(context, repeat: true);
+      await weatherProvider.loadSavedCity(context);
+      await weatherProvider.updateWeatherData(context, repeat: true);
     });
 
     _controller.forward();

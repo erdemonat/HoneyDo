@@ -128,7 +128,7 @@ class MealCardTileState extends State<MealCardTile> {
                                 },
                                 hintext: AppLocalizations.of(context)!.hintTextMeal,
                                 paddingHorizontal: 1,
-                                dotLenght: 285,
+                                dotLenght: _calculateTextWidth(AppLocalizations.of(context)!.hintTextMeal, Theme.of(context).textTheme.bodyLarge!) + 17,
                               ),
                             ],
                           ),
@@ -143,5 +143,14 @@ class MealCardTileState extends State<MealCardTile> {
         ),
       ),
     );
+  }
+
+  double _calculateTextWidth(String text, TextStyle style) {
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      maxLines: 1,
+      textDirection: TextDirection.ltr,
+    )..layout(minWidth: 0, maxWidth: double.infinity);
+    return textPainter.size.width;
   }
 }
