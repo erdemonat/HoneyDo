@@ -101,7 +101,7 @@ class ProgressBar extends StatelessWidget {
 
     return SizedBox(
       width: 50,
-      height: 300,
+      height: double.infinity,
       child: SfLinearGauge(
         orientation: LinearGaugeOrientation.vertical,
         maximum: 100,
