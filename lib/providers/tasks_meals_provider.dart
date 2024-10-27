@@ -151,6 +151,9 @@ class TasksMealsProvider with ChangeNotifier {
   Future<void> shiftTaskDate(BuildContext context, int index) async {
     await isarService.shiftTaskDate(index, _tasks, context);
     _tasks.removeAt(index);
+    loadUpcomingEvents();
+    Provider.of<SoundEffectProvider>(context, listen: false)
+        .playSound('arcade1Short');
     notifyListeners();
   }
 
@@ -291,6 +294,8 @@ class TasksMealsProvider with ChangeNotifier {
   Future<void> updateSubtaskCheckedStatus(
       int taskId, int subTaskId, bool isChecked, BuildContext context) async {
     Task task = _tasks.firstWhere((t) => t.id == taskId);
+    final SoundEffectProvider soundEffectProvider =
+        Provider.of<SoundEffectProvider>(context, listen: false);
 
     SubTask subTask = task.subtasks.firstWhere((st) => st.id == subTaskId);
 
@@ -300,8 +305,7 @@ class TasksMealsProvider with ChangeNotifier {
 
     bool allChecked = task.subtasks.every((st) => st.isChecked);
     if (allChecked) {
-      Provider.of<SoundEffectProvider>(context, listen: false)
-          .playSound('arcade1');
+      soundEffectProvider.playSound('arcade1');
 
       task.isChecked = true;
 
@@ -310,6 +314,9 @@ class TasksMealsProvider with ChangeNotifier {
     if (!allChecked) {
       task.isChecked = false;
       await isarService.updateTask(task);
+    }
+    if (isChecked && !allChecked) {
+      soundEffectProvider.playSound("arcade1Short");
     }
     notifyListeners();
   }

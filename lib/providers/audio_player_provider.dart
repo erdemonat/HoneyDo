@@ -9,6 +9,7 @@ class SoundEffectProvider with ChangeNotifier {
   double get currentVolume => _currentVolume;
 
   final Map<String, String> _soundEffects = {
+    'arcade1Short': 'sfx/arcade-ui-1-short.wav',
     'arcade1': 'sfx/arcade-ui-1.wav',
     'arcade4': 'sfx/arcade-ui-4.wav',
     'bloop1': 'sfx/bloop-1.wav',
@@ -26,7 +27,8 @@ class SoundEffectProvider with ChangeNotifier {
     try {
       await _audioPlayer.stop();
 
-      await _audioPlayer.play(AssetSource(_soundEffects[audioId]!), mode: PlayerMode.lowLatency, volume: _currentVolume);
+      await _audioPlayer.play(AssetSource(_soundEffects[audioId]!),
+          mode: PlayerMode.lowLatency, volume: _currentVolume);
     } catch (e) {
       print("Sound effect failed to play: $e");
     }
