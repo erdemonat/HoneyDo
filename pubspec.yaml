@@ -93,7 +93,6 @@ flutter:
     - .env
     - assets/sfx/
     - assets/weather_icons/
-    - assets/app_icon/
     - assets/flags/
 
   # An image asset can refer to one or more resolution-specific "variants", see

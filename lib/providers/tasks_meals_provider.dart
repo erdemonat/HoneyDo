@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:honeydo/providers/audio_player_provider.dart';
 import 'package:honeydo/providers/language_provider.dart';
@@ -46,55 +48,35 @@ class TasksMealsProvider with ChangeNotifier {
     DateTime tomorrow = today.add(const Duration(days: 1));
     DateTime dayAfterTomorrow = today.add(const Duration(days: 2));
     DateTime twoDaysAfterTomorrow = today.add(const Duration(days: 3));
-    String tomorrowDay =
-        DateFormat('EEEE', LanguageProvider().getLanguageCode())
-            .format(tomorrow);
-    String dayAfterTomorrowDay =
-        DateFormat('EEEE', LanguageProvider().getLanguageCode())
-            .format(dayAfterTomorrow);
-    String twoDaysAfterTomorrowDay =
-        DateFormat('EEEE', LanguageProvider().getLanguageCode())
-            .format(twoDaysAfterTomorrow);
+    String tomorrowDay = DateFormat('EEEE', LanguageProvider().getLanguageCode()).format(tomorrow);
+    String dayAfterTomorrowDay = DateFormat('EEEE', LanguageProvider().getLanguageCode()).format(dayAfterTomorrow);
+    String twoDaysAfterTomorrowDay = DateFormat('EEEE', LanguageProvider().getLanguageCode()).format(twoDaysAfterTomorrow);
 
     String formattedTomorrowDate = DateFormat('ddMMyyyy').format(tomorrow);
-    String formattedDayAfterTomorrowDate =
-        DateFormat('ddMMyyyy').format(dayAfterTomorrow);
-    String formattedTwoDaysAfterTomorrowDate =
-        DateFormat('ddMMyyyy').format(twoDaysAfterTomorrow);
+    String formattedDayAfterTomorrowDate = DateFormat('ddMMyyyy').format(dayAfterTomorrow);
+    String formattedTwoDaysAfterTomorrowDate = DateFormat('ddMMyyyy').format(twoDaysAfterTomorrow);
 
     HoneyDoData? honeyDoData = await isarService.getTaskDataByName();
     if (honeyDoData != null) {
-      DateLinks? taskDateObjTomorrow = await isarService.getTaskDateByDate(
-          honeyDoData, formattedTomorrowDate);
+      DateLinks? taskDateObjTomorrow = await isarService.getTaskDateByDate(honeyDoData, formattedTomorrowDate);
       if (taskDateObjTomorrow != null) {
         await taskDateObjTomorrow.tasks.load();
       }
 
-      DateLinks? taskDateObjDayAfterTomorrow = await isarService
-          .getTaskDateByDate(honeyDoData, formattedDayAfterTomorrowDate);
+      DateLinks? taskDateObjDayAfterTomorrow = await isarService.getTaskDateByDate(honeyDoData, formattedDayAfterTomorrowDate);
       if (taskDateObjDayAfterTomorrow != null) {
         await taskDateObjDayAfterTomorrow.tasks.load();
       }
 
-      DateLinks? taskDateObjTwoDaysAfterTomorrow = await isarService
-          .getTaskDateByDate(honeyDoData, formattedTwoDaysAfterTomorrowDate);
+      DateLinks? taskDateObjTwoDaysAfterTomorrow = await isarService.getTaskDateByDate(honeyDoData, formattedTwoDaysAfterTomorrowDate);
       if (taskDateObjTwoDaysAfterTomorrow != null) {
         await taskDateObjTwoDaysAfterTomorrow.tasks.load();
       }
 
       _upcomingEvents = [
-        ...?taskDateObjTomorrow?.tasks
-            .where((task) => task.markColor == "4294198070")
-            .map((task) => '$tomorrowDay: ${task.name}')
-            .toList(),
-        ...?taskDateObjDayAfterTomorrow?.tasks
-            .where((task) => task.markColor == "4294198070")
-            .map((task) => '$dayAfterTomorrowDay: ${task.name}')
-            .toList(),
-        ...?taskDateObjTwoDaysAfterTomorrow?.tasks
-            .where((task) => task.markColor == "4294198070")
-            .map((task) => '$twoDaysAfterTomorrowDay: ${task.name}')
-            .toList(),
+        ...?taskDateObjTomorrow?.tasks.where((task) => task.markColor == "4294198070").map((task) => '$tomorrowDay: ${task.name}').toList(),
+        ...?taskDateObjDayAfterTomorrow?.tasks.where((task) => task.markColor == "4294198070").map((task) => '$dayAfterTomorrowDay: ${task.name}').toList(),
+        ...?taskDateObjTwoDaysAfterTomorrow?.tasks.where((task) => task.markColor == "4294198070").map((task) => '$twoDaysAfterTomorrowDay: ${task.name}').toList(),
       ];
     }
     notifyListeners();
@@ -114,34 +96,28 @@ class TasksMealsProvider with ChangeNotifier {
   }
 
   Future<void> loadTasks(BuildContext context) async {
-    String taskDate =
-        Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
+    String taskDate = Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
 
     HoneyDoData? honeyDoData = await isarService.getTaskDataByName();
     if (honeyDoData != null) {
-      DateLinks? taskDateObj =
-          await isarService.getTaskDateByDate(honeyDoData, taskDate);
+      DateLinks? taskDateObj = await isarService.getTaskDateByDate(honeyDoData, taskDate);
       if (taskDateObj != null) {
         await taskDateObj.tasks.load();
-        _tasks = taskDateObj.tasks.toList()
-          ..sort((a, b) => a.order.compareTo(b.order));
+        _tasks = taskDateObj.tasks.toList()..sort((a, b) => a.order.compareTo(b.order));
       }
     }
     notifyListeners();
   }
 
   Future<void> loadMeals(BuildContext context) async {
-    String mealDate =
-        Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
+    String mealDate = Provider.of<FocusDateProvider>(context, listen: false).getFocusDate();
 
     HoneyDoData? honeyDoData = await isarService.getTaskDataByName();
     if (honeyDoData != null) {
-      DateLinks? mealDateObj =
-          await isarService.getTaskDateByDate(honeyDoData, mealDate);
+      DateLinks? mealDateObj = await isarService.getTaskDateByDate(honeyDoData, mealDate);
       if (mealDateObj != null) {
         await mealDateObj.meals.load();
-        _meals = mealDateObj.meals.toList()
-          ..sort((a, b) => a.order.compareTo(b.order));
+        _meals = mealDateObj.meals.toList()..sort((a, b) => a.order.compareTo(b.order));
       }
     }
 
@@ -152,30 +128,26 @@ class TasksMealsProvider with ChangeNotifier {
     await isarService.shiftTaskDate(index, _tasks, context);
     _tasks.removeAt(index);
     loadUpcomingEvents();
-    Provider.of<SoundEffectProvider>(context, listen: false)
-        .playSound('arcade1Short');
+    Provider.of<SoundEffectProvider>(context, listen: false).playSound('infoPop2');
     notifyListeners();
   }
 
   void removeTask(BuildContext context, int index) async {
-    await IsarService().deleteTask(index, _tasks);
+    await isarService.deleteTask(index, _tasks);
     _tasks.removeAt(index);
     loadUpcomingEvents();
-    Provider.of<SoundEffectProvider>(context, listen: false)
-        .playSound('arcade4');
+    Provider.of<SoundEffectProvider>(context, listen: false).playSound('infoPop1');
     notifyListeners();
   }
 
   void removeMeal(BuildContext context, int index) async {
-    await IsarService().deleteMeal(index, _meals);
+    await isarService.deleteMeal(index, _meals);
     _meals.removeAt(index);
-    Provider.of<SoundEffectProvider>(context, listen: false)
-        .playSound('arcade4');
+    Provider.of<SoundEffectProvider>(context, listen: false).playSound('infoPop1');
     notifyListeners();
   }
 
-  Future<void> onReorderMeal(
-      BuildContext context, int oldIndex, int newIndex) async {
+  Future<void> onReorderMeal(BuildContext context, int oldIndex, int newIndex) async {
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }
@@ -189,8 +161,7 @@ class TasksMealsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> onReorderTask(
-      BuildContext context, int oldIndex, int newIndex) async {
+  Future<void> onReorderTask(BuildContext context, int oldIndex, int newIndex) async {
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }
@@ -274,16 +245,17 @@ class TasksMealsProvider with ChangeNotifier {
 
     List<SubtitleItem> subtitles = [];
     for (final subTask in task.subtasks) {
-      subtitles.add(SubtitleItem(
-          id: subTask.id, text: subTask.name, isChecked: subTask.isChecked));
+      if (!subTask.isChecked) subtitles.add(SubtitleItem(id: subTask.id, text: subTask.name, isChecked: subTask.isChecked));
+    }
+    for (final subTask in task.subtasks) {
+      if (subTask.isChecked) subtitles.add(SubtitleItem(id: subTask.id, text: subTask.name, isChecked: subTask.isChecked));
     }
 
     _subTasks[task.id] = subtitles;
     notifyListeners();
   }
 
-  Future<void> updateTaskMarkStatus(
-      Task task, String color, bool isMarked) async {
+  Future<void> updateTaskMarkStatus(Task task, String color, bool isMarked) async {
     task.markColor = color;
     task.isMarked = isMarked;
     await isarService.updateTask(task);
@@ -291,11 +263,9 @@ class TasksMealsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateSubtaskCheckedStatus(
-      int taskId, int subTaskId, bool isChecked, BuildContext context) async {
+  Future<void> updateSubtaskCheckedStatus(int taskId, int subTaskId, bool isChecked, BuildContext context) async {
     Task task = _tasks.firstWhere((t) => t.id == taskId);
-    final SoundEffectProvider soundEffectProvider =
-        Provider.of<SoundEffectProvider>(context, listen: false);
+    final SoundEffectProvider soundEffectProvider = Provider.of<SoundEffectProvider>(context, listen: false);
 
     SubTask subTask = task.subtasks.firstWhere((st) => st.id == subTaskId);
 
@@ -305,7 +275,9 @@ class TasksMealsProvider with ChangeNotifier {
 
     bool allChecked = task.subtasks.every((st) => st.isChecked);
     if (allChecked) {
-      soundEffectProvider.playSound('arcade1');
+      final random = Random();
+      int randomNumber = 1 + random.nextInt(26);
+      soundEffectProvider.playSound('marimbaWin$randomNumber');
 
       task.isChecked = true;
 
@@ -316,8 +288,10 @@ class TasksMealsProvider with ChangeNotifier {
       await isarService.updateTask(task);
     }
     if (isChecked && !allChecked) {
-      soundEffectProvider.playSound("arcade1Short");
+      soundEffectProvider.playSound("multiPop2");
     }
+    Future.delayed(Durations.extralong4);
+    loadSubTasks(task);
     notifyListeners();
   }
 

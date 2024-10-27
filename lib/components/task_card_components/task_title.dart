@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:honeydo/constants/constants.dart';
 import 'package:honeydo/model/task_model.dart';
@@ -32,7 +34,9 @@ class TaskTitleState extends State<TaskTitle> {
             if (value != null) {
               widget.onTaskChecked(value);
               if (value) {
-                Provider.of<SoundEffectProvider>(context, listen: false).playSound('arcade1');
+                final random = Random();
+                int randomNumber = 1 + random.nextInt(26);
+                Provider.of<SoundEffectProvider>(context, listen: false).playSound('marimbaWin$randomNumber');
               }
             }
           },

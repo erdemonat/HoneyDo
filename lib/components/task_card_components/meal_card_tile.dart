@@ -29,6 +29,7 @@ class MealCardTileState extends State<MealCardTile> {
   double _currentExpandedHeight = _expandedBaseHeight;
   double completionPercentage = 0.0;
   int completedSubtasks = 0;
+  final FocusNode _focusNode = FocusNode();
 
   void _toggleCardHeight() {
     setState(() {
@@ -54,6 +55,7 @@ class MealCardTileState extends State<MealCardTile> {
   @override
   void dispose() {
     _subtitleController.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -120,11 +122,13 @@ class MealCardTileState extends State<MealCardTile> {
                                 },
                               ),
                               SubItemTextField(
+                                focusNode: _focusNode,
                                 controller: _subtitleController,
                                 onSubmitted: (p0) {
                                   taskMealsProvider.addSubMeal(widget.meals, _subtitleController.text);
                                   taskMealsProvider.loadSubMeals(widget.meals);
                                   _subtitleController.clear();
+                                  FocusScope.of(context).requestFocus(_focusNode);
                                 },
                                 hintext: AppLocalizations.of(context)!.hintTextMeal,
                                 paddingHorizontal: 1,

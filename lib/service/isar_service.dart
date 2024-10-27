@@ -19,6 +19,7 @@ import 'package:honeydo/providers/weather_provider.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class IsarService {
   static Isar? _isar;
@@ -54,8 +55,7 @@ class IsarService {
     return _isar!;
   }
 
-  Future<void> savePomodoroSettings(
-      pomodoro_model.PomodoroSettings settings) async {
+  Future<void> savePomodoroSettings(pomodoro_model.PomodoroSettings settings) async {
     final isar = await db;
     await isar.writeTxn(() async {
       await isar.pomodoroSettings.put(settings);
@@ -74,20 +74,15 @@ class IsarService {
 
   Future<task_model.HoneyDoData?> getTaskDataByName() async {
     final isar = await db;
-    return await isar.honeyDoDatas
-        .filter()
-        .nameEqualTo("HoneyDoData")
-        .findFirst();
+    return await isar.honeyDoDatas.filter().nameEqualTo("HoneyDoData").findFirst();
   }
 
-  Future<task_model.DateLinks?> getTaskDateByDate(
-      task_model.HoneyDoData honeyDoData, String date) async {
+  Future<task_model.DateLinks?> getTaskDateByDate(task_model.HoneyDoData honeyDoData, String date) async {
     await honeyDoData.dateLinks.load();
     return honeyDoData.dateLinks.filter().dateEqualTo(date).findFirst();
   }
 
-  Future<void> createOrUpdateTaskData(
-      BuildContext context, String date, String taskName) async {
+  Future<void> createOrUpdateTaskData(BuildContext context, String date, String taskName) async {
     final isar = await db;
     const String dataName = "HoneyDoData";
     await isar.writeTxn(() async {
@@ -96,8 +91,7 @@ class IsarService {
         honeyDoData = task_model.HoneyDoData()..name = dataName;
         await isar.honeyDoDatas.put(honeyDoData);
       }
-      task_model.DateLinks? dateLink =
-          await getTaskDateByDate(honeyDoData, date);
+      task_model.DateLinks? dateLink = await getTaskDateByDate(honeyDoData, date);
       if (dateLink == null) {
         dateLink = task_model.DateLinks()..date = date;
         await isar.dateLinks.put(dateLink);
@@ -117,8 +111,7 @@ class IsarService {
       dateLink.tasks.add(task);
       await dateLink.tasks.save();
     });
-    Provider.of<TasksMealsProvider>(context, listen: false)
-        .loadUpcomingEvents();
+    Provider.of<TasksMealsProvider>(context, listen: false).loadUpcomingEvents();
   }
 
   Future<void> createOrUpdateMealData(String date, String mealName) async {
@@ -131,8 +124,7 @@ class IsarService {
         honeyDoData = task_model.HoneyDoData()..name = dataName;
         await isar.honeyDoDatas.put(honeyDoData);
       }
-      task_model.DateLinks? dateLink =
-          await getTaskDateByDate(honeyDoData, date);
+      task_model.DateLinks? dateLink = await getTaskDateByDate(honeyDoData, date);
       if (dateLink == null) {
         dateLink = task_model.DateLinks()..date = date;
         await isar.dateLinks.put(dateLink);
@@ -159,8 +151,7 @@ class IsarService {
         honeyDoData = task_model.HoneyDoData()..name = "HoneyDoData";
         await isar.honeyDoDatas.put(honeyDoData);
       }
-      task_model.DateLinks? dateLink =
-          await getTaskDateByDate(honeyDoData, date);
+      task_model.DateLinks? dateLink = await getTaskDateByDate(honeyDoData, date);
       if (dateLink == null) {
         dateLink = task_model.DateLinks()..date = date;
         await isar.dateLinks.put(dateLink);
@@ -177,8 +168,10 @@ class IsarService {
     await isar.writeTxn(() async {
       await meal.submeals.load();
 
-      for (final subMeal in meal.submeals) {
-        await isar.subMeals.delete(subMeal.id);
+      final subMealIds = meal.submeals.map((subMeal) => subMeal.id).toList();
+
+      for (final subMealId in subMealIds) {
+        await isar.subMeals.delete(subMealId);
       }
 
       await isar.meals.delete(meal.id);
@@ -190,8 +183,7 @@ class IsarService {
     List<task_model.Task> tasks,
     BuildContext context,
   ) async {
-    String tomorrow = Provider.of<FocusDateProvider>(context, listen: false)
-        .getTomorrowDate();
+    String tomorrow = Provider.of<FocusDateProvider>(context, listen: false).getTomorrowDate();
     final isar = await db;
     final shiftTask = tasks[index];
     const String dataName = "HoneyDoData";
@@ -202,8 +194,7 @@ class IsarService {
           honeyDoData = task_model.HoneyDoData()..name = dataName;
           await isar.honeyDoDatas.put(honeyDoData);
         }
-        task_model.DateLinks? dateLink =
-            await getTaskDateByDate(honeyDoData, tomorrow);
+        task_model.DateLinks? dateLink = await getTaskDateByDate(honeyDoData, tomorrow);
         if (dateLink == null) {
           dateLink = task_model.DateLinks()..date = tomorrow;
           await isar.dateLinks.put(dateLink);
@@ -222,8 +213,7 @@ class IsarService {
         await isar.tasks.put(task);
         dateLink.tasks.add(task);
 
-        final List<task_model.SubTask> subTasksCopy =
-            List.from(shiftTask.subtasks);
+        final List<task_model.SubTask> subTasksCopy = List.from(shiftTask.subtasks);
 
         for (var subTask in subTasksCopy) {
           final newSubTask = task_model.SubTask()
@@ -250,8 +240,10 @@ class IsarService {
     await isar.writeTxn(() async {
       await task.subtasks.load();
 
-      for (final subTask in task.subtasks) {
-        await isar.subTasks.delete(subTask.id);
+      final subTaskIds = task.subtasks.map((subTask) => subTask.id).toList();
+
+      for (final subTaskId in subTaskIds) {
+        await isar.subTasks.delete(subTaskId);
       }
 
       await isar.tasks.delete(task.id);
@@ -269,10 +261,8 @@ class IsarService {
     });
   }
 
-  Future<void> onReorderTask(
-      BuildContext context, int oldIndex, int newIndex) async {
-    TasksMealsProvider tasksMealsProvider =
-        Provider.of<TasksMealsProvider>(context, listen: false);
+  Future<void> onReorderTask(BuildContext context, int oldIndex, int newIndex) async {
+    TasksMealsProvider tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: false);
     final isar = await db;
 
     await isar.writeTxn(() async {
@@ -283,8 +273,7 @@ class IsarService {
     });
   }
 
-  Future<void> addSubTask(task_model.Task tasks, task_model.SubTask subTask,
-      String subtitleText) async {
+  Future<void> addSubTask(task_model.Task tasks, task_model.SubTask subTask, String subtitleText) async {
     final isar = await db;
     await isar.writeTxn(() async {
       await isar.subTasks.put(subTask);
@@ -293,9 +282,7 @@ class IsarService {
     });
   }
 
- 
-  Future<void> addSubMeal(task_model.Meal meals, task_model.SubMeal subMeal,
-      String subtitleText) async {
+  Future<void> addSubMeal(task_model.Meal meals, task_model.SubMeal subMeal, String subtitleText) async {
     final isar = await db;
     await isar.writeTxn(() async {
       await isar.subMeals.put(subMeal);
@@ -367,8 +354,7 @@ class IsarService {
     });
   }
 
-  Future<void> updateSubtaskCheckedStatus(
-      task_model.Task task, task_model.SubTask subTask) async {
+  Future<void> updateSubtaskCheckedStatus(task_model.Task task, task_model.SubTask subTask) async {
     final isar = await db;
     await isar.writeTxn(() async {
       await isar.subTasks.put(subTask);
@@ -384,8 +370,7 @@ class IsarService {
   }
 
   Future<String> getSavedCity(BuildContext context) async {
-    final weatherProvider =
-        Provider.of<WeatherProvider>(context, listen: false);
+    final weatherProvider = Provider.of<WeatherProvider>(context, listen: false);
     final isar = await db;
     final weatherData = await isar.weatherDatas.where().findFirst();
     if (weatherData == null) {
@@ -440,13 +425,10 @@ class IsarService {
     }
   }
 
-  Future<void> saveVolumeData(
-      BuildContext context, double currentVolume) async {
-    final soundProvider =
-        Provider.of<SoundEffectProvider>(context, listen: false);
+  Future<void> saveVolumeData(BuildContext context, double currentVolume) async {
+    final soundProvider = Provider.of<SoundEffectProvider>(context, listen: false);
     final isar = await db;
-    final volumeData = preference_model.VolumeData()
-      ..currentVolume = soundProvider.currentVolume;
+    final volumeData = preference_model.VolumeData()..currentVolume = soundProvider.currentVolume;
 
     await isar.writeTxn(() async {
       await isar.volumeDatas.put(volumeData);
@@ -458,8 +440,7 @@ class IsarService {
     var volumeData = await isar.volumeDatas.get(1);
 
     if (volumeData == null) {
-      final defaultVolumeData = preference_model.VolumeData()
-        ..currentVolume = 0.5;
+      final defaultVolumeData = preference_model.VolumeData()..currentVolume = 0.5;
 
       await isar.writeTxn(() async {
         await isar.volumeDatas.put(defaultVolumeData);
@@ -502,11 +483,11 @@ class IsarService {
     return themeData;
   }
 
-  Future<void> createBackUp() async {
+  Future<void> createBackUp(BuildContext context) async {
     final isar = await db;
 
     String? outputFile = await FilePicker.platform.saveFile(
-      dialogTitle: 'HoneyDo Verilerini Dışa Aktar',
+      dialogTitle: AppLocalizations.of(context)!.exportData,
       fileName: 'honeydo_backup.isar',
     );
 
@@ -519,25 +500,22 @@ class IsarService {
     }
   }
 
-  Future<void> downloadDataToDevice() async {
+  Future<void> downloadDataToDevice(BuildContext context) async {
     await createCloudBackUp(
       (bytesTransferred, totalBytes) {},
     );
-    await createBackUp();
+    await createBackUp(context);
   }
 
-  Future<void> createCloudBackUp(
-      Function(double bytesTransferred, double totalBytes) onProgress) async {
+  Future<void> createCloudBackUp(Function(double bytesTransferred, double totalBytes) onProgress) async {
     final isar = await db;
     var currentUserUID = auth.currentUser!.uid;
 
     DateTime localTimeNow = DateTime.now();
-    String localFormattedDate =
-        DateFormat('dd.MM.yyyy-HH:mm').format(localTimeNow);
+    String localFormattedDate = DateFormat('dd.MM.yyyy-HH:mm').format(localTimeNow);
 
     var fileName = "$currentUserUID.isar";
-    var storageRef =
-        FirebaseStorage.instance.ref().child(currentUserUID).child(fileName);
+    var storageRef = FirebaseStorage.instance.ref().child(currentUserUID).child(fileName);
 
     SettableMetadata metadata = SettableMetadata(
       customMetadata: {
@@ -571,14 +549,12 @@ class IsarService {
     await uploadTask;
   }
 
-  Future<void> restoreDBOnCloud(
-      Function(double bytesTransferred, double totalBytes) onProgress) async {
+  Future<void> restoreDBOnCloud(Function(double bytesTransferred, double totalBytes) onProgress) async {
     final isar = await db;
     var currentUserUID = auth.currentUser!.uid;
 
     var fileName = "$currentUserUID.isar";
-    var storageRef =
-        FirebaseStorage.instance.ref().child(currentUserUID).child(fileName);
+    var storageRef = FirebaseStorage.instance.ref().child(currentUserUID).child(fileName);
 
     final metadata = await storageRef.getMetadata();
     final totalBytes = metadata.size ?? 0;
@@ -658,10 +634,8 @@ class IsarService {
             await reopenedIsar.themeDatas.put(themeSchema);
           }
           DateTime localTimeNow = DateTime.now();
-          String localFormattedDate =
-              DateFormat('dd.MM.yyyy-HH:mm').format(localTimeNow);
-          final newCloudMetaData = preference_model.CloudMetaData(
-              lastDownloadTime: localFormattedDate);
+          String localFormattedDate = DateFormat('dd.MM.yyyy-HH:mm').format(localTimeNow);
+          final newCloudMetaData = preference_model.CloudMetaData(lastDownloadTime: localFormattedDate);
           await reopenedIsar.cloudMetaDatas.put(newCloudMetaData);
         },
       );
@@ -682,7 +656,7 @@ class IsarService {
     await _restartApp();
   }
 
-  Future<void> restoreDB() async {
+  Future<void> restoreDB(BuildContext context) async {
     final isar = await db;
 
     final weatherSchema = await isar.weatherDatas.get(2);
@@ -693,9 +667,11 @@ class IsarService {
     final themeSchema = await isar.themeDatas.get(2);
 
     FilePickerResult? result = await FilePicker.platform.pickFiles(
-      dialogTitle: 'HoneyDo Verilerini İçe Aktar',
+      dialogTitle: AppLocalizations.of(context)!.importData,
       type: FileType.custom,
-      allowedExtensions: ['isar'],
+      allowedExtensions: [
+        'isar'
+      ],
     );
 
     if (result != null) {
@@ -707,11 +683,9 @@ class IsarService {
         String path = 'C:\\Users\\$username\\AppData\\Roaming\\HoneyDo';
         final dbPath = p.join(path, 'default.isar');
 
-        if (!isar.isOpen) {
-          print('Veritabanı zaten kapalı');
-          return;
+        if (isar.isOpen) {
+          await isar.close();
         }
-        await isar.close();
 
         await backupFile.copy(dbPath);
 
@@ -729,7 +703,7 @@ class IsarService {
             preference_model.VolumeDataSchema,
             preference_model.ThemeDataSchema,
             preference_model.LanguageSchema,
-            preference_model.LanguageSchema,
+            preference_model.CloudMetaDataSchema,
           ],
           directory: path,
         );

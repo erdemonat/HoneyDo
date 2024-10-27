@@ -293,7 +293,7 @@ class LocalSyncButtons extends StatelessWidget {
         ExportImportButton(
           buttonText: AppLocalizations.of(context)!.exportData,
           onTap: () async {
-            await IsarService().createBackUp();
+            await IsarService().createBackUp(context);
           },
           icon: Symbols.drive_folder_upload_rounded,
           margin: const EdgeInsets.only(left: 25),
@@ -307,7 +307,7 @@ class LocalSyncButtons extends StatelessWidget {
         ExportImportButton(
           buttonText: AppLocalizations.of(context)!.importData,
           onTap: () async {
-            await IsarService().restoreDB();
+            await IsarService().restoreDB(context);
           },
           icon: Symbols.install_desktop_rounded,
           margin: const EdgeInsets.only(right: 25),

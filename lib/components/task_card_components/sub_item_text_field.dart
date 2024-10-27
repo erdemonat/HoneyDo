@@ -4,6 +4,7 @@ import 'package:flutter_dash/flutter_dash.dart';
 class SubItemTextField extends StatelessWidget {
   final TextEditingController controller;
   final Function(String) onSubmitted;
+  final FocusNode? focusNode;
   final String hintext;
   final double paddingHorizontal;
   final double dotLenght;
@@ -12,16 +13,21 @@ class SubItemTextField extends StatelessWidget {
     super.key,
     required this.controller,
     required this.onSubmitted,
-    required this.hintext, required this.paddingHorizontal, required this.dotLenght,
+    required this.hintext,
+    required this.paddingHorizontal,
+    required this.dotLenght,
+    this.focusNode,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:  EdgeInsets.symmetric(vertical: 6, horizontal: paddingHorizontal),
+      padding: EdgeInsets.symmetric(vertical: 6, horizontal: paddingHorizontal),
       child: Stack(
         children: [
           TextField(
+            focusNode: focusNode,
+            autofocus: true,
             controller: controller,
             onSubmitted: (value) {
               if (value.isNotEmpty) {
@@ -55,8 +61,7 @@ class SubItemTextField extends StatelessWidget {
               dashGap: 4,
               direction: Axis.horizontal,
               length: dotLenght,
-              dashColor:
-                  Theme.of(context).colorScheme.tertiary.withOpacity(0.6),
+              dashColor: Theme.of(context).colorScheme.tertiary.withOpacity(0.6),
             ),
           ),
         ],

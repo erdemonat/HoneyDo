@@ -340,7 +340,7 @@ class _PomodoroCardState extends State<PomodoroCard> with SingleTickerProviderSt
               onPressed: () {
                 _resetTimer(true);
                 Navigator.of(context).pop();
-                soundEffectProvider.playSound('infoPop2');
+                soundEffectProvider.playSound('infoPop1');
               },
               icon: const Icon(Icons.check)),
         ],
