@@ -30,19 +30,29 @@ class TaskTextField extends StatelessWidget {
           focusColor: Theme.of(context).colorScheme.tertiary,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Theme.of(context).colorScheme.surface),
+            borderSide:
+                BorderSide(color: Theme.of(context).colorScheme.surface),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Theme.of(context).colorScheme.tertiary, width: 2),
+            borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.tertiary, width: 2),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide(color: Theme.of(context).colorScheme.tertiary, width: 1.2),
+            borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.tertiary, width: 1.2),
           ),
           prefixIcon: IconButton(
             onPressed: onTaskMealToggle,
             icon: Icon(taskMealIcon),
+            style: ButtonStyle(
+              shape: WidgetStateProperty.all(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
           ),
           suffixIcon: IconButton(
             onPressed: onPressed,
@@ -55,9 +65,11 @@ class TaskTextField extends StatelessWidget {
               ),
             ),
           ),
-          contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           hintText: hintext,
-          hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4)),
+          hintStyle: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4)),
         ),
       ),
     );

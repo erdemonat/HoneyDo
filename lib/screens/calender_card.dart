@@ -16,10 +16,12 @@ class CalenderCard extends StatefulWidget {
   State<CalenderCard> createState() => _CalenderCardState();
 }
 
-final EasyInfiniteDateTimelineController _controller = EasyInfiniteDateTimelineController();
+final EasyInfiniteDateTimelineController _controller =
+    EasyInfiniteDateTimelineController();
 DateTime now = DateTime.now();
 DateTime firstDate = DateTime(1900);
 DateTime lastDate = DateTime(2100);
+bool isHovered = false;
 
 class _CalenderCardState extends State<CalenderCard> {
   @override
@@ -27,9 +29,12 @@ class _CalenderCardState extends State<CalenderCard> {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
     final double widthContainerSize = screenWidth * 0.045;
-    final focusDateProvider = Provider.of<FocusDateProvider>(context, listen: false);
-    final tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: true);
-    final LanguageProvider languageProvider = Provider.of<LanguageProvider>(context, listen: false);
+    final focusDateProvider =
+        Provider.of<FocusDateProvider>(context, listen: false);
+    final tasksMealsProvider =
+        Provider.of<TasksMealsProvider>(context, listen: true);
+    final LanguageProvider languageProvider =
+        Provider.of<LanguageProvider>(context, listen: false);
 
     return Row(
       children: [
@@ -48,7 +53,8 @@ class _CalenderCardState extends State<CalenderCard> {
                 onPressed: () {
                   VoidCallback;
                   focusDateProvider.updateFocusDate(focusDateProvider.now);
-                  tasksMealsProvider.createEmptyTaskDate(context, focusDateProvider.getFocusDate());
+                  tasksMealsProvider.createEmptyTaskDate(
+                      context, focusDateProvider.getFocusDate());
                   setState(() {
                     _controller.animateToDate(
                       focusDateProvider.focusDate,
@@ -60,6 +66,13 @@ class _CalenderCardState extends State<CalenderCard> {
                 icon: Icon(
                   Icons.arrow_back_ios_new_outlined,
                   size: screenHeight * 0.030,
+                ),
+                style: ButtonStyle(
+                  shape: WidgetStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
                 ),
               ),
               Padding(
@@ -73,12 +86,16 @@ class _CalenderCardState extends State<CalenderCard> {
                   showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                      backgroundColor:
+                          Theme.of(context).scaffoldBackgroundColor,
                       content: LargeCalendartCard(
                         onSelectionChanged: (args) {
-                          focusDateProvider.updateFocusDate(args.value as DateTime);
-                          tasksMealsProvider.createEmptyTaskDate(context, focusDateProvider.getFocusDate());
+                          focusDateProvider
+                              .updateFocusDate(args.value as DateTime);
+                          tasksMealsProvider.createEmptyTaskDate(
+                              context, focusDateProvider.getFocusDate());
                           setState(() {
                             _controller.animateToDate(
                               focusDateProvider.focusDate,
@@ -96,6 +113,13 @@ class _CalenderCardState extends State<CalenderCard> {
                   Icons.date_range_rounded,
                   size: screenHeight * 0.030,
                 ),
+                style: ButtonStyle(
+                  shape: WidgetStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
@@ -108,34 +132,10 @@ class _CalenderCardState extends State<CalenderCard> {
               EasyInfiniteDateTimeLine(
                 dayProps: const EasyDayProps(width: 125, height: 105),
                 itemBuilder: (context, date, isSelected, onTap) {
-                  final dayName = DateFormat('EE', languageProvider.getLanguageCode()).format(date);
-                  return InkWell(
-                    borderRadius: BorderRadius.circular(16),
+                  return HoverableDayTile(
+                    date: date,
+                    isSelected: isSelected,
                     onTap: onTap,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: isSelected ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.surface,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            dayName,
-                            style: isSelected ? kCalendarDayTextStyle(context) : null,
-                          ),
-                          Text(
-                            date.day.toString(),
-                            style: isSelected ? kCalendarDayNumberTextStyle(context) : kCalendarDayNumberTextStyle(context),
-                          ),
-                          if (isSelected)
-                            Text(
-                              DateFormat('MMMM yyyy', languageProvider.getLanguageCode()).format(focusDateProvider.focusDate),
-                              style: kCalendarDayTextStyle(context),
-                            ),
-                        ],
-                      ),
-                    ),
                   );
                 },
                 physics: const NeverScrollableScrollPhysics(),
@@ -147,7 +147,8 @@ class _CalenderCardState extends State<CalenderCard> {
                 lastDate: lastDate,
                 onDateChange: (selectedDate) {
                   focusDateProvider.updateFocusDate(selectedDate);
-                  tasksMealsProvider.createEmptyTaskDate(context, focusDateProvider.getFocusDate());
+                  tasksMealsProvider.createEmptyTaskDate(
+                      context, focusDateProvider.getFocusDate());
                 },
               ),
               Flexible(
@@ -155,7 +156,9 @@ class _CalenderCardState extends State<CalenderCard> {
                   margin: EdgeInsets.only(top: 0.01 * screenHeight),
                   width: double.infinity,
                   height: double.infinity,
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Theme.of(context).colorScheme.surface),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: Theme.of(context).colorScheme.surface),
                   child: const UpcomingEventCard(),
                 ),
               ),
@@ -163,6 +166,81 @@ class _CalenderCardState extends State<CalenderCard> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class HoverableDayTile extends StatefulWidget {
+  final DateTime date;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  HoverableDayTile(
+      {required this.date, required this.isSelected, required this.onTap});
+
+  @override
+  _HoverableDayTileState createState() => _HoverableDayTileState();
+}
+
+class _HoverableDayTileState extends State<HoverableDayTile> {
+  bool isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final focusDateProvider =
+        Provider.of<FocusDateProvider>(context, listen: false);
+    final LanguageProvider languageProvider =
+        Provider.of<LanguageProvider>(context, listen: false);
+    final dayName = DateFormat('EE', languageProvider.getLanguageCode())
+        .format(widget.date);
+
+    return MouseRegion(
+      onEnter: (_) {
+        setState(() {
+          isHovered = true;
+        });
+      },
+      onExit: (_) {
+        setState(() {
+          isHovered = false;
+        });
+      },
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: widget.onTap,
+        child: Container(
+          decoration: BoxDecoration(
+            color: widget.isSelected
+                ? Theme.of(context).colorScheme.secondary
+                : isHovered
+                    ? Theme.of(context).colorScheme.secondary.withOpacity(0.5)
+                    : Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                dayName,
+                style:
+                    widget.isSelected ? kCalendarDayTextStyle(context) : null,
+              ),
+              Text(
+                widget.date.day.toString(),
+                style: widget.isSelected
+                    ? kCalendarDayNumberTextStyle(context)
+                    : kCalendarDayNumberTextStyle(context),
+              ),
+              if (widget.isSelected)
+                Text(
+                  DateFormat('MMMM yyyy', languageProvider.getLanguageCode())
+                      .format(focusDateProvider.focusDate),
+                  style: kCalendarDayTextStyle(context),
+                ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

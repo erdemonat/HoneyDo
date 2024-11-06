@@ -23,11 +23,16 @@ class TasksCard extends StatefulWidget {
 TextEditingController taskTextController = TextEditingController();
 
 class _TasksCardState extends State<TasksCard> {
-  late TasksMealsProvider tasksMealsProvider = Provider.of<TasksMealsProvider>(context, listen: true);
-  late FocusDateProvider focusDateProvider = Provider.of<FocusDateProvider>(context, listen: false);
-  late SoundEffectProvider soundEffectProvider = Provider.of<SoundEffectProvider>(context, listen: false);
+  late TasksMealsProvider tasksMealsProvider =
+      Provider.of<TasksMealsProvider>(context, listen: true);
+  late FocusDateProvider focusDateProvider =
+      Provider.of<FocusDateProvider>(context, listen: false);
+  late SoundEffectProvider soundEffectProvider =
+      Provider.of<SoundEffectProvider>(context, listen: false);
   bool isDragging = false;
   bool taskMealToggle = false;
+  bool isOnDeleteIcon = false;
+  bool isOnShiftDateIcon = false;
 
   @override
   void initState() {
@@ -90,7 +95,9 @@ class _TasksCardState extends State<TasksCard> {
                           child: Text(
                             AppLocalizations.of(context)!.mealCardHint,
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 24, color: Theme.of(context).colorScheme.primary),
+                            style: TextStyle(
+                                fontSize: 24,
+                                color: Theme.of(context).colorScheme.primary),
                           ),
                         )
                       : ListView.builder(
@@ -99,15 +106,31 @@ class _TasksCardState extends State<TasksCard> {
                             return DragTarget<int>(
                               onAcceptWithDetails: (details) {
                                 int oldIndex = details.data;
-                                tasksMealsProvider.onReorderMeal(context, oldIndex, index);
+                                tasksMealsProvider.onReorderMeal(
+                                    context, oldIndex, index);
                               },
                               builder: (context, candidateData, rejectedData) {
                                 return Draggable<int>(
                                   data: index,
+                                  dragAnchorStrategy: pointerDragAnchorStrategy,
                                   feedback: Material(
-                                    color: Colors.transparent,
-                                    child: SizedBox(height: 90, width: double.maxFinite, child: MealCardTile(meals: tasksMealsProvider.meals[index])),
-                                  ),
+                                      color: Colors.transparent,
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Symbols.trip_origin,
+                                            size: 36,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .tertiary,
+                                          ),
+                                          Text(
+                                            tasksMealsProvider
+                                                .meals[index].name,
+                                            style: TextStyle(fontSize: 18),
+                                          ),
+                                        ],
+                                      )),
                                   childWhenDragging: Container(),
                                   onDragStarted: () {
                                     setState(() {
@@ -124,7 +147,8 @@ class _TasksCardState extends State<TasksCard> {
                                       isDragging = false;
                                     });
                                   },
-                                  child: MealCardTile(meals: tasksMealsProvider.meals[index]),
+                                  child: MealCardTile(
+                                      meals: tasksMealsProvider.meals[index]),
                                 );
                               },
                             );
@@ -137,7 +161,9 @@ class _TasksCardState extends State<TasksCard> {
                           child: Text(
                             randomTaskSentences(context),
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 24, color: Theme.of(context).colorScheme.primary),
+                            style: TextStyle(
+                                fontSize: 24,
+                                color: Theme.of(context).colorScheme.primary),
                           ),
                         )
                       : ListView.builder(
@@ -146,19 +172,30 @@ class _TasksCardState extends State<TasksCard> {
                             return DragTarget<int>(
                               onAcceptWithDetails: (details) {
                                 int oldIndex = details.data;
-                                tasksMealsProvider.onReorderTask(context, oldIndex, index);
+                                tasksMealsProvider.onReorderTask(
+                                    context, oldIndex, index);
                               },
                               builder: (context, candidateData, rejectedData) {
                                 return Draggable<int>(
                                   data: index,
+                                  dragAnchorStrategy: pointerDragAnchorStrategy,
                                   feedback: Material(
                                     color: Colors.transparent,
-                                    child: SizedBox(
-                                        height: 90,
-                                        width: double.maxFinite,
-                                        child: TaskCardTile(
-                                          tasks: tasksMealsProvider.tasks[index],
-                                        )),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Symbols.trip_origin,
+                                          size: 36,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .tertiary,
+                                        ),
+                                        Text(
+                                          tasksMealsProvider.tasks[index].name,
+                                          style: TextStyle(fontSize: 12),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                   childWhenDragging: Container(),
                                   onDragStarted: () {
@@ -192,22 +229,36 @@ class _TasksCardState extends State<TasksCard> {
                 visible: isDragging,
                 child: DragTarget<int>(
                   onAcceptWithDetails: (details) {
-                    taskMealToggle ? tasksMealsProvider.removeMeal(context, details.data) : tasksMealsProvider.removeTask(context, details.data);
+                    taskMealToggle
+                        ? tasksMealsProvider.removeMeal(context, details.data)
+                        : tasksMealsProvider.removeTask(context, details.data);
+                    isOnDeleteIcon = false;
                   },
                   builder: (context, candidateData, rejectedData) {
                     return Padding(
                       padding: const EdgeInsets.only(left: 10.0),
-                      child: Icon(
-                        Icons.delete,
-                        color: Theme.of(context).colorScheme.tertiary,
-                        size: 36.0,
+                      child: MouseRegion(
+                        onEnter: (_) {
+                          setState(() {
+                            isOnDeleteIcon = true;
+                          });
+                        },
+                        onExit: (_) {
+                          isOnDeleteIcon = false;
+                        },
+                        child: Icon(
+                          isOnDeleteIcon ? Icons.delete_sweep : Icons.delete,
+                          color: Theme.of(context).colorScheme.tertiary,
+                          size: 36.0,
+                        ),
                       ),
                     );
                   },
                 ),
               ),
               TaskTextField(
-                onFieldSubmitted: (p0) => taskMealToggle ? onMealPressed() : onTaskPressed(),
+                onFieldSubmitted: (p0) =>
+                    taskMealToggle ? onMealPressed() : onTaskPressed(),
                 textcontroller: taskTextController,
                 onPressed: taskMealToggle ? onMealPressed : onTaskPressed,
                 onTaskMealToggle: () {
@@ -215,14 +266,18 @@ class _TasksCardState extends State<TasksCard> {
                     taskMealToggle = !taskMealToggle;
                   });
                 },
-                taskMealIcon: taskMealToggle ? Icons.restaurant : Icons.library_add_sharp,
-                hintext: taskMealToggle ? AppLocalizations.of(context)!.hintTextMeal : AppLocalizations.of(context)!.hintTextTask,
+                taskMealIcon:
+                    taskMealToggle ? Icons.restaurant : Icons.library_add_sharp,
+                hintext: taskMealToggle
+                    ? AppLocalizations.of(context)!.hintTextMeal
+                    : AppLocalizations.of(context)!.hintTextTask,
               ),
               Visibility(
                 visible: isDragging,
                 child: DragTarget<int>(
                   onAcceptWithDetails: (details) {
                     tasksMealsProvider.shiftTaskDate(context, details.data);
+                    isOnShiftDateIcon = false;
                   },
                   builder: (context, candidateData, rejectedData) {
                     return taskMealToggle
@@ -232,10 +287,18 @@ class _TasksCardState extends State<TasksCard> {
                           )
                         : Padding(
                             padding: const EdgeInsets.only(right: 10.0),
-                            child: Icon(
-                              Symbols.next_plan_rounded,
-                              color: Theme.of(context).colorScheme.tertiary,
-                              size: 36.0,
+                            child: MouseRegion(
+                              onEnter: (_) {
+                                isOnShiftDateIcon = true;
+                              },
+                              onExit: (_) {
+                                isOnShiftDateIcon = false;
+                              },
+                              child: Icon(
+                                Symbols.next_plan_rounded,
+                                color: Theme.of(context).colorScheme.tertiary,
+                                size: 36.0,
+                              ),
                             ),
                           );
                   },
