@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:honeydo/components/export_import_button.dart';
 import 'package:honeydo/providers/sync_card_provider.dart';
 import 'package:honeydo/screens/auth.dart';
-import 'package:provider/provider.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:slide_to_confirm/slide_to_confirm.dart';
 
-class SyncStatus extends StatelessWidget {
+class SyncStatus extends ConsumerWidget {
   const SyncStatus({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final AppLocalizations appLocalizations = AppLocalizations.of(context)!;
-    final SyncCardProvider syncCardProvider = Provider.of<SyncCardProvider>(context, listen: false);
+
+    final SyncCardState syncCardState = ref.watch(syncCardProvider);
+    final SyncCardNotifier syncCardNotifier =
+        ref.read(syncCardProvider.notifier);
 
     return Stack(
       alignment: Alignment.bottomCenter,
@@ -24,30 +27,38 @@ class SyncStatus extends StatelessWidget {
           height: 42,
           width: double.infinity,
           decoration: BoxDecoration(
-            borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(10), bottomRight: Radius.circular(10)),
+            borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(10),
+                bottomRight: Radius.circular(10)),
             color: Theme.of(context).colorScheme.onSurface,
           ),
           child: Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: syncCardProvider.isSignOutMode ? const EdgeInsets.all(2) : const EdgeInsets.only(left: 14.0, top: 5, right: 5),
-              child: syncCardProvider.isSignOutMode
+              padding: syncCardState.isSignOutMode
+                  ? const EdgeInsets.all(2)
+                  : const EdgeInsets.only(left: 14.0, top: 5, right: 5),
+              child: syncCardState.isSignOutMode
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ConfirmationSlider(
                           text: appLocalizations.swipeToLogout,
-                          textStyle: TextStyle(color: Theme.of(context).colorScheme.tertiary, fontSize: 11),
+                          textStyle: TextStyle(
+                              color: Theme.of(context).colorScheme.tertiary,
+                              fontSize: 11),
                           sliderButtonContent: const SizedBox(),
                           iconColor: Theme.of(context).colorScheme.tertiary,
-                          backgroundColor: Theme.of(context).colorScheme.surface,
-                          foregroundColor: Theme.of(context).colorScheme.onSurface,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.surface,
+                          foregroundColor:
+                              Theme.of(context).colorScheme.onSurface,
                           width: 250,
                           height: 25,
-                          onTapUp: () => syncCardProvider.setSignOutMode(false),
+                          onTapUp: () => syncCardNotifier.setSignOutMode(false),
                           onConfirmation: () {
                             auth.signOut();
-                            syncCardProvider.setSignOutMode(false);
+                            syncCardNotifier.setSignOutMode(false);
                           },
                         )
                       ],
@@ -65,7 +76,8 @@ class SyncStatus extends StatelessWidget {
                         ),
                         const Spacer(),
                         IconButton(
-                          onPressed: () => syncCardProvider.setSignOutMode(true),
+                          onPressed: () =>
+                              syncCardNotifier.setSignOutMode(true),
                           icon: Icon(
                             Icons.logout,
                             color: Theme.of(context).colorScheme.surface,
@@ -89,7 +101,7 @@ class SyncStatus extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  syncCardProvider.isUploadConfirmation
+                  syncCardState.isUploadConfirmation
                       ? Expanded(
                           child: Container(
                             margin: const EdgeInsets.only(left: 25),
@@ -107,22 +119,30 @@ class SyncStatus extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
-                                    color: Theme.of(context).colorScheme.tertiary.withOpacity(0.6),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .tertiary
+                                        .withOpacity(0.6),
                                   ),
                                 ),
                                 Text(
-                                  syncCardProvider.lastUploadTime,
+                                  syncCardState.lastUploadTime,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color: Theme.of(context).colorScheme.tertiary.withOpacity(0.6),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .tertiary
+                                        .withOpacity(0.6),
                                   ),
                                 ),
                                 const SizedBox(height: 16),
                                 Text(
                                   appLocalizations.confirmUpload,
                                   textAlign: TextAlign.center,
-                                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
                                 ),
                                 const SizedBox(height: 12),
                                 Row(
@@ -130,14 +150,15 @@ class SyncStatus extends StatelessWidget {
                                   children: [
                                     IconButton(
                                       onPressed: () {
-                                        syncCardProvider.setIsUploadConfirmation(false);
+                                        syncCardNotifier
+                                            .setIsUploadConfirmation(false);
                                       },
                                       icon: const Icon(Icons.close),
                                     ),
                                     const SizedBox(width: 24),
                                     IconButton(
                                       onPressed: () {
-                                        syncCardProvider.startBackup();
+                                        syncCardNotifier.startBackup();
                                       },
                                       icon: const Icon(Icons.done),
                                     ),
@@ -147,7 +168,7 @@ class SyncStatus extends StatelessWidget {
                             ),
                           ),
                         )
-                      : syncCardProvider.isUploadMode
+                      : syncCardState.isUploadMode
                           ? Expanded(
                               child: Container(
                                 margin: const EdgeInsets.only(left: 25),
@@ -164,31 +185,27 @@ class SyncStatus extends StatelessWidget {
                                       children: [
                                         Column(
                                           children: [
-                                            const Icon(Icons.file_upload_outlined),
+                                            const Icon(
+                                                Icons.file_upload_outlined),
                                             const SizedBox(height: 4),
-                                            Selector<SyncCardProvider, String>(
-                                              selector: (context, provider) => '${provider.dataBytesTransferredUpload.toStringAsFixed(2)} / ${provider.dataTotalBytesUpload.toStringAsFixed(2)}',
-                                              builder: (context, dataText, child) {
-                                                return Text(
-                                                  dataText,
-                                                  style: const TextStyle(fontSize: 10),
-                                                );
-                                              },
+                                            Text(
+                                              "${syncCardState.dataBytesTransferredUpload.toStringAsFixed(2)} / ${syncCardState.dataTotalBytesUpload.toStringAsFixed(2)}",
+                                              style:
+                                                  const TextStyle(fontSize: 10),
                                             ),
                                           ],
                                         ),
                                         SizedBox(
                                           height: 80,
                                           width: 80,
-                                          child: Selector<SyncCardProvider, double>(
-                                            selector: (context, provider) => provider.uploadProgress,
-                                            builder: (context, uploadProgress, child) {
-                                              return CircularProgressIndicator(
-                                                value: uploadProgress,
-                                                backgroundColor: Theme.of(context).colorScheme.primary,
-                                                color: Theme.of(context).colorScheme.tertiary,
-                                              );
-                                            },
+                                          child: CircularProgressIndicator(
+                                            value: syncCardState.uploadProgress,
+                                            backgroundColor: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .tertiary,
                                           ),
                                         ),
                                       ],
@@ -197,7 +214,9 @@ class SyncStatus extends StatelessWidget {
                                     Text(
                                       appLocalizations.uploading,
                                       textAlign: TextAlign.center,
-                                      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14),
                                     ),
                                   ],
                                 ),
@@ -206,7 +225,7 @@ class SyncStatus extends StatelessWidget {
                           : ExportImportButton(
                               buttonText: appLocalizations.uploadToCloud,
                               onTap: () async {
-                                syncCardProvider.setIsUploadConfirmation(true);
+                                syncCardNotifier.setIsUploadConfirmation(true);
                               },
                               subtitleText: Column(
                                 children: [
@@ -216,15 +235,21 @@ class SyncStatus extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w500,
-                                      color: Theme.of(context).colorScheme.tertiary.withOpacity(0.6),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .tertiary
+                                          .withOpacity(0.6),
                                     ),
                                   ),
                                   Text(
-                                    syncCardProvider.lastUploadTime,
+                                    syncCardState.lastUploadTime,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: Theme.of(context).colorScheme.tertiary.withOpacity(0.6),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .tertiary
+                                          .withOpacity(0.6),
                                     ),
                                   ),
                                 ],
@@ -238,7 +263,7 @@ class SyncStatus extends StatelessWidget {
                       color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
-                  syncCardProvider.isDownloadConfirmation
+                  syncCardState.isDownloadConfirmation
                       ? Expanded(
                           child: Container(
                             margin: const EdgeInsets.only(right: 25),
@@ -256,22 +281,30 @@ class SyncStatus extends StatelessWidget {
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
-                                    color: Theme.of(context).colorScheme.tertiary.withOpacity(0.6),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .tertiary
+                                        .withOpacity(0.6),
                                   ),
                                 ),
                                 Text(
-                                  syncCardProvider.lastDownloadTime,
+                                  syncCardState.lastDownloadTime,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color: Theme.of(context).colorScheme.tertiary.withOpacity(0.6),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .tertiary
+                                        .withOpacity(0.6),
                                   ),
                                 ),
                                 const SizedBox(height: 16),
                                 Text(
                                   appLocalizations.confirmDownload,
                                   textAlign: TextAlign.center,
-                                  style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14),
                                 ),
                                 const SizedBox(height: 12),
                                 Row(
@@ -279,14 +312,15 @@ class SyncStatus extends StatelessWidget {
                                   children: [
                                     IconButton(
                                       onPressed: () {
-                                        syncCardProvider.setIsDownloadConfirmation(false);
+                                        syncCardNotifier
+                                            .setIsDownloadConfirmation(false);
                                       },
                                       icon: const Icon(Icons.close),
                                     ),
                                     const SizedBox(width: 24),
                                     IconButton(
                                       onPressed: () {
-                                        syncCardProvider.startRestoreDB();
+                                        syncCardNotifier.startRestoreDB();
                                       },
                                       icon: const Icon(Icons.done),
                                     ),
@@ -296,7 +330,7 @@ class SyncStatus extends StatelessWidget {
                             ),
                           ),
                         )
-                      : syncCardProvider.isDownloadMode
+                      : syncCardState.isDownloadMode
                           ? Expanded(
                               child: Container(
                                 margin: const EdgeInsets.only(right: 25),
@@ -313,31 +347,28 @@ class SyncStatus extends StatelessWidget {
                                       children: [
                                         Column(
                                           children: [
-                                            const Icon(Icons.file_download_outlined),
+                                            const Icon(
+                                                Icons.file_download_outlined),
                                             const SizedBox(height: 4),
-                                            Selector<SyncCardProvider, String>(
-                                              selector: (context, provider) => '${provider.dataBytesTransferredDownload.toStringAsFixed(2)} / ${provider.dataTotalBytesDownload.toStringAsFixed(2)}',
-                                              builder: (context, dataText, child) {
-                                                return Text(
-                                                  dataText,
-                                                  style: const TextStyle(fontSize: 10),
-                                                );
-                                              },
+                                            Text(
+                                              "${syncCardState.dataBytesTransferredDownload.toStringAsFixed(2)} / ${syncCardState.dataTotalBytesDownload.toStringAsFixed(2)}",
+                                              style:
+                                                  const TextStyle(fontSize: 10),
                                             ),
                                           ],
                                         ),
                                         SizedBox(
                                           height: 80,
                                           width: 80,
-                                          child: Selector<SyncCardProvider, double>(
-                                            selector: (context, provider) => provider.downloadProgress,
-                                            builder: (context, downloadProgress, child) {
-                                              return CircularProgressIndicator(
-                                                value: downloadProgress,
-                                                backgroundColor: Theme.of(context).colorScheme.primary,
-                                                color: Theme.of(context).colorScheme.tertiary,
-                                              );
-                                            },
+                                          child: CircularProgressIndicator(
+                                            value:
+                                                syncCardState.downloadProgress,
+                                            backgroundColor: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .tertiary,
                                           ),
                                         ),
                                       ],
@@ -346,7 +377,9 @@ class SyncStatus extends StatelessWidget {
                                     Text(
                                       appLocalizations.downloading,
                                       textAlign: TextAlign.center,
-                                      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14),
                                     ),
                                   ],
                                 ),
@@ -354,7 +387,8 @@ class SyncStatus extends StatelessWidget {
                             )
                           : ExportImportButton(
                               buttonText: appLocalizations.downloadFromCloud,
-                              onTap: () => syncCardProvider.setIsDownloadConfirmation(true),
+                              onTap: () => syncCardNotifier
+                                  .setIsDownloadConfirmation(true),
                               icon: Symbols.cloud_download,
                               margin: const EdgeInsets.only(right: 25),
                               subtitleText: Column(
@@ -365,15 +399,21 @@ class SyncStatus extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w500,
-                                      color: Theme.of(context).colorScheme.tertiary.withOpacity(0.6),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .tertiary
+                                          .withOpacity(0.6),
                                     ),
                                   ),
                                   Text(
-                                    syncCardProvider.lastDownloadTime,
+                                    syncCardState.lastDownloadTime,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: Theme.of(context).colorScheme.tertiary.withOpacity(0.6),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .tertiary
+                                          .withOpacity(0.6),
                                     ),
                                   ),
                                 ],

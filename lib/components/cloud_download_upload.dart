@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:honeydo/providers/sync_card_provider.dart';
-import 'package:provider/provider.dart';
 
-class CloudDownloadUpload extends StatelessWidget {
+class CloudDownloadUpload extends ConsumerWidget {
   final EdgeInsetsGeometry? margin;
   final String describeText;
   const CloudDownloadUpload({
@@ -12,7 +12,9 @@ class CloudDownloadUpload extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final SyncCardState syncCardState = ref.watch(syncCardProvider);
+
     return Expanded(
       child: Container(
         margin: margin,
@@ -31,29 +33,19 @@ class CloudDownloadUpload extends StatelessWidget {
                   children: [
                     const Icon(Icons.file_upload_outlined),
                     const SizedBox(height: 4),
-                    Selector<SyncCardProvider, String>(
-                      selector: (context, provider) => '${provider.dataBytesTransferredDownload.toStringAsFixed(2)} / ${provider.dataTotalBytesDownload.toStringAsFixed(2)}',
-                      builder: (context, dataText, child) {
-                        return Text(
-                          dataText,
-                          style: const TextStyle(fontSize: 10),
-                        );
-                      },
+                    Text(
+                      "${syncCardState.dataBytesTransferredDownload.toStringAsFixed(2)} / ${syncCardState.dataTotalBytesDownload.toStringAsFixed(2)}",
+                      style: const TextStyle(fontSize: 10),
                     ),
                   ],
                 ),
                 SizedBox(
                   height: 80,
                   width: 80,
-                  child: Selector<SyncCardProvider, double>(
-                    selector: (context, provider) => provider.downloadProgress,
-                    builder: (context, downloadProgress, child) {
-                      return CircularProgressIndicator(
-                        value: downloadProgress,
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        color: Theme.of(context).colorScheme.tertiary,
-                      );
-                    },
+                  child: CircularProgressIndicator(
+                    value: syncCardState.downloadProgress,
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    color: Theme.of(context).colorScheme.tertiary,
                   ),
                 ),
               ],

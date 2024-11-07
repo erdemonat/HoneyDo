@@ -33,8 +33,6 @@ class _CalenderCardState extends State<CalenderCard> {
         Provider.of<FocusDateProvider>(context, listen: false);
     final tasksMealsProvider =
         Provider.of<TasksMealsProvider>(context, listen: true);
-    final LanguageProvider languageProvider =
-        Provider.of<LanguageProvider>(context, listen: false);
 
     return Row(
       children: [
@@ -52,7 +50,7 @@ class _CalenderCardState extends State<CalenderCard> {
               IconButton(
                 onPressed: () {
                   VoidCallback;
-                  focusDateProvider.updateFocusDate(focusDateProvider.now);
+                  focusDateProvider.updateFocusDate(DateTime.now());
                   tasksMealsProvider.createEmptyTaskDate(
                       context, focusDateProvider.getFocusDate());
                   setState(() {

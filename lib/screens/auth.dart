@@ -1,32 +1,34 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:honeydo/constants/constants.dart';
 import 'package:honeydo/providers/sync_card_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final auth = FirebaseAuth.instance;
 
-class AuthScreen extends StatefulWidget {
+class AuthScreen extends ConsumerStatefulWidget {
   const AuthScreen({super.key});
 
   @override
-  State<AuthScreen> createState() => _AuthScreenState();
+  ConsumerState<AuthScreen> createState() => _AuthScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> {
+class _AuthScreenState extends ConsumerState<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   bool _isObscurePassword = true;
 
   var _enteredEmail = '';
   var _enteredPassword = '';
 
   void _submit() async {
-    final SyncCardProvider syncCardProvider = Provider.of(context, listen: false);
+    final syncCardNotifier = ref.read(syncCardProvider.notifier);
+    final syncCardState = ref.watch(syncCardProvider);
     final AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     final isValid = _formKey.currentState!.validate();
 
@@ -36,12 +38,14 @@ class _AuthScreenState extends State<AuthScreen> {
     _formKey.currentState!.save();
 
     try {
-      if (syncCardProvider.isLoginMode) {
-        await auth.signInWithEmailAndPassword(email: _enteredEmail, password: _enteredPassword);
-        syncCardProvider.getFileMetadata();
+      if (syncCardState.isLoginMode) {
+        await auth.signInWithEmailAndPassword(
+            email: _enteredEmail, password: _enteredPassword);
+        syncCardNotifier.getFileMetadata();
       } else {
-        await auth.createUserWithEmailAndPassword(email: _enteredEmail, password: _enteredPassword);
-        syncCardProvider.setLoginMode(true);
+        await auth.createUserWithEmailAndPassword(
+            email: _enteredEmail, password: _enteredPassword);
+        syncCardNotifier.setLoginMode(true);
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
@@ -65,7 +69,9 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final SyncCardProvider syncCardProvider = Provider.of(context, listen: false);
+    final syncCardNotifier = ref.read(syncCardProvider.notifier);
+    final syncCardState = ref.watch(syncCardProvider);
+
     final AppLocalizations appLocalizations = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
@@ -81,21 +87,22 @@ class _AuthScreenState extends State<AuthScreen> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    if (syncCardProvider.isLoginMode)
+                    if (syncCardState.isLoginMode)
                       TextButton.icon(
                         icon: Icon(
                           Icons.drive_file_move,
                           color: Theme.of(context).colorScheme.onSurface,
                         ),
                         onPressed: () {
-                          syncCardProvider.toggleLocalBackUp();
+                          syncCardNotifier.toggleLocalBackUp();
                         },
                         label: Text(
                           appLocalizations.localImportExport,
-                          style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.secondary),
                         ),
                       ),
-                    if (syncCardProvider.isLoginMode) const SizedBox(height: 6),
+                    if (syncCardState.isLoginMode) const SizedBox(height: 6),
                     TextFormField(
                         inputFormatters: [
                           FilteringTextInputFormatter.deny(RegExp(r'\s'))
@@ -105,12 +112,16 @@ class _AuthScreenState extends State<AuthScreen> {
                           _enteredEmail = value!;
                         },
                         validator: (value) {
-                          if (value == null || value.isEmpty || !value.contains('@')) {
+                          if (value == null ||
+                              value.isEmpty ||
+                              !value.contains('@')) {
                             return appLocalizations.emailValidationError;
                           }
                           return null;
                         },
-                        decoration: kAuthScreenInputDecoration(context).copyWith(labelText: appLocalizations.authEmailLabel)),
+                        decoration: kAuthScreenInputDecoration(context)
+                            .copyWith(
+                                labelText: appLocalizations.authEmailLabel)),
                     const SizedBox(height: 12),
                     TextFormField(
                       inputFormatters: [
@@ -140,12 +151,15 @@ class _AuthScreenState extends State<AuthScreen> {
                                     _isObscurePassword = !_isObscurePassword;
                                   });
                                 },
-                                icon: Icon(_isObscurePassword ? Icons.visibility : Icons.visibility_off),
+                                icon: Icon(_isObscurePassword
+                                    ? Icons.visibility
+                                    : Icons.visibility_off),
                               ),
-                              if (syncCardProvider.isLoginMode)
+                              if (syncCardState.isLoginMode)
                                 IconButton(
                                   onPressed: _submit,
-                                  icon: const Icon(Icons.arrow_forward_ios_rounded),
+                                  icon: const Icon(
+                                      Icons.arrow_forward_ios_rounded),
                                 ),
                             ],
                           ),
@@ -153,20 +167,23 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                       obscureText: _isObscurePassword,
                     ),
-                    if (!syncCardProvider.isLoginMode) const SizedBox(height: 12),
-                    if (!syncCardProvider.isLoginMode)
+                    if (!syncCardState.isLoginMode) const SizedBox(height: 12),
+                    if (!syncCardState.isLoginMode)
                       TextFormField(
                         inputFormatters: [
                           FilteringTextInputFormatter.deny(RegExp(r'\s'))
                         ],
                         controller: _confirmPasswordController,
                         validator: (value) {
-                          if (_passwordController.text != _confirmPasswordController.text) {
-                            return appLocalizations.passwordConfirmValidationError;
+                          if (_passwordController.text !=
+                              _confirmPasswordController.text) {
+                            return appLocalizations
+                                .passwordConfirmValidationError;
                           }
                           return null;
                         },
-                        decoration: kAuthScreenInputDecoration(context).copyWith(
+                        decoration:
+                            kAuthScreenInputDecoration(context).copyWith(
                           labelText: appLocalizations.authConfirmPasswordLabel,
                           suffixIcon: Padding(
                             padding: const EdgeInsets.only(right: 8.0),
@@ -185,23 +202,28 @@ class _AuthScreenState extends State<AuthScreen> {
                         TextButton(
                           onPressed: () {
                             setState(() {
-                              syncCardProvider.setLoginMode(!syncCardProvider.isLoginMode);
+                              syncCardNotifier
+                                  .setLoginMode(!syncCardState.isLoginMode);
                             });
                           },
                           child: Text(
-                            syncCardProvider.isLoginMode ? appLocalizations.authCreateAccountButton : appLocalizations.authAlreadyHaveAccountButton,
-                            style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                            syncCardState.isLoginMode
+                                ? appLocalizations.authCreateAccountButton
+                                : appLocalizations.authAlreadyHaveAccountButton,
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary),
                           ),
                         ),
                         const Spacer(),
                         TextButton(
                           onPressed: () {
-                            syncCardProvider.setPasswordResetMode(true);
-                            syncCardProvider.setLoginMode(true);
+                            syncCardNotifier.setPasswordResetMode(true);
+                            syncCardNotifier.setLoginMode(true);
                           },
                           child: Text(
                             appLocalizations.forgotMyPassword,
-                            style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.secondary),
                           ),
                         ),
                       ],
