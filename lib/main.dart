@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart' as riverpod;
 import 'package:honeydo/firebase_options.dart';
 import 'package:honeydo/providers/audio_player_provider.dart';
 import 'package:honeydo/providers/language_provider.dart';
-import 'package:honeydo/providers/sync_card_provider.dart';
 import 'package:honeydo/service/isar_service.dart';
 import 'package:honeydo/providers/focus_date_provider.dart';
 import 'package:honeydo/providers/pomodoro_provider.dart';
