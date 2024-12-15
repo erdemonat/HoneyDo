@@ -3,7 +3,14 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  audioplayers_windows
   bitsdojo_window_windows
+  connectivity_plus
+  firebase_auth
+  firebase_core
+  firebase_storage
+  isar_flutter_libs
+  windows_single_instance
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

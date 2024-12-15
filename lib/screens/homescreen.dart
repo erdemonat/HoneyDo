@@ -1,16 +1,44 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:honeydo/components/calender_card.dart';
-import 'package:honeydo/components/motivation_card.dart';
-import 'package:honeydo/components/pomodoro_card.dart';
-import 'package:honeydo/components/task_field_card.dart';
-import 'package:honeydo/components/window_buttons.dart';
+import 'package:honeydo/components/banner.dart';
+import 'package:honeydo/providers/settings_provider.model.dart';
+import 'package:honeydo/screens/auth.dart';
+import 'package:honeydo/screens/calender_card.dart';
+import 'package:honeydo/screens/motivation_card.dart';
+import 'package:honeydo/screens/pomodoro_card.dart';
+import 'package:honeydo/components/windows_bar_components.dart/window_buttons.dart';
+import 'package:honeydo/screens/settings_card.dart';
+import 'package:honeydo/screens/todo_tasks_card.dart';
+import 'package:provider/provider.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => HomeScreenState();
+}
+
+class HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 500), () {
+      _checkInternetAndSignOut();
+    });
+  }
+
+  Future<void> _checkInternetAndSignOut() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult.toString() == "[${ConnectivityResult.none}]") {
+      auth.signOut();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final settingsProvider = Provider.of<SettingsProvider>(context);
+
     return Scaffold(
       body: Column(
         mainAxisSize: MainAxisSize.min,
@@ -20,10 +48,17 @@ class HomeScreen extends StatelessWidget {
             child: MoveWindow(
               child: Row(
                 children: [
+                  const HoneydoBanner(),
                   Expanded(
-                    child: Container(),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(),
+                        ),
+                        const WindowButtons(),
+                      ],
+                    ),
                   ),
-                  const WindowButtons(),
                 ],
               ),
             ),
@@ -35,34 +70,32 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     flex: 3,
-                    child: Column(
+                    child: Stack(
                       children: [
-                        Flexible(
-                          child: Container(
-                            width: double.infinity,
-                            height: double.infinity,
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  flex: 3,
-                                  child: Container(
-                                    //margin: const EdgeInsets.all(5),
-                                    height: 200,
-                                    width: double.infinity,
-                                    child: const MotivationCard(),
-                                  ),
+                        Column(
+                          children: [
+                            Flexible(
+                              child: SizedBox(
+                                width: double.infinity,
+                                height: double.infinity,
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.all(5),
+                                      height: 160,
+                                      width: double.infinity,
+                                      child: const MotivationCard(),
+                                    ),
+                                    const Expanded(
+                                      child: PomodoroCard(),
+                                    ),
+                                  ],
                                 ),
-                                Expanded(
-                                  flex: 10,
-                                  child: Container(
-                                    //margin: const EdgeInsets.all(5),
-                                    child: const PomodoroCard(),
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
-                          ),
+                          ],
                         ),
+                        if (settingsProvider.showSettingCards) const SettingsCard(),
                       ],
                     ),
                   ),
@@ -71,28 +104,20 @@ class HomeScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         Flexible(
-                          child: Container(
+                          child: SizedBox(
                             width: double.infinity,
                             height: double.infinity,
                             child: Column(
                               children: [
-                                Expanded(
-                                  flex: 3,
-                                  child: Container(
-                                    //margin: const EdgeInsets.all(5),
-                                    //color: Colors.blue,
-                                    height: 200,
-                                    width: double.infinity,
-                                    child: const CalenderCard(),
-                                  ),
+                                Container(
+                                  margin: const EdgeInsets.all(5),
+                                  height: 160,
+                                  width: double.infinity,
+                                  child: const CalenderCard(),
                                 ),
-                                Expanded(
+                                const Expanded(
                                   flex: 10,
-                                  child: Container(
-                                    //margin: const EdgeInsets.all(5),
-
-                                    child: const TaskFieldCard(),
-                                  ),
+                                  child: TasksCard(),
                                 ),
                               ],
                             ),
